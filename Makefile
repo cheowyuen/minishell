@@ -6,7 +6,7 @@
 #    By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/31 13:46:50 by lsurco-t          #+#    #+#              #
-#    Updated: 2025/07/31 19:07:49 by lsurco-t         ###   ########.fr        #
+#    Updated: 2025/07/31 20:00:49 by lsurco-t         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,8 @@ $(LIBFT):
 	@make -C $(LIBFT_DIR)
 
 $(NAME): $(OBJ) $(LIBFT)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) -lreadline
+	@echo "\033[34mCompiling Minishell...\033[0m"
 	@echo "\033[32mMinishell built successfully!\033[0m"
 
 $(OBJ_DIR)/%.o: src/%.c | $(OBJDIRS)
