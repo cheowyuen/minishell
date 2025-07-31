@@ -6,7 +6,7 @@
 #    By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/31 13:46:50 by lsurco-t          #+#    #+#              #
-#    Updated: 2025/07/31 14:05:46 by lsurco-t         ###   ########.fr        #
+#    Updated: 2025/07/31 19:07:49 by lsurco-t         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,14 +16,16 @@ CFLAGS = -Wall -Wextra -Werror -Iinclude
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 OBJ_DIR = obj
-SRC = src/*.c
-	
-OBJ = $(SRC:src/%.c=$(OBJ_DIR)/%.o)
+SRC = $(shell find src -name '*.c')
+
+OBJ = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRC))
+
+OBJDIRS := $(sort $(dir $(OBJ)))
 
 all: $(NAME)
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
+$(OBJDIRS):
+	@mkdir -p $@
 
 $(LIBFT):
 	@make -C $(LIBFT_DIR)
@@ -32,7 +34,7 @@ $(NAME): $(OBJ) $(LIBFT)
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT)
 	@echo "\033[32mMinishell built successfully!\033[0m"
 
-$(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: src/%.c | $(OBJDIRS)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
