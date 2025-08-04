@@ -70,5 +70,6 @@ int			ft_count_hex_digits(unsigned long num);
 int			ft_putchar_i_fd(char c, int fd);
 int			ft_putstr_i_fd(char *s, int fd);
 int			ft_dprintf(int fd, const char *format, ...);
+int			ft_strcmp(const char *s1, const char *s2);
 
 #endif

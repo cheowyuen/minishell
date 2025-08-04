@@ -25,8 +25,8 @@ SRC = \
 	ft_substr.c ft_strjoin.c ft_strtrim.c ft_split.c ft_itoa.c ft_strmapi.c ft_striteri.c \
 	ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c get_next_line.c ft_printf.c \
 	ft_printf_utils.c ft_putchar_i_fd.c ft_putstr_i_fd.c ft_count_hex_digits.c ft_putnbr_hex.c \
-	ft_utoa.c ft_dprintf.c\
-
+	ft_utoa.c ft_dprintf.c ft_strcmp.c\
+	
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
 all: $(OBJ_DIR) $(NAME)
