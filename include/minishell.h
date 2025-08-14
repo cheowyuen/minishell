@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:51:48 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/01 18:10:54 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/12 10:09:08 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 # define FAILURE 1
 # define SUCCESS 0
@@ -37,6 +38,42 @@
 # define BOLD "\033[1m"
 
 # define PROMPT "minishell$ "
+
+typedef enum e_quote_type
+{
+	NONE,
+	SINGLE,
+	DOUBLE,
+	DOUBLE_ENV
+}	t_quote_type;
+
+typedef struct s_token
+{
+	char			*token;
+	t_quote_type	quote_type;
+	bool			has_dollar_sign;
+	struct s_token	*next;
+}	t_token;
+
+typedef struct s_var
+{
+	char	*value;
+	bool	has_braces;
+}	t_var;
+
+typedef struct s_command
+{
+	char				**argv;
+	char				*infile;
+	char				*outfile;
+	int					append;
+	int					has_heredoc;
+	char				*heredoc_delim;
+	int					is_builtin;
+	int					is_last;
+	int					pipe_out;
+	struct s_command	*next;	
+}	t_command;
 
 
 #endif
