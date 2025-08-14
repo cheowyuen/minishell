@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/12 11:34:24 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/14 13:26:16 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_token	*ft_lstnew(int quote_type, char *content, int len)
 {
 	t_token	*new_node;
 
-	new_node = (t_token *) malloc(sizeof(t_token));
+	new_node = malloc(sizeof(t_token));
 	if (!new_node)
 		return (NULL);
 	new_node->token = ft_strndup(content, len);

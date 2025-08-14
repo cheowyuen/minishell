@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:51:48 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/12 10:09:08 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/14 11:55:08 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,9 @@ typedef struct s_command
 	struct s_command	*next;	
 }	t_command;
 
+typedef struct s_shell
+{
+	int	exit_code;
+}	t_shell;
 
 #endif
