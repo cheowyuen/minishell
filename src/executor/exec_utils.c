@@ -6,11 +6,11 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 19:39:17 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:36:10 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/builtin.h"
+#include "builtin.h"
 
 void	count_commands(t_command *command, t_executor *executor)
 {
@@ -65,7 +65,7 @@ char	*find_command_path(t_executor *executor, char *command)
 		return (NULL);
 	if (ft_strchr(command, '/'))
 		return (ft_strdup(command));
-	path_env = get_env_value(executor, "PATH");
+	path_env = get_env_var(executor, "PATH");
 	if (!path_env || !*path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');
@@ -84,8 +84,7 @@ void	exec_external_command(t_executor *executor, t_command *command)
 	cmd_path = find_command_path(executor, command->argv[0]);
 	if (!cmd_path)
 	{
-		ft_dprintf(STDERR_FILENO, "%s: command not found\n",
-			command->argv[0]);
+		ft_dprintf(STDERR_FILENO, "%s: command not found\n", command->argv[0]);
 		exit(EXIT_CMD_NOT_FOUND);
 	}
 	envp = build_env_array(executor);
@@ -96,7 +95,8 @@ void	exec_external_command(t_executor *executor, t_command *command)
 		exit(EXIT_FAILURE);
 	}
 	execve(cmd_path, command->argv, envp);
-	perror("execve");
+	ft_dprintf(STDERR_FILENO, "bash: %s: %s\n", command->argv[0],
+		strerror(errno));
 	free(cmd_path);
 	free_str_array(envp);
 	exit(EXIT_CMD_NOT_FOUND);

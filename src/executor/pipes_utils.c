@@ -6,12 +6,12 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 20:17:31 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:36:21 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/executor.h"
-#include "../include/utils.h"
+#include "executor.h"
+#include "utils.h"
 
 void	close_and_free_pipes(t_executor *executor)
 {

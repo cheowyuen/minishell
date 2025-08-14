@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 20:52:14 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/13 19:36:00 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,19 @@ typedef struct s_executor
 
 // Functions command execution
 int					exec_cmd(t_executor *executor, t_command *command);
-int					exec_builtin(t_executor *executor, t_command *command);
+int					exec_builtin(t_executor *executor);
+int					exec_builtin_with_redirection(t_executor *executor,
+						t_command *command);
 int					exec_pipe(t_executor *executor, t_command *command);
 void				exec_external_command(t_executor *executor,
+						t_command *command);
+
+// Execute single command
+int					exec_single_command(t_executor *executor,
+						t_command *command);
+void				restore_fds(int saved_stdin, int saved_stdout);
+int					setup_single_redirection(t_command *command);
+int					exec_single_external(t_executor *executor,
 						t_command *command);
 
 // Heredoc management
@@ -80,12 +90,5 @@ int					close_children_process(t_executor *executor);
 // Executor memory management
 void				free_environment(t_executor *executor);
 void				free_executor(t_executor *executor);
-
-// Signal handling for execution contexts
-void				sigint_handler_prompt(int sig);
-void				setup_signals_prompt(void);
-void				setup_signals_child(void);
-void				setup_signals_heredoc(void);
-void				setup_signals_ignore(void);
 
 #endif

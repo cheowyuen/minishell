@@ -6,11 +6,11 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 19:38:44 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:36:34 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/executor.h"
+#include "executor.h"
 
 int	setup_input_redirection(t_command *command)
 {
@@ -43,8 +43,7 @@ int	setup_output_redirection(t_command *command)
 
 	if (!command || !command->outfile)
 		return (SUCCESS);
-	flags = command->append;
-	if (flags)
+	if (command->append)
 		flags = O_WRONLY | O_CREAT | O_APPEND;
 	else
 		flags = O_WRONLY | O_CREAT | O_TRUNC;

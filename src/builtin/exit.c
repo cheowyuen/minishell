@@ -6,16 +6,21 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 19:26:20 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:34:31 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/builtin.h"
+#include "builtin.h"
 
-void	builtin_exit(t_executor *executor, t_command *command)
+void	builtin_exit(t_executor *executor)
 {
-	if (command && command->argv)
-		free_split(command->argv);
+	if (!executor || !executor->commands || !executor->commands->argv)
+	{
+		ft_dprintf(STDERR_FILENO, "exit: no command to exit from\n");
+		return ;
+	}
+	if (executor->commands && executor->commands->argv)
+		free_split(executor->commands->argv);
 	if (executor->env_list)
 		free_environment(executor);
 	if (executor)
@@ -27,8 +32,7 @@ void	builtin_exit(t_executor *executor, t_command *command)
 	}
 	else
 	{
-		ft_dprintf(STDOUT_FILENO, "Exiting minishell with code %d\n",
-			executor->last_exit_code);
+		ft_dprintf(STDOUT_FILENO, "exit\n", executor->last_exit_code);
 	}
 	exit(executor->last_exit_code);
 }

@@ -6,12 +6,12 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 10:58:28 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/12 11:35:01 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:33:46 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/builtin.h"
-#include "../include/environment.h"
+#include "builtin.h"
+#include "environment.h"
 
 void	cleanup_and_set_failure(t_executor *executor, int need_free,
 		char *target_copy)

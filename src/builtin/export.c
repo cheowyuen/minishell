@@ -6,37 +6,37 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:46:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/09 10:41:53 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:34:46 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/builtin.h"
+#include "builtin.h"
 
 static int	handle_export_argument(t_executor *executor, const char *arg,
 				char *equal_sign);
 static int	mark_as_exported(t_executor *executor, const char *arg);
 static int	check_valid_identifier(char *arg, char *equal_sign, char *key);
-static void	list_exported_variables(t_executor *executor, t_command *command);
+static void	list_exported_variables(t_executor *executor);
 
-void	builtin_export(t_executor *executor, t_command *command)
+void	builtin_export(t_executor *executor)
 {
 	int		i;
 	char	*equal_sign;
 	char	*key;
 
 	i = 1;
-	list_exported_variables(executor, command);
-	while (command->argv[i])
+	list_exported_variables(executor);
+	while (executor->commands->argv[i])
 	{
-		equal_sign = ft_strchr(command->argv[i], '=');
+		equal_sign = ft_strchr(executor->commands->argv[i], '=');
 		key = NULL;
-		if (check_valid_identifier(command->argv[i], equal_sign,
+		if (check_valid_identifier(executor->commands->argv[i], equal_sign,
 				key) == FAILURE)
 		{
 			executor->last_exit_code = FAILURE;
 			return ;
 		}
-		if (handle_export_argument(executor, command->argv[i],
+		if (handle_export_argument(executor, executor->commands->argv[i],
 				equal_sign) == FAILURE)
 		{
 			executor->last_exit_code = FAILURE;
@@ -64,9 +64,9 @@ static int	check_valid_identifier(char *arg, char *equal_sign, char *key)
 	if (!valid)
 	{
 		if (key)
-			ft_dprintf(2, "export: `%s': not a valid identifier\n", key);
+			ft_dprintf(2, "bash: export: `%s': not a valid identifier\n", key);
 		else
-			ft_dprintf(2, "export: `%s': not a valid identifier\n", arg);
+			ft_dprintf(2, "bash: export: `%s': not a valid identifier\n", arg);
 		if (key)
 			free(key);
 		return (FAILURE);
@@ -83,7 +83,7 @@ static int	handle_export_argument(t_executor *executor, const char *arg,
 	{
 		if (add_env_variable(executor, arg) == FAILURE)
 		{
-			print_error_stderr("export: failed to add env variable\n");
+			print_error_stderr("bash: export: failed to add env variable\n");
 			return (FAILURE);
 		}
 	}
@@ -109,15 +109,15 @@ static int	mark_as_exported(t_executor *executor, const char *arg)
 		}
 		env = env->next;
 	}
-	return (add_env_to_list(executor, arg, NULL));
+	return (add_var_to_list(executor, arg, NULL));
 }
 
-static void	list_exported_variables(t_executor *executor, t_command *command)
+static void	list_exported_variables(t_executor *executor)
 {
 	t_env	*env;
 
 	env = executor->env_list;
-	if (!command->argv[1])
+	if (!executor->commands->argv[1])
 	{
 		while (env)
 		{

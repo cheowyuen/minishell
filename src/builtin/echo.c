@@ -6,21 +6,21 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:46:42 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/06 12:12:35 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:34:20 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/builtin.h"
+#include "builtin.h"
 
 static int	parse_echo_flags(char **args, int *newline);
 
-void	builtin_echo(t_executor *executor, t_command *command)
+void	builtin_echo(t_executor *executor)
 {
 	char	**args;
 	int		newline;
 	int		i;
 
-	args = command->argv;
+	args = executor->commands->argv;
 	i = parse_echo_flags(args, &newline);
 	while (args[i])
 	{

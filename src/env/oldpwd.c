@@ -6,17 +6,17 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 09:00:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 15:42:30 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:35:34 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/builtin.h"
+#include "builtin.h"
 
 int	set_oldpwd(t_executor *executor)
 {
 	char	*oldpwd;
 
-	oldpwd = get_env_value(executor, "OLDPWD");
+	oldpwd = get_env_var(executor, "OLDPWD");
 	if (oldpwd)
 	{
 		printf("%s\n", oldpwd);
@@ -41,7 +41,7 @@ int	update_oldpwd(t_executor *executor)
 		perror("getcwd");
 		return (FAILURE);
 	}
-	if (add_env_to_list(executor, "OLDPWD", current_pwd) == FAILURE)
+	if (add_var_to_list(executor, "OLDPWD", current_pwd) == FAILURE)
 	{
 		free(current_pwd);
 		return (FAILURE);
@@ -60,7 +60,7 @@ int	update_pwd(t_executor *executor)
 		perror("getcwd");
 		return (FAILURE);
 	}
-	if (add_env_to_list(executor, "PWD", current_pwd) == FAILURE)
+	if (add_var_to_list(executor, "PWD", current_pwd) == FAILURE)
 	{
 		free(current_pwd);
 		return (FAILURE);

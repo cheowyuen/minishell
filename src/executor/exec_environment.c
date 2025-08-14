@@ -6,11 +6,11 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:31 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/09 15:33:45 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:35:52 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/builtin.h"
+#include "builtin.h"
 
 static int	count_exported_variables(t_env *env_list);
 static int	add_env_to_array(char **env_array, t_env *env, int i);

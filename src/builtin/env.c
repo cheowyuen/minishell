@@ -6,20 +6,19 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:08 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/09 15:23:21 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:34:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/builtin.h"
+#include "builtin.h"
 
-void	builtin_env(t_executor *executor, t_command *command)
+void	builtin_env(t_executor *executor)
 {
 	t_env	*env;
 
-	if (command->argv[1])
+	if (executor->commands->argv[1])
 	{
-		print_error_stderr(CLR_RED "env: run with no options or arguments\n"
-			RESET);
+		print_error_stderr("env: run with no options or arguments\n");
 		executor->last_exit_code = FAILURE;
 		return ;
 	}

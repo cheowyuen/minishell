@@ -6,14 +6,14 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 14:12:03 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 19:19:14 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:34:40 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/builtin.h"
-#include "../include/environment.h"
+#include "builtin.h"
+#include "environment.h"
 
-static int	alloc_and_add_env(t_executor *executor, const char *key,
+static int	alloc_and_add_var(t_executor *executor, const char *key,
 				const char *value);
 
 int	is_valid_identifier(const char *str)
@@ -29,7 +29,7 @@ int	is_valid_identifier(const char *str)
 	return (1);
 }
 
-char	*get_env_value(t_executor *executor, const char *key)
+char	*get_env_var(t_executor *executor, const char *key)
 {
 	t_env	*env;
 
@@ -63,7 +63,7 @@ int	add_env_variable(t_executor *executor, const char *var)
 		free(value);
 		return (FAILURE);
 	}
-	if (add_env_to_list(executor, key, value) == FAILURE)
+	if (add_var_to_list(executor, key, value) == FAILURE)
 	{
 		free(key);
 		free(value);
@@ -74,7 +74,7 @@ int	add_env_variable(t_executor *executor, const char *var)
 	return (SUCCESS);
 }
 
-int	add_env_to_list(t_executor *executor, const char *key, const char *value)
+int	add_var_to_list(t_executor *executor, const char *key, const char *value)
 {
 	t_env	*env;
 	char	*new_val;
@@ -97,10 +97,10 @@ int	add_env_to_list(t_executor *executor, const char *key, const char *value)
 		}
 		env = env->next;
 	}
-	return (alloc_and_add_env(executor, key, value));
+	return (alloc_and_add_var(executor, key, value));
 }
 
-static int	alloc_and_add_env(t_executor *executor, const char *key,
+static int	alloc_and_add_var(t_executor *executor, const char *key,
 		const char *value)
 {
 	t_env	*new_env;

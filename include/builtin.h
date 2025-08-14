@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:49:22 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 14:53:36 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:46:43 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,25 @@
 typedef struct s_builtin_entry
 {
 	char	*name;
-	void	(*func)(t_executor *executor, t_command *command);
+	void	(*func)(t_executor *executor);
 }			t_builtin_entry;
 
 // Builtin command functions
-void		builtin_echo(t_executor *executor, t_command *command);
-void		builtin_pwd(t_executor *executor, t_command *command);
-void		builtin_cd(t_executor *executor, t_command *command);
-void		builtin_export(t_executor *executor, t_command *command);
-void		builtin_unset(t_executor *executor, t_command *command);
-void		builtin_env(t_executor *executor, t_command *command);
-void		builtin_exit(t_executor *executor, t_command *command);
+void		builtin_echo(t_executor *executor);
+void		builtin_pwd(t_executor *executor);
+void		builtin_cd(t_executor *executor);
+void		builtin_export(t_executor *executor);
+void		builtin_unset(t_executor *executor);
+void		builtin_env(t_executor *executor);
+void		builtin_exit(t_executor *executor);
 
 // Export utility functions
 int			add_env_variable(t_executor *executor, const char *var);
-int			is_valid_identifier(const char *str);
-int			add_env_to_list(t_executor *executor, const char *key,
+int			add_var_to_list(t_executor *executor, const char *key,
 				const char *value);
+int			is_valid_identifier(const char *str);
 int			is_env_key_set(t_executor *executor, const char *key);
-char		*get_env_value(t_executor *executor, const char *key);
+char		*get_env_var(t_executor *executor, const char *key);
 
 // Cd functions
 char		*handle_cd_dash(t_executor *executor);

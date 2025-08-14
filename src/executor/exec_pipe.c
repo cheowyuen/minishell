@@ -6,12 +6,12 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 20:18:43 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:36:02 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/executor.h"
-#include "../include/utils.h"
+#include "executor.h"
+#include "utils.h"
 
 static int	create_pipes(t_executor *executor, int count);
 static int	fork_processes(t_executor *executor, t_command *command);
@@ -112,7 +112,8 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 	close_all_pipes_children(executor);
 	if (command->is_builtin)
 	{
-		exec_builtin(executor, command);
+		executor->commands = command;
+		exec_builtin(executor);
 		exit(executor->last_exit_code);
 	}
 	else

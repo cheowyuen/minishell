@@ -6,16 +6,11 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 20:54:56 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:35:47 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/executor.h"
-
-static int	exec_single_command(t_executor *executor, t_command *command);
-static int	setup_single_redirection(t_command *command);
-static int	exec_single_external(t_executor *executor, t_command *command);
-static void	restore_fds(int saved_stdin, int saved_stdout);
+#include "executor.h"
 
 int	exec_cmd(t_executor *executor, t_command *command)
 {
@@ -26,33 +21,16 @@ int	exec_cmd(t_executor *executor, t_command *command)
 		return (exec_pipe(executor, command));
 	else
 		return (exec_single_command(executor, command));
-	return (SUCCESS);
 }
 
-static int	exec_single_command(t_executor *executor, t_command *command)
+int	exec_single_command(t_executor *executor, t_command *command)
 {
-	int	result;
-	int	saved_stdin;
-	int	saved_stdout;
-
-	if (!executor || !command)
-		return (FAILURE);
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
-	if (setup_single_redirection(command) == FAILURE)
-	{
-		restore_fds(saved_stdin, saved_stdout);
-		return (FAILURE);
-	}
 	if (command->is_builtin)
-		result = exec_builtin(executor, command);
-	else
-		result = exec_single_external(executor, command);
-	restore_fds(saved_stdin, saved_stdout);
-	return (result);
+		return (exec_builtin_with_redirection(executor, command));
+	return (exec_single_external(executor, command));
 }
 
-static int	setup_single_redirection(t_command *command)
+int	setup_single_redirection(t_command *command)
 {
 	if (command->infile || command->has_heredoc)
 	{
@@ -67,36 +45,45 @@ static int	setup_single_redirection(t_command *command)
 	return (SUCCESS);
 }
 
-static int	exec_single_external(t_executor *executor, t_command *command)
+int	exec_single_external(t_executor *executor, t_command *command)
 {
 	pid_t	pid;
 	int		status;
 
 	pid = fork();
 	if (pid == 0)
+	{
+		if (setup_single_redirection(command) == FAILURE)
+			exit(EXIT_FAILURE);
 		exec_external_command(executor, command);
+		exit(127);
+	}
 	else if (pid > 0)
 	{
-		waitpid(pid, &status, 0);
+		if (waitpid(pid, &status, 0) < 0)
+		{
+			perror("waitpid");
+			return (FAILURE);
+		}
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
-		else if (WIFSIGNALED(status))
+		if (WIFSIGNALED(status))
 			return (EXIT_SIGNAL_BASE + WTERMSIG(status));
 	}
-	else
-	{
-		perror("fork");
-		return (FAILURE);
-	}
-	return (SUCCESS);
+	perror("fork");
+	return (FAILURE);
 }
 
-static void	restore_fds(int saved_stdin, int saved_stdout)
+void	restore_fds(int saved_stdin, int saved_stdout)
 {
 	if (saved_stdin >= 0)
+	{
 		dup2(saved_stdin, STDIN_FILENO);
+		close(saved_stdin);
+	}
 	if (saved_stdout >= 0)
+	{
 		dup2(saved_stdout, STDOUT_FILENO);
-	close(saved_stdin);
-	close(saved_stdout);
+		close(saved_stdout);
+	}
 }

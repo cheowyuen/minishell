@@ -6,16 +6,16 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:02 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/11 10:53:00 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:35:01 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/builtin.h"
+#include "builtin.h"
 
 static int	remove_env_variable(t_executor *executor, const char *key);
 static int	is_valid_unset_identifier(const char *str);
 
-void	builtin_unset(t_executor *executor, t_command *command)
+void	builtin_unset(t_executor *executor)
 {
 	int		i;
 	char	*key;
@@ -23,9 +23,9 @@ void	builtin_unset(t_executor *executor, t_command *command)
 
 	had_invalid = 0;
 	i = 1;
-	while (command->argv[i])
+	while (executor->commands->argv[i])
 	{
-		key = command->argv[i];
+		key = executor->commands->argv[i];
 		if (!is_valid_unset_identifier(key))
 		{
 			ft_dprintf(STDERR_FILENO, "unset: %s: invalid parameter name\n",
