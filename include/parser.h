@@ -6,14 +6,14 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 10:26:54 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 10:55:39 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "executor.h"
+typedef struct s_executor t_executor;
 
 typedef enum e_quote_type
 {

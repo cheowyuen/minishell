@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/15 10:04:24 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 10:55:20 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define EXECUTOR_H
 
 # include "minishell.h"
+# include "parser.h"
 
 // System call error codes
 # define PIPE_ERROR -1
@@ -28,8 +29,6 @@
 // Exit codes
 # define EXIT_CMD_NOT_FOUND 127
 # define EXIT_SIGNAL_BASE 128
-
-typedef struct s_command t_command;
 
 // Environment variable structure to save key-value pairs
 typedef struct s_env
