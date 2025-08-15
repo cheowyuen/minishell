@@ -6,14 +6,14 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 09:14:29 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 10:13:03 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/parser.h"
+#include "minishell.h"
+#include "parser.h"
 
-//for debugging
+// for debugging
 void print_commands(t_command *cmd)
 {
     int i;
@@ -139,7 +139,7 @@ int	parse_commands(t_token *tokens)
 		return (free_tokens(&tokens));
 	if (process_tokens(tokens, new_command) < 0)
 		return (-1);
-	//for debugging
+	// for debugging
 	print_commands(new_command);
 	return (0);
 }

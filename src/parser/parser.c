@@ -6,12 +6,12 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 09:30:58 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 10:13:32 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/parser.h"
+#include "minishell.h"
+#include "parser.h"
 
 static int	parse_word(char *input, int *i, t_token **tokens)
 {

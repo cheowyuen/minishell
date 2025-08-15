@@ -6,12 +6,12 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 08:47:32 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 09:11:16 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 10:12:53 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/parser.h"
+#include "minishell.h"
+#include "parser.h"
 
 int	count_tokens(t_token *tokens)
 {

@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:51:48 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/15 09:28:58 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 09:48:17 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,46 +44,5 @@
 
 // Prompt definition
 # define PROMPT "minishell$ "
-
-typedef enum e_quote_type
-{
-	NONE,
-	SINGLE,
-	DOUBLE,
-	DOUBLE_ENV
-}	t_quote_type;
-
-typedef struct s_token
-{
-	char			*token;
-	t_quote_type	quote_type;
-	bool			has_dollar_sign;
-	struct s_token	*next;
-}	t_token;
-
-typedef struct s_var
-{
-	char	*value;
-	bool	has_braces;
-}	t_var;
-
-typedef struct s_command
-{
-	char				**argv;
-	char				*infile;
-	char				*outfile;
-	int					append;
-	int					has_heredoc;
-	char				*heredoc_delim;
-	int					is_builtin;
-	int					is_last;
-	int					pipe_out;
-	struct s_command	*next;	
-}	t_command;
-
-typedef struct s_shell
-{
-	int	exit_code;
-}	t_shell;
 
 #endif

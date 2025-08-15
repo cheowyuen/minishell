@@ -6,13 +6,14 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 09:13:52 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 10:30:16 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/parser.h"
-#include "../../include/executor.h"
+#include "minishell.h"
+#include "parser.h"
+#include "executor.h"
+#include "builtin.h"
 
 static int	assign_new_token(t_token *tokens, char	*tmp, char	*right)
 {
@@ -64,7 +65,7 @@ static int	get_value(t_token *tokens, int i, int len, t_var var)
 		variable = ft_strndup(&tokens->token[i + 1], len - 1);
 		if (!variable)
 			return (free_tokens(&tokens));
-		var.value = getenv(variable);
+		var.value = get_env_var(var.executor, variable);
 		free(variable);
 		if (!var.value)
 			var.value = ft_strdup("");
@@ -74,13 +75,14 @@ static int	get_value(t_token *tokens, int i, int len, t_var var)
 	return (join_token(tokens, i, len, var));
 }
 
-static int	get_var(t_token *tokens, int i, t_shell *shell)
+static int	get_var(t_token *tokens, int i, t_shell *shell, t_executor *executor)
 {
 	t_var	var;
 	int		len;
 
 	var.has_braces = false;
 	var.value = NULL;
+	var.executor = executor;
 	if (tokens->token[i + 1] == '{')
 	{
 		var.has_braces = true;
@@ -100,7 +102,7 @@ static int	get_var(t_token *tokens, int i, t_shell *shell)
 	return (get_value(tokens, i, len, var));
 }
 
-int	expand_env_var(t_token *tokens, t_shell *shell)
+int	expand_env_var(t_token *tokens, t_shell *shell, t_executor *executor)
 {
 	int		i;
 
@@ -113,7 +115,7 @@ int	expand_env_var(t_token *tokens, t_shell *shell)
 			{
 				if (tokens->token[i] == '$')
 				{
-					if (get_var(tokens, i, shell))
+					if (get_var(tokens, i, shell, executor))
 						return (-1);
 					i = 0;
 				}

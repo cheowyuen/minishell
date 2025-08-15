@@ -6,12 +6,12 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:51:08 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 09:08:55 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 10:13:26 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/parser.h"
+#include "minishell.h"
+#include "parser.h"
 
 char	*ft_strndup(const char *src, int n)
 {
