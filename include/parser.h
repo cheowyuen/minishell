@@ -3,15 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/09 11:08:31 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/13 20:44:18 by lsurco-t         ###   ########.fr       */
+/*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
+/*   Updated: 2025/08/15 10:55:39 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
+
+typedef struct s_executor t_executor;
+
+typedef enum e_quote_type
+{
+	NONE,
+	SINGLE,
+	DOUBLE,
+	DOUBLE_ENV
+}	t_quote_type;
+
+typedef struct s_token
+{
+	char			*token;
+	t_quote_type	quote_type;
+	bool			has_dollar_sign;
+	struct s_token	*next;
+}	t_token;
+
+typedef struct s_var
+{
+	char		*value;
+	bool		has_braces;
+	t_executor	*executor;
+}	t_var;
 
 typedef struct s_command
 {
@@ -21,14 +46,36 @@ typedef struct s_command
 	int					append;
 	int					has_heredoc;
 	char				*heredoc_delim;
-	int					heredoc_expand;
 	int					is_builtin;
 	int					is_last;
 	int					pipe_out;
-	struct s_command	*next;
+	struct s_command	*next;	
+}	t_command;
 
-}						t_command;
+typedef struct s_shell
+{
+	int	exit_code;
+}	t_shell;
 
-int						is_builtin_command(const char *cmd);
+int			parse_input(char *input, t_token **tokens);
+int			free_tokens_input(t_token **tokens, char *input);
+int			add_token(t_token **tokens, t_quote_type quote_type,
+				char *content, int len);
+int			is_special(char c);
+int			is_quote(char c);
+int			is_space(char c);
+void		ft_lstclear(t_token **lst);
+char		*ft_strndup(const char *src, int n);
+void		ft_lstadd_back(t_token **lst, t_token *new);
+t_token		*ft_lstnew(int quote_type, char *content, int len);
+int			expand_env_var(t_token *tokens, t_shell *shell, t_executor *executor);
+int			free_tokens(t_token **tokens);
+int			parse_commands(t_token *tokens);
+int			free_tokens_commands(t_token **tokens, t_command **commands);
+void		set_outfile(t_token **tokens, t_command *current, int append);
+void		set_infile(t_token **tokens, t_command *current);
+int			is_builtin(char *cmd);
+t_command	*create_command(void);
+int			count_tokens(t_token *tokens);
 
 #endif

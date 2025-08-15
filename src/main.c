@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:23:16 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/15 10:21:41 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 static void	initial_setup(t_executor *executor, t_command *command,
 				char **envp);
-static void	run_shell_loop(t_executor *executor);
+static int	run_shell_loop(t_executor *executor);
 static void	cleanup_ending(t_executor *executor);
 
 int	main(int argc, char **argv, char **envp)
@@ -29,7 +29,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	initial_setup(&executor, &command, envp);
-	run_shell_loop(&executor);
+	if (run_shell_loop(&executor) < 0)
+		return (1);
 	rl_clear_history();
 	return (0);
 }
@@ -43,10 +44,35 @@ static void	initial_setup(t_executor *executor, t_command *command, char **envp)
 	printf(BOLD CLR_BLUE "Welcome to Minishell!\n" RESET);
 }
 
-static void	run_shell_loop(t_executor *executor)
+static int	parse(char *input, t_token *tokens, t_executor *executor)
+{
+	t_shell	shell;
+	
+	add_history(input);
+	if (parse_input(input, &tokens) < 0)
+		return (-1);
+	free(input);
+	if (expand_env_var(tokens, &shell, executor) < 0)
+		return (-1);
+	if (parse_commands(tokens) < 0)
+		return (-1);
+	// for debugging
+	t_token *tmp = tokens;
+	printf("Tokens:\n");
+	while (tmp)
+	{
+		printf("  %s\n", tmp->token);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+static int	run_shell_loop(t_executor *executor)
 {
 	char	*input;
+	t_token	*tokens;
 
+	tokens = NULL;
 	while (1)
 	{
 		input = readline(CLR_GREEN PROMPT RESET);
@@ -63,9 +89,11 @@ static void	run_shell_loop(t_executor *executor)
 			continue ;
 		}
 		if (*input && ft_strlen(input) > 0 && !is_only_space_or_tab(input))
-			add_history(input);
+			if (parse(input, tokens, executor) < 0)
+				return (-1);
 		free(input);
 	}
+	return (0);
 }
 
 static void	cleanup_ending(t_executor *executor)
