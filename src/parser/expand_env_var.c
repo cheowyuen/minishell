@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/14 14:14:40 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 09:13:52 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ static int	assign_new_token(t_token *tokens, char	*tmp, char	*right)
 	return (0);
 }
 
-static int	get_value(t_token *tokens, int i, int len, t_var var)
+static int	join_token(t_token *tokens, int i, int len, t_var var)
 {
 	int		braces_len;
 	char	*tmp;
-	char	*left;          
+	char	*left;
 	char	*right;
 
 	braces_len = 0;
@@ -45,38 +45,21 @@ static int	get_value(t_token *tokens, int i, int len, t_var var)
 	free(left);
 	if (!tmp)
 		return (free_tokens(&tokens));
-	right =  ft_substr(tokens->token, i + len + var.has_braces, ft_strlen(tokens->token) - i - len);
+	right = ft_substr(tokens->token, i + len + var.has_braces,
+			ft_strlen(tokens->token) - i - len);
 	if (!right)
 		return (free_tokens(&tokens));
 	return (assign_new_token(tokens, tmp, right));
 }
 
-static int	get_var(t_token *tokens, int i, t_shell *shell, t_env **env)
+static int	get_value(t_token *tokens, int i, int len, t_var var)
 {
-	t_var	var;
-	int		len;
 	char	*variable;
-	
-	var.has_braces = false;
-	if (tokens->token[i + 1] == '{')
+
+	if (tokens->token[i + 1] != '?')
 	{
-		var.has_braces = true;
-		i++;
-	}
-	if (tokens->token[i + 1] == '?' )
-	{
-		if (var.has_braces && ft_strncmp(&tokens->token[i], "{?}", 4) != 0)
-			return (free_tokens(&tokens));
-		len = 2;
-		var.value = ft_itoa(shell->exit_code);
-		if (!var.value)
-			return (free_tokens(&tokens));
-	}
-	else
-	{
-		len = 1;
 		while (tokens->token[i + len] && (ft_isalnum(tokens->token[i + len])
-			|| tokens->token[i + len] == '_'))
+				|| tokens->token[i + len] == '_'))
 			len++;
 		variable = ft_strndup(&tokens->token[i + 1], len - 1);
 		if (!variable)
@@ -88,13 +71,39 @@ static int	get_var(t_token *tokens, int i, t_shell *shell, t_env **env)
 		if (!var.value)
 			return (free_tokens(&tokens));
 	}
+	return (join_token(tokens, i, len, var));
+}
+
+static int	get_var(t_token *tokens, int i, t_shell *shell)
+{
+	t_var	var;
+	int		len;
+
+	var.has_braces = false;
+	var.value = NULL;
+	if (tokens->token[i + 1] == '{')
+	{
+		var.has_braces = true;
+		i++;
+	}
+	if (tokens->token[i + 1] == '?')
+	{
+		if (var.has_braces && ft_strncmp(&tokens->token[i], "{?}", 4) != 0)
+			return (free_tokens(&tokens));
+		len = 2;
+		var.value = ft_itoa(shell->exit_code);
+		if (!var.value)
+			return (free_tokens(&tokens));
+	}
+	else
+		len = 1;
 	return (get_value(tokens, i, len, var));
 }
 
-int	expand_env_var(t_token *tokens, t_shell *shell, t_env **env)
+int	expand_env_var(t_token *tokens, t_shell *shell)
 {
 	int		i;
-	
+
 	while (tokens)
 	{
 		if (tokens->quote_type == DOUBLE_ENV)
@@ -104,7 +113,7 @@ int	expand_env_var(t_token *tokens, t_shell *shell, t_env **env)
 			{
 				if (tokens->token[i] == '$')
 				{
-					if (get_var(tokens, i, shell, env))
+					if (get_var(tokens, i, shell))
 						return (-1);
 					i = 0;
 				}

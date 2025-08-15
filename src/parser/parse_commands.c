@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/14 08:42:11 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 09:14:29 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,122 +53,77 @@ void print_commands(t_command *cmd)
     }
 }
 
-static int	is_builtin(char *cmd)
+static int	handle_commands(t_token **tokens, t_command *current
+	, t_command *commands)
 {
-	char	*builtins[8];
-	int		i;
+	int			count;
+	int			i;
 
-	if (!cmd)
-		return (0);
-	builtins[0] = "echo";
-	builtins[1] = "cd";
-	builtins[2] = "pwd";
-	builtins[3] = "export";
-	builtins[4] = "unset";
-	builtins[5] = "env";
-	builtins[6] = "exit";
-	builtins[7] = NULL;
+	count = count_tokens(*tokens);
+	current->argv = ft_calloc(count + 1, sizeof(char *));
+	if (!current->argv)
+		return (free_tokens_commands(tokens, &commands));
 	i = 0;
-	while (builtins[i])
+	while (i < count)
 	{
-		if (ft_strncmp(cmd, builtins[i], ft_strlen(builtins[i]) + 1) == 0)
-			return (1);
+		current->argv[i] = ft_strdup((*tokens)->token);
+		if (!current->argv[i])
+			return (free_tokens_commands(tokens, &commands));
+		if (i == 0 && is_builtin((*tokens)->token))
+			current->is_builtin = 1;
+		*tokens = (*tokens)->next;
 		i++;
 	}
+	current->argv[i] = NULL;
 	return (0);
 }
 
-static t_command	*create_command()
+static int	handle_special(t_token **tokens, t_command **current
+	, t_command *commands)
 {
 	t_command	*new_command;
 
-	new_command = malloc(sizeof(t_command));
-	if (!new_command)
-		return (NULL);
-	new_command->argv = NULL;
-	new_command->infile = NULL;
-	new_command->outfile = NULL;
-	new_command->append = 0;
-	new_command->has_heredoc = 0;
-	new_command->heredoc_delim = NULL;
-	new_command->is_builtin = 0;
-	new_command->is_last = 0;
-	new_command->pipe_out = 0;
-	new_command->next = NULL;
-	return (new_command);
+	if (ft_strcmp((*tokens)->token, "<<") == 0)
+	{
+		*tokens = (*tokens)->next;
+		(*current)->has_heredoc = 1;
+		(*current)->heredoc_delim = (*tokens)->token;
+	}
+	else if (ft_strcmp((*tokens)->token, ">>") == 0)
+		set_outfile(tokens, *current, 1);
+	else if ((*tokens)->token[0] == '<')
+		set_infile(tokens, *current);
+	else if ((*tokens)->token[0] == '>')
+		set_outfile(tokens, *current, 0);
+	else
+	{
+		(*current)->pipe_out = 1;
+		new_command = create_command();
+		if (!new_command)
+			return (free_tokens_commands(tokens, &commands));
+		(*current)->next = new_command;
+		*current = (*current)->next;
+	}
+	*tokens = (*tokens)->next;
+	return (0);
 }
 
 static int	process_tokens(t_token *tokens, t_command *commands)
 {
 	t_command	*current;
-	t_command	*new_command;
-	t_token		*temp;
-	int			count;
-	int			i;
 
 	current = commands;
 	while (tokens)
 	{
 		if (is_special(tokens->token[0]))
 		{
-			if (ft_strcmp(tokens->token, "<<") == 0)
-			{
-				tokens = tokens->next;
-				current->has_heredoc = 1;
-				current->heredoc_delim = tokens->token;
-			}
-			else if (ft_strcmp(tokens->token, ">>") == 0)
-			{
-				tokens = tokens->next;
-				current->outfile = tokens->token;
-				current->append = 1;
-			}
-			else if (tokens->token[0] == '<')
-			{
-				tokens = tokens->next;
-				current->infile = tokens->token;
-			}
-			else if (tokens->token[0] == '>')
-			{
-				tokens = tokens->next;
-				current->outfile = tokens->token;
-				current->append = 0;
-			}
-			else 
-			{
-				current->pipe_out = 1;
-				new_command = create_command();
-				if (!new_command)
-					return (free_tokens_commands(&tokens, &commands));
-				current->next = new_command;
-				current = current->next;
-			}
-			tokens = tokens->next;
+			if (handle_special(&tokens, &current, commands) < 0)
+				return (-1);
 		}
 		else
 		{
-			count = 0;
-			temp = tokens;
-			while (temp && !is_special(temp->token[0]))
-			{
-				count++;
-				temp = temp->next;
-			}
-			current->argv = ft_calloc(count + 1, sizeof(char *));
-			if (!current->argv)
-				return (free_tokens_commands(&tokens, &commands));
-			i = 0;
-			while (i < count)
-			{
-				current->argv[i] = ft_strdup(tokens->token);
-				if (!current->argv[i])
-					return (free_tokens_commands(&tokens, &commands));
-				if (i == 0 && is_builtin(tokens->token))
-						current->is_builtin = 1;
-				tokens = tokens->next;
-				i++;
-			}
-			current->argv[i] = NULL;
+			if (handle_commands(&tokens, current, commands) < 0)
+				return (-1);
 		}
 	}
 	current->is_last = 1;

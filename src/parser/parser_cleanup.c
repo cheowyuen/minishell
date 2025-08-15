@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:30:25 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/14 08:23:07 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 09:10:08 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	free_tokens_commands(t_token **tokens, t_command **commands)
 		{
 			free(temp->argv[i]);
 			i++;
-		}	
+		}
 		free(temp->argv);
 		free(temp);
 	}

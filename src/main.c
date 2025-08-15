@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 14:34:08 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 08:14:05 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,9 @@ int main(void)
     char 	*input;
 	t_token	*tokens;
 	t_shell	shell;
-	t_env	*env;
 
 	printf(BOLD CLR_BLUE"Welcome to Minishell!\n"RESET);
 	tokens = NULL;
-	env = NULL;
 	//for debugging
 	shell.exit_code = 0;
 	signal(SIGINT, handle_signal);
@@ -54,7 +52,7 @@ int main(void)
 			if (parse_input(input, &tokens) < 0)
 				return (1);
 			free(input);
-			if (expand_env_var(tokens, &shell, &env) < 0)
+			if (expand_env_var(tokens, &shell) < 0)
 				return (1);
 			if (parse_commands(tokens) < 0)
 				return (1);
@@ -65,13 +63,6 @@ int main(void)
 			{
 				printf("  %s\n", tmp->token);
 				tmp = tmp->next;
-			}
-			t_env *tmp_env = env;
-			printf("Env:\n");
-			while (tmp_env)
-			{
-				printf("  Key: %s Value: %s Exported: %d\n", tmp_env->key, tmp_env->value, tmp_env->exported);
-				tmp_env = tmp_env->next;
 			}
 		}
 		free_tokens(&tokens);

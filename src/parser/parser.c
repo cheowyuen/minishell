@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/09 14:34:03 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 09:08:44 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	parse_word(char *input, int *i, t_token **tokens)
 static int	parse_special(char *input, int *i, t_token **tokens)
 {
 	int				j;
- 
+
 	j = 1;
 	if (input[*i + 1] == input[*i])
 		j = 2;
@@ -64,7 +64,7 @@ static int	parse_quote(char *input, int *i, t_token **tokens)
 		quote_type = DOUBLE;
 	if (add_token(tokens, quote_type, &input[*i + 1], len - 1) < 0)
 		return (free_tokens_input(tokens, input));
-	*i += len + 1; 
+	*i += len + 1;
 	return (0);
 }
 
@@ -80,7 +80,7 @@ static int	handle_parsing(char *input, int *i, t_token **tokens)
 		if (parse_special(input, i, tokens) < 0)
 			return (-1);
 	}
-	else 
+	else
 	{
 		if (parse_word(input, i, tokens) < 0)
 			return (-1);

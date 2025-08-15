@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:51:08 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/09 16:45:18 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 09:08:55 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_strndup(const char *src, int n)
 	i = 0;
 	while (i < n)
 	{
-		duplicate[i] = src[i]; 
+		duplicate[i] = src[i];
 		i++;
 	}
 	duplicate[i] = '\0';
@@ -40,7 +40,7 @@ int	add_token(t_token **tokens, t_quote_type quote_type, char *content, int len)
 		return (-1);
 	ft_lstadd_back(tokens, new_token);
 	return (0);
-} 
+}
 
 int	is_special(char c)
 {
