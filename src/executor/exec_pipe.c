@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:36:02 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/15 11:48:12 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "utils.h"
+#include "signals.h"
 
 static int	create_pipes(t_executor *executor, int count);
 static int	fork_processes(t_executor *executor, t_command *command);
@@ -78,6 +79,7 @@ static int	fork_processes(t_executor *executor, t_command *command)
 {
 	pid_t	pid;
 	int		i;
+	int     child_status;
 
 	i = 0;
 	while (command)
@@ -89,10 +91,35 @@ static int	fork_processes(t_executor *executor, t_command *command)
 			return (FAILURE);
 		}
 		if (pid == 0)
+		{
+			setup_signals_child();
 			handle_child_process(executor, command, i);
+			exit(EXIT_FAILURE);
+		}
 		else
 		{
 			executor->pids[i] = pid;
+			while (1)
+			{
+				int ret = waitpid(pid, &child_status, 0);
+				if (ret > 0)
+					break; 
+				if (ret < 0)
+				{
+					if (errno == EINTR && g_signal_status == SIGNAL_INT)
+					{
+						kill(pid, SIGINT);
+						g_signal_status = 0;
+						continue ;
+					}
+					else if (errno != ECHILD)
+					{
+						perror("waitpid");
+						return (FAILURE);
+					}
+					break;
+				}
+			}
 			i++;
 			command = command->next;
 		}
