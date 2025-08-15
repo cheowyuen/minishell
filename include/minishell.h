@@ -6,17 +6,20 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:51:48 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:55:08 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 09:28:58 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+// Common includes throughout the project
 # include "../libft/libft.h"
 # include <errno.h>
+# include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -25,9 +28,7 @@
 # include <unistd.h>
 # include <stdbool.h>
 
-# define FAILURE 1
-# define SUCCESS 0
-
+// Color definitions
 # define CLR_RED "\033[31m"
 # define CLR_GREEN "\033[32m"
 # define CLR_YELLOW "\033[33m"
@@ -37,6 +38,11 @@
 # define RESET "\033[0m"
 # define BOLD "\033[1m"
 
+// Constants for exit codes
+# define FAILURE 1
+# define SUCCESS 0
+
+// Prompt definition
 # define PROMPT "minishell$ "
 
 typedef enum e_quote_type

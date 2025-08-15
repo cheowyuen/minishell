@@ -5,8 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 18:52:58 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/07/31 18:53:00 by lsurco-t         ###   ########.fr       */
+/*   Created: 2025/08/09 10:32:36 by lsurco-t          #+#    #+#             */
+/*   Updated: 2025/08/14 11:35:29 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "executor.h"
+
+int	is_env_key_set(t_executor *executor, const char *key)
+{
+	t_env	*env;
+
+	env = executor->env_list;
+	while (env)
+	{
+		if (ft_strcmp(env->key, key) == 0)
+			return (1);
+		env = env->next;
+	}
+	return (0);
+}
