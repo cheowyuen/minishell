@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:36:28 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/16 16:58:58 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "signals.h"
 
 static int	create_heredoc_pipe(int pipefd[2]);
 static int	fork_heredoc_writer(int pipefd[2], char *delimiter);
@@ -55,10 +56,13 @@ static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 	if (pid == 0)
 	{
 		close(pipefd[0]);
+		setup_signals_heredoc();
 		write_heredoc_content(pipefd[1], delimiter);
 		close(pipefd[1]);
 		exit(0);
 	}
+	else
+		return wait_for_child(pid);
 	return (SUCCESS);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:46 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 13:37:26 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/16 16:39:16 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <readline/readline.h>
 # include <signal.h>
 # include <unistd.h>
+# include "minishell.h"
 
 extern volatile sig_atomic_t	g_signal_status;
 
@@ -29,5 +30,6 @@ void							setup_signals_prompt(void);
 void							setup_signals_child(void);
 void							setup_signals_heredoc(void);
 void							setup_signals_ignore(void);
+int								wait_for_child(pid_t pid);
 
 #endif
