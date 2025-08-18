@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/16 17:40:06 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/18 09:28:11 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ static void	initial_setup(t_executor *executor, t_command *command, char **envp)
 	printf(BOLD CLR_BLUE "Welcome to Minishell!\n" RESET);
 }
 
-static int	parse(char *input, t_token *tokens, t_executor *executor)
+static int	parse_and_exec(char *input, t_token *tokens, t_executor *executor)
 {
 	t_shell		shell;
 	t_command	*commands;
-	
+
 	commands = NULL;
 	add_history(input);
 	if (parse_input(input, &tokens) < 0)
@@ -59,14 +59,8 @@ static int	parse(char *input, t_token *tokens, t_executor *executor)
 	if (parse_commands(tokens, &commands) < 0)
 		return (-1);
 	executor->commands = commands;
-	// for debugging
-	// t_token *tmp = tokens;
-	// printf("Tokens:\n"); 
-	// while (tmp)
-	// {
-	// 	printf("  %s\n", tmp->token);
-	// 	tmp = tmp->next;
-	// }
+	if (executor->commands)
+		exec_cmd(executor, executor->commands);
 	return (0);
 }
 
@@ -92,12 +86,8 @@ static int	run_shell_loop(t_executor *executor)
 			continue ;
 		}
 		if (*input && ft_strlen(input) > 0 && !is_only_space_or_tab(input))
-		{
-			if (parse(input, tokens, executor) < 0)
+			if (parse_and_exec(input, tokens, executor) < 0)
 				return (-1);
-			if (executor->commands)
-				exec_cmd(executor, executor->commands);
-		}
 		free(input);
 	}
 	return (0);

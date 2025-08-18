@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:36:21 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/18 12:50:05 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,25 +84,67 @@ int	clean_everything_error(t_executor *executor)
 
 int	close_children_process(t_executor *executor)
 {
-	int	status;
-	int	i;
+	int		status;
+	int		last_status;
+	int		children_left;
+	pid_t	pid;
+	int		i;
 
-	i = 0;
-	while (i < executor->command_count)
+	last_status = 0;
+	children_left = executor->command_count;
+	while (children_left > 0)
 	{
-		if (waitpid(executor->pids[i], &status, 0) == WAITPID_ERROR)
+		pid = waitpid(-1, &status, 0);
+		if (pid == WAITPID_ERROR)
 		{
+			if (errno == ECHILD)
+				break ;
 			perror("waitpid");
 			return (FAILURE);
 		}
-		if (WIFEXITED(status))
-			executor->last_exit_code = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			executor->last_exit_code = EXIT_SIGNAL_BASE + WTERMSIG(status);
-		i++;
+		i = 0;
+		while (i < executor->command_count)
+		{
+			if (executor->pids[i] == pid)
+			{
+				if (i == executor->command_count - 1)
+					last_status = status;
+				break ;
+			}
+			i++;
+		}
+		children_left--;
 	}
+	if (WIFSIGNALED(last_status) && WTERMSIG(last_status) == SIGINT)
+		write(STDOUT_FILENO, "\n", 1);
+	if (WIFEXITED(last_status))
+		executor->last_exit_code = WEXITSTATUS(last_status);
+	else if (WIFSIGNALED(last_status))
+		executor->last_exit_code = EXIT_SIGNAL_BASE + WTERMSIG(last_status);
 	return (SUCCESS);
 }
+
+// int	close_children_process(t_executor *executor)
+// {
+// 	int	status;
+// 	int	i;
+
+// 	i = 0;
+// 	while (i < executor->command_count)
+// 	{
+// 		if (waitpid(executor->pids[i], &status, 0) == WAITPID_ERROR)
+// 		{
+// 			perror("waitpid");
+// 			return (FAILURE);
+// 		}
+// 		if (WIFEXITED(status))
+// 			executor->last_exit_code = WEXITSTATUS(status);
+// 		else if (WIFSIGNALED(status))
+// 			executor->last_exit_code = EXIT_SIGNAL_BASE + WTERMSIG(status);
+// 		i++;
+// 	}
+// 	return (SUCCESS);
+// }
 
 void	setup_redirection_child_process(t_executor *executor,
 		t_command *command)

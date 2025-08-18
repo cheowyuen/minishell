@@ -6,44 +6,38 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/16 16:44:50 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/18 13:01:42 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "signals.h"
 
-int	wait_for_child(pid_t pid)
+int wait_for_child(pid_t child_pid)
 {
-	int		child_status;
-	int		ret;
+    int		status;
+    int		last_status;
+	pid_t	pid;
 
-	while (1)
-	{
-		ret = waitpid(pid, &child_status, 0);
-		if (ret > 0)
-		{
-			printf("[Parent] waitpid returned, child %d exited\n", pid);
-			return SUCCESS;
-		}
-		if (ret < 0)
-		{
-			if (errno == EINTR && g_signal_status == SIGNAL_INT)
-			{
-				printf("[Parent] waitpid interrupted by SIGINT, sending SIGINT to child %d\n", pid);
-				kill(pid, SIGINT);
-				g_signal_status = 0;
-				continue;
-			}
-			else if (errno != ECHILD)
-			{
-				perror("waitpid");
-				return FAILURE;
-			}
-			break;
-		}
-	}
-	return SUCCESS;
+	last_status = 0;
+    while (1)
+    {
+        pid = waitpid(child_pid, &status, 0);
+        if (pid == WAITPID_ERROR)
+        {
+			if (errno == EINTR)
+            	continue ;
+            if (errno == ECHILD)
+                break ;
+			perror("waitpid");
+			return (FAILURE);
+        }
+        last_status = status;
+        break;
+    }
+    if (WIFSIGNALED(last_status) && WTERMSIG(last_status) == SIGINT)
+        write(STDOUT_FILENO, "\n", 1);
+    return (SUCCESS);
 }
 
 void	sigint_handler(int sig)

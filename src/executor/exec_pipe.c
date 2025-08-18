@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/16 17:49:29 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/18 12:52:24 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,13 @@ int	exec_pipe(t_executor *executor, t_command *command)
 		return (FAILURE);
 	if (create_pipes(executor, executor->command_count) == FAILURE)
 		return (clean_everything_error(executor));
+	setup_signals_ignore();
 	if (fork_processes(executor, command) == FAILURE)
 		return (clean_everything_error(executor));
 	close_and_free_pipes(executor);
 	if (close_children_process(executor) == FAILURE)
 		return (clean_everything_error(executor));
+	setup_signals_prompt();
 	if (executor->pids)
 	{
 		free(executor->pids);
@@ -91,20 +93,15 @@ static int	fork_processes(t_executor *executor, t_command *command)
 		}
 		if (pid == 0)
 		{
-			printf("[Child %d] started\n", getpid());
 			setup_signals_child();
-			sleep(10);
 			handle_child_process(executor, command, i);
-			printf("[Child %d] exiting\n", getpid());
-			exit(EXIT_FAILURE);
 		}
 		else
 		{
 			executor->pids[i] = pid;
-			printf("[Parent] forked child %d\n", pid);
+			i++;
+			command = command->next;
 		}
-		i++;
-		command = command->next;
 	}
 	return (SUCCESS);
 }
