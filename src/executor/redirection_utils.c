@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "signals.h"
 
 static int	create_heredoc_pipe(int pipefd[2]);
 static int	fork_heredoc_writer(int pipefd[2], char *delimiter);
@@ -43,6 +44,7 @@ static int	create_heredoc_pipe(int pipefd[2])
 static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 {
 	pid_t	pid;
+	int		status;
 
 	pid = fork();
 	if (pid < 0)
@@ -59,12 +61,13 @@ static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 		close(pipefd[1]);
 		exit(0);
 	}
+	close(pipefd[1]);
+	waitpid(pid, &status, 0);
 	return (SUCCESS);
 }
 
 static int	setup_heredoc_input(int pipefd[2])
 {
-	close(pipefd[1]);
 	if (dup2(pipefd[0], STDIN_FILENO) < 0)
 	{
 		perror("dup2");
@@ -79,6 +82,7 @@ static void	write_heredoc_content(int fd, char *delimiter)
 {
 	char	*line;
 
+	setup_signals_heredoc();
 	while (1)
 	{
 		line = readline("> ");

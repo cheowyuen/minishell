@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_var.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 10:30:16 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 19:36:19 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,17 @@ static int	assign_new_token(t_token *tokens, char	*tmp, char	*right)
 
 static int	join_token(t_token *tokens, int i, int len, t_var var)
 {
-	int		braces_len;
 	char	*tmp;
 	char	*left;
 	char	*right;
 
-	braces_len = 0;
-	if (var.has_braces)
-		braces_len = 2;
 	left = ft_substr(tokens->token, 0, i - var.has_braces);
 	if (!left)
 		return (free_tokens(&tokens));
 	tmp = ft_strjoin(left, var.value);
 	free(left);
+	if (var.should_free)
+		free(var.value);
 	if (!tmp)
 		return (free_tokens(&tokens));
 	right = ft_substr(tokens->token, i + len + var.has_braces,
@@ -68,7 +66,12 @@ static int	get_value(t_token *tokens, int i, int len, t_var var)
 		var.value = get_env_var(var.executor, variable);
 		free(variable);
 		if (!var.value)
+		{
 			var.value = ft_strdup("");
+			var.should_free = true;
+		}
+		else
+			var.should_free = false;
 		if (!var.value)
 			return (free_tokens(&tokens));
 	}
@@ -82,6 +85,7 @@ static int	get_var(t_token *tokens, int i, t_shell *shell, t_executor *executor)
 
 	var.has_braces = false;
 	var.value = NULL;
+	var.should_free = false;
 	var.executor = executor;
 	if (tokens->token[i + 1] == '{')
 	{
@@ -94,6 +98,7 @@ static int	get_var(t_token *tokens, int i, t_shell *shell, t_executor *executor)
 			return (free_tokens(&tokens));
 		len = 2;
 		var.value = ft_itoa(shell->exit_code);
+		var.should_free = true;
 		if (!var.value)
 			return (free_tokens(&tokens));
 	}
@@ -108,7 +113,7 @@ int	expand_env_var(t_token *tokens, t_shell *shell, t_executor *executor)
 
 	while (tokens)
 	{
-		if (tokens->quote_type == DOUBLE_ENV)
+		if (tokens->quote_type == DOUBLE_ENV || tokens->quote_type == NONE)
 		{
 			i = 0;
 			while (tokens->token[i])

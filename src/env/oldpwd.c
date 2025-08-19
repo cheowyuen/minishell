@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 09:00:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:35:34 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/15 16:22:22 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	set_oldpwd(t_executor *executor)
 	}
 	else
 	{
-		ft_dprintf(STDERR_FILENO, "cd: OLDPWD not set\n");
+		ft_dprintf(STDERR_FILENO, "minishell: cd: OLDPWD not set\n");
 		executor->last_exit_code = FAILURE;
 		return (FAILURE);
 	}

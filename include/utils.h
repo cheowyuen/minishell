@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:35:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 10:59:53 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/16 00:17:17 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,9 @@ void	free_split(char **arr);
 void	free_str_array(char **arr);
 void	free_environment(t_executor *executor);
 void	free_executor(t_executor *executor);
+int		free_input_failure(char *input);
+
+// Free inherited parent state in a forked child before exit
+void	free_inherited_state_for_child(t_executor *executor, t_command *commands);
 
 #endif

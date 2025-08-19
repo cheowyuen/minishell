@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/15 10:55:20 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/15 18:07:40 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 // Exit codes
 # define EXIT_CMD_NOT_FOUND 127
 # define EXIT_SIGNAL_BASE 128
+
+# define INVALID_ID "not a valid identifier"
 
 // Environment variable structure to save key-value pairs
 typedef struct s_env
@@ -76,7 +78,8 @@ int					setup_output_redirection(t_command *command);
 // Execution utilities
 char				**build_env_array(t_executor *executor);
 void				count_commands(t_command *command, t_executor *executor);
-char				*find_command_path(t_executor *executor, char *command);
+int					validate_commands_exist(t_executor *executor,
+						t_command *command);
 void				add_envp_to_executor(t_executor *executor, char **envp);
 
 // Pipe utils

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/15 10:21:41 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/18 23:29:12 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,54 +16,80 @@
 #include "parser.h"
 #include "signals.h"
 
-static void	initial_setup(t_executor *executor, t_command *command,
-				char **envp);
 static int	run_shell_loop(t_executor *executor);
-static void	cleanup_ending(t_executor *executor);
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_executor	executor;
 	t_command	command;
+	int			exit_code;
 
 	(void)argc;
 	(void)argv;
-	initial_setup(&executor, &command, envp);
-	if (run_shell_loop(&executor) < 0)
-		return (1);
+	setup_signals_prompt();
+	ft_bzero(&executor, sizeof(t_executor));
+	ft_bzero(&command, sizeof(t_command));
+	add_envp_to_executor(&executor, envp);
+	if (isatty(STDIN_FILENO))
+		printf(BOLD CLR_BLUE "Welcome to Minishell!\n" RESET);
+	run_shell_loop(&executor);
+	exit_code = executor.last_exit_code;
+	if (executor.env_list)
+		free_environment(&executor);
+	free_executor(&executor);
 	rl_clear_history();
+	return (exit_code);
+}
+
+static int	parse_and_execute(char *input, t_token *tokens,
+		t_executor *executor)
+{
+	t_shell		shell;
+	t_command	*commands;
+	int			result;
+
+	commands = NULL;
+	shell.exit_code = executor->last_exit_code;
+	if (parse_input(input, &tokens) < 0)
+		return (-1);
+	if (expand_env_var(tokens, &shell, executor) < 0)
+		return (-1);
+	if (parse_commands(tokens, &commands) < 0)
+		return (-1);
+	ft_lstclear(&tokens);
+	if (commands)
+	{
+		result = exec_cmd(executor, commands);
+		executor->last_exit_code = result;
+		free_commands(&commands);
+	}
 	return (0);
 }
 
-static void	initial_setup(t_executor *executor, t_command *command, char **envp)
+static int	handle_input_processing(char *input, t_token *tokens,
+		t_executor *executor)
 {
-	setup_signals_prompt();
-	ft_bzero(executor, sizeof(t_executor));
-	ft_bzero(command, sizeof(t_command));
-	add_envp_to_executor(executor, envp);
-	printf(BOLD CLR_BLUE "Welcome to Minishell!\n" RESET);
-}
-
-static int	parse(char *input, t_token *tokens, t_executor *executor)
-{
-	t_shell	shell;
-	
-	add_history(input);
-	if (parse_input(input, &tokens) < 0)
-		return (-1);
-	free(input);
-	if (expand_env_var(tokens, &shell, executor) < 0)
-		return (-1);
-	if (parse_commands(tokens) < 0)
-		return (-1);
-	// for debugging
-	t_token *tmp = tokens;
-	printf("Tokens:\n");
-	while (tmp)
+	if (!input)
 	{
-		printf("  %s\n", tmp->token);
-		tmp = tmp->next;
+		free_executor(executor);
+		free_environment(executor);
+		return (-1);
 	}
+	if (g_signal_status == SIGNAL_INT)
+	{
+		g_signal_status = SIGNAL_NONE;
+		if (!input || !*input || is_only_space_or_tab(input))
+			return (free_input_failure(input));
+	}
+	if (*input && ft_strlen(input) > 0 && !is_only_space_or_tab(input))
+	{
+		add_history(input); // moved so it does not stuck half printed input
+		if (parse_and_execute(input, tokens, executor) < 0)
+			return (free_input_failure(input));
+	}
+	free(input);
+	if (!isatty(STDIN_FILENO))
+		return (-1);
 	return (0);
 }
 
@@ -71,34 +97,24 @@ static int	run_shell_loop(t_executor *executor)
 {
 	char	*input;
 	t_token	*tokens;
+	int		result;
 
 	tokens = NULL;
 	while (1)
 	{
-		input = readline(CLR_GREEN PROMPT RESET);
-		if (!input)
+		if (isatty(STDIN_FILENO))
 		{
-			cleanup_ending(executor);
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			input = readline(CLR_GREEN PROMPT RESET);
+		}
+		else
+			input = readline("");
+		result = handle_input_processing(input, tokens, executor);
+		if (result == -1)
 			break ;
-		}
-		if (g_signal_status == SIGNAL_INT)
-		{
-			g_signal_status = SIGNAL_NONE;
-			if (input)
-				free(input);
+		if (result == 1)
 			continue ;
-		}
-		if (*input && ft_strlen(input) > 0 && !is_only_space_or_tab(input))
-			if (parse(input, tokens, executor) < 0)
-				return (-1);
-		free(input);
 	}
 	return (0);
-}
-
-static void	cleanup_ending(t_executor *executor)
-{
-	printf(CLR_RED "Exiting Minishell...\n" RESET);
-	free_executor(executor);
-	free_environment(executor);
 }

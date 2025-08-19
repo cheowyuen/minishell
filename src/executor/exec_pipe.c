@@ -6,12 +6,13 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:36:02 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/18 19:07:12 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "utils.h"
+#include "signals.h"
 
 static int	create_pipes(t_executor *executor, int count);
 static int	fork_processes(t_executor *executor, t_command *command);
@@ -21,6 +22,8 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 
 int	exec_pipe(t_executor *executor, t_command *command)
 {
+	int		last_status;
+
 	if (!executor || !command)
 		return (FAILURE);
 	count_commands(command, executor);
@@ -32,17 +35,20 @@ int	exec_pipe(t_executor *executor, t_command *command)
 		return (FAILURE);
 	if (create_pipes(executor, executor->command_count) == FAILURE)
 		return (clean_everything_error(executor));
+	setup_signals_ignore();
 	if (fork_processes(executor, command) == FAILURE)
 		return (clean_everything_error(executor));
 	close_and_free_pipes(executor);
-	if (close_children_process(executor) == FAILURE)
+	last_status = close_children_process(executor);
+	if (last_status == FAILURE)
 		return (clean_everything_error(executor));
+	setup_signals_prompt();
 	if (executor->pids)
 	{
 		free(executor->pids);
 		executor->pids = NULL;
 	}
-	return (SUCCESS);
+	return (last_status);
 }
 
 static int	create_pipes(t_executor *executor, int count)
@@ -89,7 +95,10 @@ static int	fork_processes(t_executor *executor, t_command *command)
 			return (FAILURE);
 		}
 		if (pid == 0)
+		{
+			setup_signals_child();
 			handle_child_process(executor, command, i);
+		}
 		else
 		{
 			executor->pids[i] = pid;
@@ -106,6 +115,7 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 	if (setup_children_pipes(executor, i) == FAILURE)
 	{
 		close_all_pipes_children(executor);
+		free_inherited_state_for_child(executor, command);
 		exit(EXIT_FAILURE);
 	}
 	setup_redirection_child_process(executor, command);
@@ -114,6 +124,7 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 	{
 		executor->commands = command;
 		exec_builtin(executor);
+		free_inherited_state_for_child(executor, command);
 		exit(executor->last_exit_code);
 	}
 	else

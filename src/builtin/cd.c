@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:53:02 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:33:55 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/15 16:21:35 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	builtin_cd(t_executor *executor)
 		i++;
 	if (i > 2)
 	{
-		print_error_stderr("bash: cd: too many arguments\n");
+		print_error_stderr("minishell: cd: too many arguments\n");
 		executor->last_exit_code = FAILURE;
 		return ;
 	}
@@ -45,7 +45,7 @@ char	*handle_cd_dash(t_executor *executor)
 	oldpwd = get_env_var(executor, "OLDPWD");
 	if (!oldpwd)
 	{
-		ft_dprintf(STDERR_FILENO, "bash: cd: OLDPWD not set\n");
+		ft_dprintf(STDERR_FILENO, "minishell: cd: OLDPWD not set\n");
 		executor->last_exit_code = FAILURE;
 		return (NULL);
 	}
@@ -60,7 +60,7 @@ char	*handle_cd_home(t_executor *executor)
 	home = get_env_var(executor, "HOME");
 	if (!home)
 	{
-		ft_dprintf(STDERR_FILENO, "bash: cd: HOME not set\n");
+		ft_dprintf(STDERR_FILENO, "minishell: cd: HOME not set\n");
 		executor->last_exit_code = FAILURE;
 		return (NULL);
 	}

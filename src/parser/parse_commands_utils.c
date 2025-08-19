@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 08:47:32 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 10:12:53 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/18 19:54:09 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,31 @@ t_command	*create_command(void)
 	return (new_command);
 }
 
-void	set_outfile(t_token **tokens, t_command *current, int append)
+int	set_outfile(t_token **tokens, t_command *current, int append)
 {
 	*tokens = (*tokens)->next;
-	current->outfile = (*tokens)->token;
+	if (!*tokens)
+	{
+		ft_dprintf(STDERR_FILENO, "minishell: syntax error near unexpected token `newline'\n");
+		return (-1);
+	}
+	current->outfile = ft_strdup((*tokens)->token); 
+	if (!current->outfile)
+		return (-1);
 	current->append = append;
+	return (0);
 }
 
-void	set_infile(t_token **tokens, t_command *current)
+int	set_infile(t_token **tokens, t_command *current)
 {
 	*tokens = (*tokens)->next;
-	current->infile = (*tokens)->token;
+	if (!*tokens)
+	{
+		ft_dprintf(STDERR_FILENO, "minishell: syntax error near unexpected token `newline'\n");
+		return (-1);
+	}
+	current->infile = ft_strdup((*tokens)->token);  // Copying the string so we can free it later
+	if (!current->infile)
+		return (-1);
+	return (0);
 }

@@ -6,13 +6,13 @@
 #    By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/31 13:46:50 by lsurco-t          #+#    #+#              #
-#    Updated: 2025/08/14 11:32:14 by lsurco-t         ###   ########.fr        #
+#    Updated: 2025/08/16 14:08:10 by lsurco-t         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Iinclude
+CFLAGS = -Wall -Wextra -Werror -Iinclude -g # DO NOT FORGET TO REMOVE -g FOR PRODUCTION BUILD
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 OBJ_DIR = obj
