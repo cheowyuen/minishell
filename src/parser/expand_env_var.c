@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 10:30:16 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/19 11:13:06 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ static int	get_var(t_token *tokens, int i, t_shell *shell, t_executor *executor)
 		if (var.has_braces && ft_strncmp(&tokens->token[i], "{?}", 4) != 0)
 			return (free_tokens(&tokens));
 		len = 2;
+		shell->exit_code = 0;
 		var.value = ft_itoa(shell->exit_code);
 		if (!var.value)
 			return (free_tokens(&tokens));
