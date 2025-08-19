@@ -1,0 +1,45 @@
+# Heredoc Test Commands for Minishell
+# Run these commands one by one in your minishell
+
+# Test 1: Basic heredoc
+cat << EOF
+Hello from heredoc!
+This is line 2
+This is line 3
+EOF
+
+# Test 2: Heredoc with variables
+export TEST_VAR="minishell"
+cat << EOF
+Testing $TEST_VAR
+Variable expansion: $USER
+EOF
+
+# Test 3: Heredoc without variable expansion (quoted delimiter)
+cat << 'EOF'
+No expansion: $TEST_VAR
+Should show literal: $USER
+EOF
+
+# Test 4: Heredoc with grep
+grep "hello" << EOF
+hello world
+goodbye world
+hello again
+EOF
+
+# Test 5: Simple one-liner
+cat << END
+Single line heredoc
+END
+
+# Test 6: Empty heredoc
+cat << EMPTY
+EMPTY
+
+# Test 7: Heredoc with special characters
+cat << SPECIAL
+Special chars: !@#$%^&*()
+Quotes: "double" 'single'
+Backslashes: \n \t \\
+SPECIAL
