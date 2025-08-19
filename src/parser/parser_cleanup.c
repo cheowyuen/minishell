@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_cleanup.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:30:25 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 10:13:10 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/18 19:52:50 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,42 @@ int	free_tokens(t_token **tokens)
 	return (-1);
 }
 
-int	free_tokens_commands(t_token **tokens, t_command **commands)
+void	free_commands(t_command **commands)
 {
 	t_command	*temp;
 	int			i;
 
-	free_tokens(tokens);
 	if (!commands || !*commands)
-		return (-1);
+		return ;
 	while (*commands)
 	{
 		temp = *commands;
 		*commands = (*commands)->next;
 		i = 0;
-		while (temp->argv[i])
+		if (temp->argv)
 		{
-			free(temp->argv[i]);
-			i++;
+			while (temp->argv[i])
+			{
+				free(temp->argv[i]);
+				i++;
+			}
+			free(temp->argv);
 		}
-		free(temp->argv);
+		if (temp->infile)
+			free(temp->infile);
+		if (temp->outfile)
+			free(temp->outfile);
+		if (temp->heredoc_delim)
+			free(temp->heredoc_delim);
 		free(temp);
 	}
 	*commands = NULL;
+}
+
+int	free_tokens_commands(t_token **tokens, t_command **commands)
+{
+	free_tokens(tokens);
+	free_commands(commands);
 	return (-1);
 }
 

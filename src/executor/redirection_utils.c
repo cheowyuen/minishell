@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/19 10:35:16 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/19 11:38:55 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 
 static int	setup_heredoc_input(int pipefd[2])
 {
-	close(pipefd[1]);
 	if (dup2(pipefd[0], STDIN_FILENO) < 0)
 	{
 		perror("dup2");
@@ -90,6 +89,7 @@ static void	write_heredoc_content(int fd, char *delimiter)
 {
 	char	*line;
 
+	setup_signals_heredoc();
 	while (1)
 	{
 		line = readline("> ");

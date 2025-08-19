@@ -6,7 +6,11 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/08/19 09:09:07 by cwong            ###   ########.fr       */
+=======
+/*   Updated: 2025/08/18 20:00:38 by lsurco-t         ###   ########.fr       */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +102,7 @@ int	close_children_process(t_executor *executor)
 		executor->last_exit_code = EXIT_SIGNAL_BASE + WTERMSIG(last_status);
 	return (SUCCESS);
 }
+
 
 void	setup_redirection_child_process(t_executor *executor,
 		t_command *command)

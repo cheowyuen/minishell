@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 10:58:28 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:33:46 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/15 16:21:12 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	perform_directory_change(t_executor *executor, char *target_copy,
 	}
 	if (chdir(target_copy) != SUCCESS)
 	{
-		ft_dprintf(STDERR_FILENO, "bash: cd: %s: %s\n", target_copy,
+		ft_dprintf(STDERR_FILENO, "minishell: cd: %s: %s\n", target_copy,
 			strerror(errno));
 		cleanup_and_set_failure(executor, need_free, target_copy);
 		return (FAILURE);

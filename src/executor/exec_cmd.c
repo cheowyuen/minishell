@@ -6,15 +6,18 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:35:47 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/18 19:59:36 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "utils.h"
 
 int	exec_cmd(t_executor *executor, t_command *command)
 {
 	if (!executor || !command)
+		return (FAILURE);
+	if (validate_commands_exist(executor, command) == FAILURE)
 		return (FAILURE);
 	executor->commands = command;
 	if (command->next != NULL || command->pipe_out)
@@ -54,7 +57,10 @@ int	exec_single_external(t_executor *executor, t_command *command)
 	if (pid == 0)
 	{
 		if (setup_single_redirection(command) == FAILURE)
+		{
+			free_inherited_state_for_child(executor, command);
 			exit(EXIT_FAILURE);
+		}
 		exec_external_command(executor, command);
 		exit(127);
 	}

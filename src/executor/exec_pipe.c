@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/19 09:51:21 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/19 11:38:24 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 
 int	exec_pipe(t_executor *executor, t_command *command)
 {
+	int		last_status;
+
 	if (!executor || !command)
 		return (FAILURE);
 	count_commands(command, executor);
@@ -37,7 +39,8 @@ int	exec_pipe(t_executor *executor, t_command *command)
 	if (fork_processes(executor, command) == FAILURE)
 		return (clean_everything_error(executor));
 	close_and_free_pipes(executor);
-	if (close_children_process(executor) == FAILURE)
+	last_status = close_children_process(executor);
+	if (last_status == FAILURE)
 		return (clean_everything_error(executor));
 	setup_signals_prompt();
 	if (executor->pids)
@@ -45,7 +48,7 @@ int	exec_pipe(t_executor *executor, t_command *command)
 		free(executor->pids);
 		executor->pids = NULL;
 	}
-	return (SUCCESS);
+	return (last_status);
 }
 
 static int	create_pipes(t_executor *executor, int count)
@@ -112,6 +115,7 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 	if (setup_children_pipes(executor, i) == FAILURE)
 	{
 		close_all_pipes_children(executor);
+		free_inherited_state_for_child(executor, command);
 		exit(EXIT_FAILURE);
 	}
 	setup_redirection_child_process(executor, command);
@@ -120,6 +124,7 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 	{
 		executor->commands = command;
 		exec_builtin(executor);
+		free_inherited_state_for_child(executor, command);
 		exit(executor->last_exit_code);
 	}
 	else

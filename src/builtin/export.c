@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:46:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:34:46 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/15 16:16:14 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ static int	check_valid_identifier(char *arg, char *equal_sign, char *key)
 	if (!valid)
 	{
 		if (key)
-			ft_dprintf(2, "bash: export: `%s': not a valid identifier\n", key);
+			ft_dprintf(2, "minishell: export: `%s': %s\n", key, INVALID_ID);
 		else
-			ft_dprintf(2, "bash: export: `%s': not a valid identifier\n", arg);
+			ft_dprintf(2, "minishell: export: `%s': %s\n", arg, INVALID_ID);
 		if (key)
 			free(key);
 		return (FAILURE);
@@ -83,7 +83,7 @@ static int	handle_export_argument(t_executor *executor, const char *arg,
 	{
 		if (add_env_variable(executor, arg) == FAILURE)
 		{
-			print_error_stderr("bash: export: failed to add env variable\n");
+			print_error_stderr("minishell: export: failed to add variable\n");
 			return (FAILURE);
 		}
 	}

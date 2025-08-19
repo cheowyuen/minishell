@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:00:21 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/15 10:53:08 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/16 11:44:37 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
+
+static int	exec_builtin_and_restore(t_executor *executor,
+		int saved_stdin, int saved_stdout, int is_exit_command);
 
 int	exec_builtin(t_executor *executor)
 {
@@ -35,18 +38,16 @@ int	exec_builtin(t_executor *executor)
 		}
 		i++;
 	}
-	ft_dprintf(STDERR_FILENO, "%s: command not found\n",
-		executor->commands->argv[0]);
-	executor->last_exit_code = FAILURE;
 	return (FAILURE);
 }
 
 int	exec_builtin_with_redirection(t_executor *executor, t_command *command)
 {
-	int	result;
 	int	saved_stdin;
 	int	saved_stdout;
+	int	is_exit_command;
 
+	is_exit_command = (ft_strcmp(command->argv[0], "exit") == 0);
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
 	if (saved_stdin < 0 || saved_stdout < 0)
@@ -63,7 +64,20 @@ int	exec_builtin_with_redirection(t_executor *executor, t_command *command)
 		restore_fds(saved_stdin, saved_stdout);
 		return (FAILURE);
 	}
-	result = exec_builtin(executor);
+	return (exec_builtin_and_restore(executor, saved_stdin,
+			saved_stdout, is_exit_command));
+}
+
+static int	exec_builtin_and_restore(t_executor *executor,
+		int saved_stdin, int saved_stdout, int is_exit_command)
+{
+	if (is_exit_command)
+	{
+		restore_fds(saved_stdin, saved_stdout);
+		exec_builtin(executor);
+		return (executor->last_exit_code);
+	}
+	exec_builtin(executor);
 	restore_fds(saved_stdin, saved_stdout);
-	return (result);
+	return (executor->last_exit_code);
 }

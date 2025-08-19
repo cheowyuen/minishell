@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:42:48 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:33:14 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/16 00:19:46 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	free_executor(t_executor *executor)
 	free_environment(executor);
 	executor->command_count = 0;
 	executor->current_command_index = 0;
-	executor->last_exit_code = 0;
 }
 
 void	free_split(char **arr)
@@ -64,4 +63,19 @@ void	free_str_array(char **arr)
 		i++;
 	}
 	free(arr);
+}
+
+void	free_inherited_state_for_child(t_executor *executor, t_command *commands)
+{
+	if (commands)
+		free_commands(&commands);
+	if (executor)
+	{
+		free_environment(executor);
+		if (executor->pids)
+			free(executor->pids);
+		close_and_free_pipes(executor);
+		executor->pids = NULL;
+		executor->pipes = NULL;
+	}
 }

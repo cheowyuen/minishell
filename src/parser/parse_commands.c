@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/18 09:30:15 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/19 11:39:49 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,25 @@ static int	handle_special(t_token **tokens, t_command **current
 	{
 		*tokens = (*tokens)->next;
 		(*current)->has_heredoc = 1;
-		(*current)->heredoc_delim = (*tokens)->token;
+		(*current)->heredoc_delim = ft_strdup((*tokens)->token);
+		if (!(*current)->heredoc_delim)
+			return (free_tokens_commands(tokens, &commands));
 	}
 	else if (ft_strcmp((*tokens)->token, ">>") == 0)
-		set_outfile(tokens, *current, 1);
+	{
+		if (set_outfile(tokens, *current, 1) < 0)
+			return (free_tokens_commands(tokens, &commands));
+	}
 	else if ((*tokens)->token[0] == '<')
-		set_infile(tokens, *current);
+	{
+		if (set_infile(tokens, *current) < 0)
+			return (free_tokens_commands(tokens, &commands));
+	}
 	else if ((*tokens)->token[0] == '>')
-		set_outfile(tokens, *current, 0);
+	{
+		if (set_outfile(tokens, *current, 0) < 0)
+			return (free_tokens_commands(tokens, &commands));
+	}
 	else
 	{
 		(*current)->pipe_out = 1;
@@ -92,8 +103,8 @@ static int	process_tokens(t_token *tokens, t_command *commands)
 
 int	parse_commands(t_token *tokens, t_command **commands)
 {
-	(*commands)= create_command();
-	if (!(*commands))
+	*commands = create_command();
+	if (!*commands)
 		return (free_tokens(&tokens));
 	if (process_tokens(tokens, *commands) < 0)
 		return (-1);
