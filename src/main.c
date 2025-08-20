@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/18 23:29:12 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/19 19:26:53 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ static int	run_shell_loop(t_executor *executor)
 		{
 			rl_replace_line("", 0);
 			rl_on_new_line();
-			input = readline(CLR_GREEN PROMPT RESET);
+			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
 		else
 			input = readline("");
