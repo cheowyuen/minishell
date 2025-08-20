@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 17:41:27 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/20 19:07:41 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ static int	handle_special(t_token **tokens, t_command **current
 	if (ft_strcmp((*tokens)->token, "<<") == 0)
 	{
 		*tokens = (*tokens)->next;
+		if (!*tokens)
+		{
+			ft_dprintf(STDERR_FILENO, "minishell: syntax error near unexpected token `newline'\n");
+			return (free_tokens_commands(tokens, &commands));
+		}
 		(*current)->has_heredoc = 1;
 		(*current)->heredoc_delim = ft_strdup((*tokens)->token);
 		if (!(*current)->heredoc_delim)
