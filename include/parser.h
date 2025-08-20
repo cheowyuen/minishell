@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/20 11:48:04 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/21 00:06:06 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,17 @@ typedef struct s_var
 	t_executor				*executor;
 }							t_var;
 
+typedef struct s_shell
+{
+	int						exit_code;
+}							t_shell;
+
 typedef struct s_quote
 {
 	char					*quoted_word;
 	t_quote_type			quote_type;
+	t_shell					*shell;
+	t_executor				*executor;
 }							t_quote;
 
 typedef struct s_command
@@ -59,12 +66,8 @@ typedef struct s_command
 	struct s_command		*next;
 }							t_command;
 
-typedef struct s_shell
-{
-	int						exit_code;
-}							t_shell;
-
-int							parse_input(char *input, t_token **tokens);
+int							parse_input(char *input, t_token **tokens,
+								t_shell *shell, t_executor *executor);
 int							free_tokens_input(t_token **tokens, char *input);
 int							add_token(t_token **tokens, t_quote_type quote_type,
 								char *content, int len);
@@ -89,5 +92,7 @@ t_command					*create_command(void);
 int							count_tokens(t_token *tokens);
 int							get_word(char *input, int *i, t_token **tokens,
 								char **word);
+int							expand_env_var_new(char **word, t_shell *shell,
+								t_executor *executor);
 
 #endif

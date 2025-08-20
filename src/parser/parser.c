@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/20 12:03:56 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/21 00:38:56 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,25 +28,23 @@ static int	parse_quote(char *input, int *i, t_token **tokens, t_quote *quote)
 	}
 	if (!input[*i + len])
 		return (-1);
-	if (input[*i] == '\"' && has_dollar_sign)
-		quote->quote_type = DOUBLE_ENV;
 	quote->quoted_word = ft_strndup(&input[*i + 1], len - 1);
 	if (!quote->quoted_word)
 		return (free_tokens_input(tokens, input));
+	if (input[*i] == '\"' && has_dollar_sign)
+		if (expand_env_var_new(&quote->quoted_word, quote->shell, quote->executor) < 0)
+			return (free_tokens_input(tokens, input));
 	*i += len + 1;
 	return (0);
 }
 
-static int	parse_word(char *input, int *i, t_token **tokens)
+static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 {
 	char	*word;
 	char	*joined;
 	char	*temp;
-	t_quote	quote;
 
 	word = NULL;
-	quote.quote_type = NONE;
-	quote.quoted_word = NULL;	
 	joined = ft_strdup("");
 	if (!joined)
 		return (free_tokens_input(tokens, input)); 
@@ -54,12 +52,12 @@ static int	parse_word(char *input, int *i, t_token **tokens)
 	{
 		if (is_quote(input[*i]))
 		{
-			if (parse_quote(input, i, tokens, &quote) < 0)
+			if (parse_quote(input, i, tokens, quote) < 0)
 				return (-1);
-			temp = ft_strjoin(joined, quote.quoted_word);
+			temp = ft_strjoin(joined, quote->quoted_word);
 			free(joined);
-			free(quote.quoted_word);
-			quote.quoted_word = NULL;	
+			free(quote->quoted_word);
+			quote->quoted_word = NULL;	
 			if (!temp)
 				return (free_tokens_input(tokens, input)); 
 			joined = temp;
@@ -77,7 +75,7 @@ static int	parse_word(char *input, int *i, t_token **tokens)
 			joined = temp;
 		}
 	}
-	if (add_token(tokens, quote.quote_type, joined, ft_strlen(joined)) < 0)
+	if (add_token(tokens, quote->quote_type, joined, ft_strlen(joined)) < 0)
 		return (free_tokens_input(tokens, input));
 	return (0);
 }
@@ -95,7 +93,7 @@ static int	parse_special(char *input, int *i, t_token **tokens)
 	return (0);
 }
 
-static int	handle_parsing(char *input, int *i, t_token **tokens)
+static int	handle_parsing(char *input, int *i, t_token **tokens, t_quote *quote)
 {
 	if (is_special(input[*i]))
 	{
@@ -104,16 +102,21 @@ static int	handle_parsing(char *input, int *i, t_token **tokens)
 	}
 	else
 	{
-		if (parse_word(input, i, tokens) < 0)
+		if (parse_word(input, i, tokens, quote) < 0)
 			return (-1);
 	}
 	return (0);
 }
 
-int	parse_input(char *input, t_token **tokens)
+int	parse_input(char *input, t_token **tokens, t_shell *shell, t_executor *executor)
 {
-	int				i;
+	int		i;
+	t_quote	quote;
 
+	quote.quote_type = NONE;
+	quote.quoted_word = NULL;
+	quote.shell = shell;
+	quote.executor = executor;
 	i = 0;
 	while (input[i])
 	{
@@ -121,7 +124,7 @@ int	parse_input(char *input, t_token **tokens)
 			i++;
 		if (input[i])
 		{
-			if (handle_parsing(input, &i, tokens) < 0)
+			if (handle_parsing(input, &i, tokens, &quote) < 0)
 				return (-1);
 		}
 	}
