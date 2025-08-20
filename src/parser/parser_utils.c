@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:51:08 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 16:00:10 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/20 11:47:34 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,18 @@ char	*ft_strndup(const char *src, int n)
 	return (duplicate);
 }
 
-int	add_token(t_token **tokens, t_quote_type quote_type, char *content, int len)
+int	get_word(char *input, int *i, t_token **tokens, char **word)
 {
-	t_token	*new_token;
+	int	len;
 
-	new_token = ft_lstnew(quote_type, content, len);
-	if (!new_token)
-		return (-1);
-	ft_lstadd_back(tokens, new_token);
+	len = 0;
+	while (input[*i + len] && !is_quote(input[*i + len])
+		&& !is_space(input[*i + len]) && !is_special(input[*i + len]))
+		len++;
+	*word = ft_strndup(&input[*i], len);
+	if (!*word)
+		return (free_tokens_input(tokens, input));
+	*i += len;
 	return (0);
 }
 

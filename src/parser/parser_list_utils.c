@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/15 10:13:18 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/20 11:47:53 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	ft_lstclear(t_token **lst)
 	*lst = NULL;
 }
 
-void	ft_lstadd_back(t_token **lst, t_token *new)
+static void	ft_lstadd_back(t_token **lst, t_token *new)
 {
 	t_token	*end;
 
@@ -48,7 +48,7 @@ void	ft_lstadd_back(t_token **lst, t_token *new)
 	new->next = NULL;
 }
 
-t_token	*ft_lstnew(int quote_type, char *content, int len)
+static t_token	*ft_lstnew(int quote_type, char *content, int len)
 {
 	t_token	*new_node;
 
@@ -64,4 +64,15 @@ t_token	*ft_lstnew(int quote_type, char *content, int len)
 	new_node->quote_type = quote_type;
 	new_node->next = NULL;
 	return (new_node);
+}
+
+int	add_token(t_token **tokens, t_quote_type quote_type, char *content, int len)
+{
+	t_token	*new_token;
+
+	new_token = ft_lstnew(quote_type, content, len);
+	if (!new_token)
+		return (-1);
+	ft_lstadd_back(tokens, new_token);
+	return (0);
 }
