@@ -3,103 +3,82 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/08/19 11:33:40 by cwong            ###   ########.fr       */
-=======
-/*   Updated: 2025/08/15 16:02:30 by lsurco-t         ###   ########.fr       */
->>>>>>> main
+/*   Updated: 2025/08/20 12:03:56 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
 
+static int	parse_quote(char *input, int *i, t_token **tokens, t_quote *quote)
+{
+	int				len;
+	bool			has_dollar_sign;
+
+	len = 1;
+	has_dollar_sign = false;
+	while (input[*i + len] && input[*i + len] != input[*i])
+	{
+		if (input[*i + len] == '$')
+			has_dollar_sign = true;
+		len++;
+	}
+	if (!input[*i + len])
+		return (-1);
+	if (input[*i] == '\"' && has_dollar_sign)
+		quote->quote_type = DOUBLE_ENV;
+	quote->quoted_word = ft_strndup(&input[*i + 1], len - 1);
+	if (!quote->quoted_word)
+		return (free_tokens_input(tokens, input));
+	*i += len + 1;
+	return (0);
+}
+
 static int	parse_word(char *input, int *i, t_token **tokens)
 {
-	int	len;
-	int	quote_start;
-	int	quote_len;
-	char *word_part;
-	char *quote_part;
-	char *combined;
+	char	*word;
+	char	*joined;
+	char	*temp;
+	t_quote	quote;
 
-	len = 0;
-	while (input[*i + len] && !is_quote(input[*i + len])
-		&& !is_space(input[*i + len]) && !is_special(input[*i + len]))
-		len++;
-		
-	// Check if there's a quote immediately after the word (no space)
-	if (input[*i + len] && is_quote(input[*i + len]))
+	word = NULL;
+	quote.quote_type = NONE;
+	quote.quoted_word = NULL;	
+	joined = ft_strdup("");
+	if (!joined)
+		return (free_tokens_input(tokens, input)); 
+	while (input[*i] && !is_space(input[*i]) && !is_special(input[*i]))
 	{
-		// Extract the word part
-		word_part = ft_strndup(&input[*i], len);
-		if (!word_part)
-			return (free_tokens_input(tokens, input));
-			
-		// Parse the quote part
-		quote_start = *i + len;
-		quote_len = 1;
-		while (input[quote_start + quote_len] && input[quote_start + quote_len] != input[quote_start])
-			quote_len++;
-		if (!input[quote_start + quote_len])
+		if (is_quote(input[*i]))
 		{
-			free(word_part);
-			return (-1);
+			if (parse_quote(input, i, tokens, &quote) < 0)
+				return (-1);
+			temp = ft_strjoin(joined, quote.quoted_word);
+			free(joined);
+			free(quote.quoted_word);
+			quote.quoted_word = NULL;	
+			if (!temp)
+				return (free_tokens_input(tokens, input)); 
+			joined = temp;
 		}
-		quote_len++; // Include closing quote
-		
-		// Extract quote content (without outer quotes)
-		quote_part = ft_strndup(&input[quote_start + 1], quote_len - 2);
-		if (!quote_part)
-		{
-			free(word_part);
-			return (free_tokens_input(tokens, input));
-		}
-		
-		// Combine word and quote content
-		combined = ft_strjoin(word_part, quote_part);
-		free(word_part);
-		free(quote_part);
-		if (!combined)
-			return (free_tokens_input(tokens, input));
-			
-		// Determine quote type
-		t_quote_type quote_type = DOUBLE;
-		if (input[quote_start] == '\'')
-			quote_type = SINGLE;
 		else
 		{
-			// Check for dollar signs in the original quoted content
-			int has_dollar = 0;
-			for (int j = quote_start + 1; j < quote_start + quote_len - 1; j++)
-			{
-				if (input[j] == '$')
-				{
-					has_dollar = 1;
-					break;
-				}
-			}
-			if (has_dollar)
-				quote_type = DOUBLE_ENV;
+			if (get_word(input, i, tokens, &word) < 0)
+				return (-1);
+			temp = ft_strjoin(joined, word);
+			free(joined);
+			free(word);
+			word = NULL;
+			if (!temp)
+				return (free_tokens_input(tokens, input));
+			joined = temp;
 		}
-			
-		if (add_token(tokens, quote_type, combined, ft_strlen(combined)) < 0)
-		{
-			free(combined);
-			return (free_tokens_input(tokens, input));
-		}
-		free(combined);
-		*i += len + quote_len;
 	}
-	else
-	{
-		if (add_token(tokens, NONE, &input[*i], len) < 0)
-			return (free_tokens_input(tokens, input));
-		*i += len;
-	}
+	if (add_token(tokens, quote.quote_type, joined, ft_strlen(joined)) < 0)
+		return (free_tokens_input(tokens, input));
 	return (0);
 }
 
@@ -116,42 +95,9 @@ static int	parse_special(char *input, int *i, t_token **tokens)
 	return (0);
 }
 
-static int	parse_quote(char *input, int *i, t_token **tokens)
-{
-	int				len;
-	t_quote_type	quote_type;
-	bool			has_dollar_sign;
-
-	len = 1;
-	has_dollar_sign = false;
-	while (input[*i + len] && input[*i + len] != input[*i])
-	{
-		if (input[*i + len] == '$')
-			has_dollar_sign = true;
-		len++;
-	}
-	if (!input[*i + len])
-		return (-1);
-	if (input[*i] == '\'')
-		quote_type = SINGLE;
-	else if (has_dollar_sign)
-		quote_type = DOUBLE_ENV;
-	else
-		quote_type = DOUBLE;
-	if (add_token(tokens, quote_type, &input[*i + 1], len - 1) < 0)
-		return (free_tokens_input(tokens, input));
-	*i += len + 1;
-	return (0);
-}
-
 static int	handle_parsing(char *input, int *i, t_token **tokens)
 {
-	if (is_quote(input[*i]))
-	{
-		if (parse_quote(input, i, tokens) < 0)
-			return (-1);
-	}
-	else if (is_special(input[*i]))
+	if (is_special(input[*i]))
 	{
 		if (parse_special(input, i, tokens) < 0)
 			return (-1);
@@ -173,7 +119,7 @@ int	parse_input(char *input, t_token **tokens)
 	{
 		while (input[i] && is_space(input[i]))
 			i++;
-		if (input[i])  // Only parse if we haven't reached the end of input
+		if (input[i])
 		{
 			if (handle_parsing(input, &i, tokens) < 0)
 				return (-1);

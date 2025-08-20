@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/19 11:37:56 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/20 11:48:04 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,12 @@ typedef struct s_var
 	t_executor				*executor;
 }							t_var;
 
+typedef struct s_quote
+{
+	char					*quoted_word;
+	t_quote_type			quote_type;
+}							t_quote;
+
 typedef struct s_command
 {
 	char					**argv;
@@ -67,8 +73,6 @@ int							is_quote(char c);
 int							is_space(char c);
 void						ft_lstclear(t_token **lst);
 char						*ft_strndup(const char *src, int n);
-void						ft_lstadd_back(t_token **lst, t_token *new);
-t_token						*ft_lstnew(int quote_type, char *content, int len);
 int							expand_env_var(t_token *tokens, t_shell *shell,
 								t_executor *executor);
 int							free_tokens(t_token **tokens);
@@ -83,5 +87,7 @@ int							set_infile(t_token **tokens, t_command *current);
 int							is_builtin(char *cmd);
 t_command					*create_command(void);
 int							count_tokens(t_token *tokens);
+int							get_word(char *input, int *i, t_token **tokens,
+								char **word);
 
 #endif
