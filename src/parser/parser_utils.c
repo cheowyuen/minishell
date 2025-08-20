@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:51:08 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/20 11:47:34 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/20 19:25:40 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strndup(const char *src, int n)
 	int		i;
 	char	*duplicate;
 
+	if (!src)
+		return (NULL);
 	duplicate = (char *) malloc ((n + 1) * sizeof(char));
 	if (!duplicate)
 		return (NULL);
