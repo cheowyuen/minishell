@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 00:17:46 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/21 06:13:52 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,18 +52,8 @@ static int	parse_and_execute(char *input, t_token *tokens,
 	shell.exit_code = executor->last_exit_code;
 	if (parse_input(input, &tokens, &shell, executor) < 0)
 		return (-1);
-	// if (expand_env_var(tokens, &shell, executor) < 0)
-	// 	return (-1);
 	if (parse_commands(tokens, &commands) < 0)
 		return (-1);
-	//for debugging
-			t_token *tmp = tokens;
-			printf("Tokens:\n");
-			while (tmp)
-			{
-				printf("  %s\n", tmp->token);
-				tmp = tmp->next;
-			}
 	ft_lstclear(&tokens);
 	if (commands)
 	{

@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 00:06:06 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/21 06:23:34 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,14 @@ int							set_infile(t_token **tokens, t_command *current);
 int							is_builtin(char *cmd);
 t_command					*create_command(void);
 int							count_tokens(t_token *tokens);
-int							get_word(char *input, int *i, t_token **tokens,
+int							get_word(char *input, int *i, t_quote *quote,
 								char **word);
 int							expand_env_var_new(char **word, t_shell *shell,
 								t_executor *executor);
+int							parse_quote(char *input, int *i, t_quote *quote);
+int							handle_quoted_word(char **joined, t_quote *quote,
+								char *input, int *i);
+int							handle_unquoted_word(char **joined, t_quote *quote,
+								char *input, int *i);
 
 #endif

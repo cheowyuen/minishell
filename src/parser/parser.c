@@ -6,14 +6,14 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 00:38:56 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/21 06:28:14 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
 
-static int	parse_quote(char *input, int *i, t_token **tokens, t_quote *quote)
+int	parse_quote(char *input, int *i, t_quote *quote)
 {
 	int				len;
 	bool			has_dollar_sign;
@@ -30,21 +30,18 @@ static int	parse_quote(char *input, int *i, t_token **tokens, t_quote *quote)
 		return (-1);
 	quote->quoted_word = ft_strndup(&input[*i + 1], len - 1);
 	if (!quote->quoted_word)
-		return (free_tokens_input(tokens, input));
+		return (-1);
 	if (input[*i] == '\"' && has_dollar_sign)
 		if (expand_env_var_new(&quote->quoted_word, quote->shell, quote->executor) < 0)
-			return (free_tokens_input(tokens, input));
+			return (-1);
 	*i += len + 1;
 	return (0);
 }
 
 static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 {
-	char	*word;
 	char	*joined;
-	char	*temp;
 
-	word = NULL;
 	joined = ft_strdup("");
 	if (!joined)
 		return (free_tokens_input(tokens, input)); 
@@ -52,27 +49,13 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	{
 		if (is_quote(input[*i]))
 		{
-			if (parse_quote(input, i, tokens, quote) < 0)
-				return (-1);
-			temp = ft_strjoin(joined, quote->quoted_word);
-			free(joined);
-			free(quote->quoted_word);
-			quote->quoted_word = NULL;	
-			if (!temp)
-				return (free_tokens_input(tokens, input)); 
-			joined = temp;
+			if (handle_quoted_word(&joined, quote, input, i) < 0)
+				return (free_tokens_input(tokens, input));
 		}
 		else
 		{
-			if (get_word(input, i, tokens, &word) < 0)
-				return (-1);
-			temp = ft_strjoin(joined, word);
-			free(joined);
-			free(word);
-			word = NULL;
-			if (!temp)
+			if (handle_unquoted_word(&joined, quote, input, i) < 0)
 				return (free_tokens_input(tokens, input));
-			joined = temp;
 		}
 	}
 	if (add_token(tokens, quote->quote_type, joined, ft_strlen(joined)) < 0)

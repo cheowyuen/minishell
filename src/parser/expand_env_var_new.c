@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 00:41:27 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/21 05:50:04 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ static int	get_var_new(char **word, int i, t_shell *shell, t_executor *executor)
 		if (var.has_braces && ft_strncmp(word[i], "{?}", 4) != 0)
 			return (-1);
 		len = 2;
-		shell->exit_code = 0;
 		var.value = ft_itoa(shell->exit_code);
 		var.should_free = true;
 		if (!var.value)
@@ -118,7 +117,6 @@ int	expand_env_var_new(char **word, t_shell *shell, t_executor *executor)
 		{
 			if (get_var_new(word, i, shell, executor) < 0)
 				return (-1);
-			return (0);
 			i = 0;
 		}
 		else
