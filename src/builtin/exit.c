@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 07:50:58 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/21 13:56:53 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,11 @@ void	builtin_exit(t_executor *executor)
 		if (validate_exit_args(executor->commands->argv, &exit_code) != SUCCESS)
 			return ;
 	}
-	
-	// If we're in a pipeline (command_count > 1), just set exit code and return
-	// The child process will exit normally, allowing parent to clean up pipes
 	if (executor->command_count > 1)
 	{
 		executor->last_exit_code = exit_code;
 		return ;
 	}
-	
-	// Only do full cleanup and exit if we're in the main shell (not in pipeline)
 	cleanup_and_exit(executor, exit_code);
 }
 
@@ -69,12 +64,14 @@ static int	validate_exit_args(char **argv, int *exit_code)
 {
 	if (argv[2])
 	{
+		ft_dprintf(STDOUT_FILENO, "exit\n");
 		ft_dprintf(STDERR_FILENO, "minishell: exit: too many arguments\n");
 		*exit_code = 1;
-		return (SUCCESS);
+		return (FAILURE);
 	}
-	if (!is_valid_number(argv[1]))
+	if (!is_valid_number(argv[1]) || ft_strlen(argv[1]) > 19)
 	{
+		ft_dprintf(STDOUT_FILENO, "exit\n");
 		ft_dprintf(STDERR_FILENO,
 			"minishell: exit: %s: numeric argument required\n", argv[1]);
 		*exit_code = 2;
@@ -86,7 +83,6 @@ static int	validate_exit_args(char **argv, int *exit_code)
 
 static void	cleanup_and_exit(t_executor *executor, int exit_code)
 {
-	ft_dprintf(STDOUT_FILENO, "exit\n");
 	rl_clear_history();
 	if (executor->commands)
 	{
