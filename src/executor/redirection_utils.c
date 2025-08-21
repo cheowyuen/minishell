@@ -6,12 +6,13 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 09:32:37 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/21 12:33:20 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "signals.h"
+#include "utils.h"
 
 static int	create_heredoc_pipe(int pipefd[2]);
 static int	fork_heredoc_writer(int pipefd[2], char *delimiter);
@@ -91,10 +92,14 @@ static void	write_heredoc_content(int fd, char *delimiter)
 
 	while (1)
 	{
-		line = readline("> ");
+		write(1, "> ", 2);
+		line = get_next_line(STDIN_FILENO);
 		if (!line)
-			break ;
-		if (ft_strcmp(line, delimiter) == 0)
+			break ;	
+		if (ft_strcmp(line, delimiter) == 0 ||
+		    (line[ft_strlen(line) - 1] == '\n' &&
+		     ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0 &&
+		     line[ft_strlen(delimiter)] == '\n')) //remove trailing newline
 		{
 			free(line);
 			break ;

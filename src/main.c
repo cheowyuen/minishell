@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 09:38:00 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/21 11:16:02 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,9 @@ static int	run_shell_loop(t_executor *executor)
 			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
 		else
+		{
 			input = readline("");
+		}
 		result = handle_input_processing(input, tokens, executor);
 		if (result == -1)
 			break ;

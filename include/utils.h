@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:35:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/16 00:17:17 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 12:08:22 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,7 @@ int		free_input_failure(char *input);
 
 // Free inherited parent state in a forked child before exit
 void	free_inherited_state_for_child(t_executor *executor, t_command *commands);
+
+char	*get_next_line(int fd);
 
 #endif
