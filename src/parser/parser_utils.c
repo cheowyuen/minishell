@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:51:08 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/20 19:25:40 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 09:39:09 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,6 @@ char	*ft_strndup(const char *src, int n)
 	}
 	duplicate[i] = '\0';
 	return (duplicate);
-}
-
-int	get_word(char *input, int *i, t_token **tokens, char **word)
-{
-	int	len;
-
-	len = 0;
-	while (input[*i + len] && !is_quote(input[*i + len])
-		&& !is_space(input[*i + len]) && !is_special(input[*i + len]))
-		len++;
-	*word = ft_strndup(&input[*i], len);
-	if (!*word)
-		return (free_tokens_input(tokens, input));
-	*i += len;
-	return (0);
 }
 
 int	is_special(char c)

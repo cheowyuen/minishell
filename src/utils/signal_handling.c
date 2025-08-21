@@ -3,41 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/18 20:00:38 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 09:21:15 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "signals.h"
 
-int wait_for_child(pid_t child_pid)
+static int	set_last_status(t_executor *executor, int pid, int status)
 {
-    int		status;
-    int		last_status;
+	int	i;
+	int	last_status;
+
+	i = 0;
+	last_status = 0;
+	while (i < executor->command_count)
+	{
+		if (executor->pids[i] == pid)
+		{
+			if (i == executor->command_count - 1)
+				last_status = status;
+			break ;
+		}
+		i++;
+	}
+	return (last_status);
+}
+
+int	wait_all_children(t_executor *executor, int *last_status)
+{
+	int		status;
+	int		children_left;
 	pid_t	pid;
 
-	last_status = 0;
-    while (1)
-    {
-        pid = waitpid(child_pid, &status, 0);
-        if (pid == WAITPID_ERROR)
-        {
-			if (errno == EINTR)
-            	continue ;
-            if (errno == ECHILD)
-                break ;
+	children_left = executor->command_count;
+	while (children_left > 0)
+	{
+		pid = waitpid(-1, &status, 0);
+		if (pid == WAITPID_ERROR)
+		{
+			if (errno == ECHILD)
+				break ;
 			perror("waitpid");
 			return (FAILURE);
-        }
-        last_status = status;
-        break;
-    }
-    if (WIFSIGNALED(last_status) && WTERMSIG(last_status) == SIGINT)
-        write(STDOUT_FILENO, "\n", 1);
-    return (SUCCESS);
+		}
+		*last_status = set_last_status(executor, pid, status);
+		children_left--;
+	}
+	return (SUCCESS);
+}
+
+int	wait_for_child(pid_t pid)
+{
+	int		status;
+
+	if (waitpid(pid, &status, 0) == WAITPID_ERROR)
+	{
+		perror("waitpid");
+		return (FAILURE);
+	}
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		write(STDOUT_FILENO, "\n", 1);
+	return (SUCCESS);
 }
 
 void	sigint_handler(int sig)

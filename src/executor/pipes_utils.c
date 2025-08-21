@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/18 20:00:38 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 08:50:18 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "utils.h"
+#include "signals.h"
 
 void	close_and_free_pipes(t_executor *executor)
 {
@@ -84,39 +85,11 @@ int	clean_everything_error(t_executor *executor)
 
 int	close_children_process(t_executor *executor)
 {
-	int		status;
 	int		last_status;
-	int		children_left;
-	pid_t	pid;
-	int		i;
 
-	if (!executor || !executor->pids || executor->command_count <= 0)
-		return (FAILURE);
 	last_status = 0;
-	children_left = executor->command_count;
-	while (children_left > 0)
-	{
-		pid = waitpid(-1, &status, 0);
-		if (pid == WAITPID_ERROR)
-		{
-			if (errno == ECHILD)
-				break ;
-			perror("waitpid");
-			return (FAILURE);
-		}
-		i = 0;
-		while (i < executor->command_count)
-		{
-			if (executor->pids[i] == pid)
-			{
-				if (i == executor->command_count - 1)
-					last_status = status;
-				break ;
-			}
-			i++;
-		}
-		children_left--;
-	}
+	if (wait_all_children(executor, &last_status) < 0)
+		return (FAILURE);
 	if (WIFSIGNALED(last_status) && WTERMSIG(last_status) == SIGINT)
 		write(STDOUT_FILENO, "\n", 1);
 	if (WIFEXITED(last_status))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/19 19:26:53 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 09:38:00 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	main(int argc, char **argv, char **envp)
 	t_executor	executor;
 	t_command	command;
 	int			exit_code;
-
+	
 	(void)argc;
 	(void)argv;
 	setup_signals_prompt();
@@ -50,9 +50,7 @@ static int	parse_and_execute(char *input, t_token *tokens,
 
 	commands = NULL;
 	shell.exit_code = executor->last_exit_code;
-	if (parse_input(input, &tokens) < 0)
-		return (-1);
-	if (expand_env_var(tokens, &shell, executor) < 0)
+	if (parse_input(input, &tokens, &shell, executor) < 0)
 		return (-1);
 	if (parse_commands(tokens, &commands) < 0)
 		return (-1);
