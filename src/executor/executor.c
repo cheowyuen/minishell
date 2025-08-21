@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 18:32:43 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 19:15:55 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@ int	exec_cmd(t_executor *executor, t_command *command)
 {
 	if (!executor || !command)
 		return (FAILURE);
+	if (!command->argv || !command->argv[0] || !command->argv[0][0])
+	{
+		if (!command->next && !command->pipe_out && !command->infile && 
+			!command->outfile && !command->has_heredoc)
+			return (SUCCESS);
+	}
 	executor->commands = command;
 	if (command->next != NULL || command->pipe_out)
 		return (exec_pipe(executor, command));
