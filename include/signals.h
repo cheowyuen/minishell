@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:46 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/19 11:38:10 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/21 09:21:22 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,6 @@ void				setup_signals_child(void);
 void				setup_signals_heredoc(void);
 void				setup_signals_ignore(void);
 int					wait_all_children(t_executor *executor, int *last_status);
-// int					wait_for_child(pid_t pid);
+int					wait_for_child(pid_t pid);
 
 #endif

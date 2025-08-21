@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 07:44:38 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/21 08:02:34 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	main(int argc, char **argv, char **envp)
 	t_executor	executor;
 	t_command	command;
 	int			exit_code;
-
+	
 	(void)argc;
 	(void)argv;
 	setup_signals_prompt();
@@ -37,7 +37,7 @@ int	main(int argc, char **argv, char **envp)
 	if (executor.env_list)
 		free_environment(&executor);
 	free_executor(&executor);
-	// rl_clear_history();
+	rl_clear_history();
 	return (exit_code);
 }
 
@@ -102,8 +102,8 @@ static int	run_shell_loop(t_executor *executor)
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			// rl_replace_line("", 0);
-			// rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_on_new_line();
 			input = readline(CLR_GREEN PROMPT RESET);
 		}
 		else

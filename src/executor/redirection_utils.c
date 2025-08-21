@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 06:13:50 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/21 09:32:37 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	write_heredoc_content(int fd, char *delimiter);
 int	setup_heredoc(t_command *command)
 {
 	int	pipefd[2];
-
+	
 	if (!command || !command->has_heredoc || !command->heredoc_delim)
 		return (FAILURE);
 	if (create_heredoc_pipe(pipefd) == FAILURE)
@@ -44,8 +44,8 @@ static int	create_heredoc_pipe(int pipefd[2])
 static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 {
 	pid_t	pid;
-	//int		status;
-
+	int		status;
+	
 	pid = fork();
 	if (pid < 0)
 	{
@@ -57,19 +57,19 @@ static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 	if (pid == 0)
 	{
 		close(pipefd[0]);
-		// setup_signals_heredoc();
+		setup_signals_heredoc();
 		write_heredoc_content(pipefd[1], delimiter);
 		close(pipefd[1]);
 		exit(0);
 	}
-	// else
-	// {
-	// 	close(pipefd[1]);
-	// 	setup_signals_ignore();
-	// 	status = wait_for_child(pid);
-	// 	setup_signals_prompt();
-	// 	return (status);
-	// }
+	else
+	{
+		close(pipefd[1]);
+		setup_signals_ignore();
+		status = wait_for_child(pid);
+		setup_signals_prompt();
+		return (status);
+	}
 	return (SUCCESS);
 }
 
@@ -89,7 +89,6 @@ static void	write_heredoc_content(int fd, char *delimiter)
 {
 	char	*line;
 
-	setup_signals_heredoc();
 	while (1)
 	{
 		line = readline("> ");

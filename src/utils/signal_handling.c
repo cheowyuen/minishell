@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 06:13:53 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/21 09:21:15 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,26 +56,26 @@ int	wait_all_children(t_executor *executor, int *last_status)
 	return (SUCCESS);
 }
 
-// int	wait_for_child(pid_t pid)
-// {
-// 	int		status;
+int	wait_for_child(pid_t pid)
+{
+	int		status;
 
-// 	if (waitpid(pid, &status, 0) == WAITPID_ERROR)
-// 	{
-// 		perror("waitpid");
-// 		return (FAILURE);
-// 	}
-// 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-// 		write(STDOUT_FILENO, "\n", 1);
-// 	return (SUCCESS);
-// }
+	if (waitpid(pid, &status, 0) == WAITPID_ERROR)
+	{
+		perror("waitpid");
+		return (FAILURE);
+	}
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		write(STDOUT_FILENO, "\n", 1);
+	return (SUCCESS);
+}
 
 void	sigint_handler(int sig)
 {
 	(void)sig;
 	g_signal_status = SIGNAL_INT;
 	write(STDOUT_FILENO, "\n", 1);
-	// rl_replace_line("", 0);
-	// rl_on_new_line();
-	// rl_redisplay();
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 }

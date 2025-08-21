@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/18 19:52:42 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 08:50:50 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 int	setup_input_redirection(t_command *command)
 {
 	int	fd;
-
-	if (!command || !command->infile)
+	
+	if (!command)
 		return (SUCCESS);
 	if (command->has_heredoc)
 		return (setup_heredoc(command));
+	if (!command->infile)
+		return (SUCCESS);
 	fd = open(command->infile, O_RDONLY);
 	if (fd < 0)
 	{
