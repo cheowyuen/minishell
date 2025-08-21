@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:42:48 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/16 00:19:46 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 22:13:10 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	free_executor(t_executor *executor)
 {
 	if (executor->pids)
 		free(executor->pids);
+	if (executor->logical_pwd)
+		free(executor->logical_pwd);
 	free_environment(executor);
 	executor->command_count = 0;
 	executor->current_command_index = 0;

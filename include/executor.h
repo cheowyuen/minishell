@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 18:43:10 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 22:13:10 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_executor
 	int				current_command_index;
 	int				last_exit_code;
 	int				**pipes;
+	char			*logical_pwd;
 }					t_executor;
 
 // Functions command execution

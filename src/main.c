@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 19:29:50 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 22:57:42 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,14 @@ int	main(int argc, char **argv, char **envp)
 	setup_signals_prompt();
 	ft_bzero(&executor, sizeof(t_executor));
 	ft_bzero(&command, sizeof(t_command));
+	executor.logical_pwd = getcwd(NULL, 0);
+	if (!executor.logical_pwd)
+		executor.logical_pwd = ft_strdup("/");
 	add_envp_to_executor(&executor, envp);
 	if (isatty(STDIN_FILENO))
 		printf(BOLD CLR_BLUE "Welcome to Minishell!\n" RESET);
 	run_shell_loop(&executor);
 	exit_code = executor.last_exit_code;
-	if (executor.env_list)
-		free_environment(&executor);
 	free_executor(&executor);
 	rl_clear_history();
 	return (exit_code);
@@ -69,8 +70,6 @@ static int	handle_input_processing(char *input, t_token *tokens,
 {
 	if (!input)
 	{
-		free_executor(executor);
-		free_environment(executor);
 		return (-1);
 	}
 	if (g_signal_status == SIGNAL_INT)

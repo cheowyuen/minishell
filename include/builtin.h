@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:49:22 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:46:43 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 22:58:07 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,7 @@ int			perform_directory_change(t_executor *executor, char *target_copy,
 				int need_free);
 char		*get_target_directory(t_executor *executor, t_command *command,
 				int *need_free);
+char		*resolve_logical_path(char *current_logical_pwd, char *target);
+char		*join_path_components(char **resolved_parts, int count);
 
 #endif
