@@ -6,13 +6,16 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 18:54:53 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 19:23:15 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "environment.h"
 #include <sys/stat.h>
+
+static void	execve_execution(t_executor *executor, t_command *command,
+			char *cmd_path);
 
 void	count_commands(t_command *command, t_executor *executor)
 {
@@ -33,7 +36,6 @@ void	count_commands(t_command *command, t_executor *executor)
 void	exec_external_command(t_executor *executor, t_command *command)
 {
 	char		*cmd_path;
-	char		**envp;
 	struct stat	st;
 
 	if (!command->argv[0] || !command->argv[0][0])
@@ -44,7 +46,7 @@ void	exec_external_command(t_executor *executor, t_command *command)
 	cmd_path = find_command_path(executor, command->argv[0]);
 	if (!cmd_path)
 	{
-		ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n", 
+		ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n",
 			command->argv[0]);
 		exit(EXIT_CMD_NOT_FOUND);
 	}
@@ -55,6 +57,14 @@ void	exec_external_command(t_executor *executor, t_command *command)
 		free(cmd_path);
 		exit(EXIT_CMD_NOT_EXECUTABLE);
 	}
+	execve_execution(executor, command, cmd_path);
+}
+
+static void	execve_execution(t_executor *executor, t_command *command,
+		char *cmd_path)
+{
+	char	**envp;
+
 	envp = build_env_array(executor);
 	if (!envp)
 	{
