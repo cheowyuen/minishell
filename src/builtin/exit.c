@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 13:56:53 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:03:45 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	builtin_exit(t_executor *executor)
 		return ;
 	}
 	exit_code = executor->last_exit_code;
+	if (executor->command_count <= 1)
+		ft_dprintf(STDOUT_FILENO, "exit\n");
 	if (executor->commands->argv[1])
 	{
 		if (validate_exit_args(executor->commands->argv, &exit_code) != SUCCESS)
@@ -62,20 +64,18 @@ static int	is_valid_number(const char *str)
 
 static int	validate_exit_args(char **argv, int *exit_code)
 {
-	if (argv[2])
-	{
-		ft_dprintf(STDOUT_FILENO, "exit\n");
-		ft_dprintf(STDERR_FILENO, "minishell: exit: too many arguments\n");
-		*exit_code = 1;
-		return (FAILURE);
-	}
 	if (!is_valid_number(argv[1]) || ft_strlen(argv[1]) > 19)
 	{
-		ft_dprintf(STDOUT_FILENO, "exit\n");
 		ft_dprintf(STDERR_FILENO,
 			"minishell: exit: %s: numeric argument required\n", argv[1]);
 		*exit_code = 2;
 		return (SUCCESS);
+	}
+	if (argv[2])
+	{
+		ft_dprintf(STDERR_FILENO, "minishell: exit: too many arguments\n");
+		*exit_code = 1;
+		return (FAILURE);
 	}
 	*exit_code = ft_atoi(argv[1]);
 	return (SUCCESS);
