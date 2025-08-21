@@ -57,6 +57,7 @@ int	setup_output_redirection(t_command *command)
 	}
 	if (dup2(fd, STDOUT_FILENO) < 0)
 	{
+		perror("dup2");
 		close(fd);
 		return (FAILURE);
 	}
