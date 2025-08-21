@@ -6,12 +6,13 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/16 00:18:51 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:54:53 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "environment.h"
+#include <sys/stat.h>
 
 void	count_commands(t_command *command, t_executor *executor)
 {
@@ -31,10 +32,29 @@ void	count_commands(t_command *command, t_executor *executor)
 
 void	exec_external_command(t_executor *executor, t_command *command)
 {
-	char	*cmd_path;
-	char	**envp;
+	char		*cmd_path;
+	char		**envp;
+	struct stat	st;
 
+	if (!command->argv[0] || !command->argv[0][0])
+	{
+		ft_dprintf(STDERR_FILENO, "minishell: : command not found\n");
+		exit(EXIT_CMD_NOT_FOUND);
+	}
 	cmd_path = find_command_path(executor, command->argv[0]);
+	if (!cmd_path)
+	{
+		ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n", 
+			command->argv[0]);
+		exit(EXIT_CMD_NOT_FOUND);
+	}
+	if (stat(cmd_path, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		ft_dprintf(STDERR_FILENO, "minishell: %s: Is a directory\n",
+			command->argv[0]);
+		free(cmd_path);
+		exit(EXIT_CMD_NOT_EXECUTABLE);
+	}
 	envp = build_env_array(executor);
 	if (!envp)
 	{
@@ -47,7 +67,10 @@ void	exec_external_command(t_executor *executor, t_command *command)
 		strerror(errno));
 	free(cmd_path);
 	free_str_array(envp);
-	exit(EXIT_CMD_NOT_FOUND);
+	if (errno == EACCES)
+		exit(EXIT_CMD_NOT_EXECUTABLE);
+	else
+		exit(EXIT_CMD_NOT_FOUND);
 }
 
 void	add_envp_to_executor(t_executor *executor, char **envp)
@@ -64,44 +87,4 @@ void	add_envp_to_executor(t_executor *executor, char **envp)
 		}
 		i++;
 	}
-}
-
-static int	validate_single_command(t_executor *executor, t_command *command)
-{
-	char	*cmd_path;
-
-	if (command->is_builtin)
-		return (SUCCESS);
-	if (!command->argv || !command->argv[0] || !command->argv[0][0])
-	{
-		ft_dprintf(STDERR_FILENO, "minishell: empty command\n");
-		return (FAILURE);
-	}
-	cmd_path = find_command_path(executor, command->argv[0]);
-	if (!cmd_path)
-	{
-		ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n",
-			command->argv[0]);
-		return (FAILURE);
-	}
-	free(cmd_path);
-	return (SUCCESS);
-}
-
-int	validate_commands_exist(t_executor *executor, t_command *command)
-{
-	t_command	*current;
-	int			has_errors;
-
-	has_errors = 0;
-	current = command;
-	while (current)
-	{
-		if (validate_single_command(executor, current) == FAILURE)
-			has_errors = 1;
-		current = current->next;
-	}
-	if (has_errors)
-		return (FAILURE);
-	return (SUCCESS);
 }

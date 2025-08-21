@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 09:38:00 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/21 18:20:42 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ static int	run_shell_loop(t_executor *executor)
 			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
 		else
-			input = readline("");
+			input = readline(PROMPT);
 		result = handle_input_processing(input, tokens, executor);
 		if (result == -1)
 			break ;

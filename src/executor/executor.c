@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 18:11:00 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:32:43 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 int	exec_cmd(t_executor *executor, t_command *command)
 {
 	if (!executor || !command)
-		return (FAILURE);
-	if (validate_commands_exist(executor, command) == FAILURE)
 		return (FAILURE);
 	executor->commands = command;
 	if (command->next != NULL || command->pipe_out)

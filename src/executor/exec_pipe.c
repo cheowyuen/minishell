@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/19 11:38:24 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/21 19:03:37 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 
 int	exec_pipe(t_executor *executor, t_command *command)
 {
-	int		last_status;
-
 	if (!executor || !command)
 		return (FAILURE);
 	count_commands(command, executor);
@@ -39,8 +37,7 @@ int	exec_pipe(t_executor *executor, t_command *command)
 	if (fork_processes(executor, command) == FAILURE)
 		return (clean_everything_error(executor));
 	close_and_free_pipes(executor);
-	last_status = close_children_process(executor);
-	if (last_status == FAILURE)
+	if (close_children_process(executor) == FAILURE)
 		return (clean_everything_error(executor));
 	setup_signals_prompt();
 	if (executor->pids)
@@ -48,7 +45,7 @@ int	exec_pipe(t_executor *executor, t_command *command)
 		free(executor->pids);
 		executor->pids = NULL;
 	}
-	return (last_status);
+	return (executor->last_exit_code);
 }
 
 static int	create_pipes(t_executor *executor, int count)

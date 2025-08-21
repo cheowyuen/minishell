@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/15 18:07:40 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:43:10 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define FD_INVALID -1
 
 // Exit codes
+# define EXIT_CMD_NOT_EXECUTABLE 126
 # define EXIT_CMD_NOT_FOUND 127
 # define EXIT_SIGNAL_BASE 128
 
@@ -78,8 +79,6 @@ int					setup_output_redirection(t_command *command);
 // Execution utilities
 char				**build_env_array(t_executor *executor);
 void				count_commands(t_command *command, t_executor *executor);
-int					validate_commands_exist(t_executor *executor,
-						t_command *command);
 void				add_envp_to_executor(t_executor *executor, char **envp);
 
 // Pipe utils
