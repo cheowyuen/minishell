@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 18:03:45 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/21 19:44:28 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ void	builtin_exit(t_executor *executor)
 	if (executor->commands->argv[1])
 	{
 		if (validate_exit_args(executor->commands->argv, &exit_code) != SUCCESS)
+		{
+			executor->last_exit_code = exit_code;
 			return ;
+		}
 	}
 	if (executor->command_count > 1)
 	{
