@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 19:23:15 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/22 23:13:14 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static void	execve_execution(t_executor *executor, t_command *command,
 		strerror(errno));
 	free(cmd_path);
 	free_str_array(envp);
-	if (errno == EACCES)
+	if (errno == EACCES || errno == ENOTDIR)
 		exit(EXIT_CMD_NOT_EXECUTABLE);
 	else
 		exit(EXIT_CMD_NOT_FOUND);
