@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_var_new.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 05:50:04 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/22 11:23:41 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ static int	join_token_new(char **word, int i, int len, t_var var)
 static int	get_value_new(char **word, int i, int len, t_var var)
 {
 	char	*variable;
-
 	if ((*word)[i + 1] != '?')
 	{
 		while ((*word)[i + len] && (ft_isalnum((*word)[i + len])

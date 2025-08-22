@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 17:05:50 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/22 12:51:47 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	main(int argc, char **argv, char **envp)
 	t_executor	executor;
 	t_command	command;
 	int			exit_code;
-	
+
 	(void)argc;
 	(void)argv;
 	setup_signals_prompt();
@@ -37,7 +37,7 @@ int	main(int argc, char **argv, char **envp)
 	if (executor.env_list)
 		free_environment(&executor);
 	free_executor(&executor);
-	// rl_clear_history();
+	rl_clear_history();
 	return (exit_code);
 }
 
@@ -102,8 +102,8 @@ static int	run_shell_loop(t_executor *executor)
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			// rl_replace_line("", 0);
-			// rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_on_new_line();
 			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
 		else

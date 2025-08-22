@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/22 07:15:01 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/22 10:09:30 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,6 @@ static int	create_heredoc_pipe(int pipefd[2])
 	return (SUCCESS);
 }
 
-int heredoc_hook(void)
-{
-    if (g_signal_status == SIGINT)
-    {
-        rl_done = 1;
-        g_signal_status = 0;
-    }
-    return 0;
-}
-
 static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 {
 	pid_t	pid;
@@ -69,21 +59,21 @@ static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 	if (pid == 0)
 	{
 		close(pipefd[0]);
+		setup_signals_heredoc();
 		write_heredoc_content(pipefd[1], delimiter);
 		close(pipefd[1]);
 		exit(0);
 	}
 	else
 	{
-		close(pipefd[1]);
-		printf("Before waitpid\n");
+		close(pipefd[1]); 
+		setup_signals_ignore();
 		if (waitpid(pid, &status, 0) == WAITPID_ERROR)
 		{
 			perror("waitpid");
 			return (FAILURE);
 		}
-		printf("After waitpid\n");
-		return (status);
+		setup_signals_prompt();
 	}
 	return (SUCCESS);
 }
@@ -104,28 +94,17 @@ static void	write_heredoc_content(int fd, char *delimiter)
 {
 	char	*line;
 	
-	rl_event_hook = heredoc_hook;
-	signal(SIGINT, sigint_handler); 
 	while (1)
 	{
-		write(1, "> ", 2);
-		line = get_next_line(STDIN_FILENO);
-		if (g_signal_status == 2)
-		{
-			free(line);
-			break;
-		}
+		line = readline("> ");
 		if (!line)
 			break ;	
-		if (ft_strcmp(line, delimiter) == 0 ||
-		    (line[ft_strlen(line) - 1] == '\n' &&
-		     ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0 &&
-		     line[ft_strlen(delimiter)] == '\n')) //remove trailing newline
+		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			break ;
 		}
-		if (write(fd, line, ft_strlen(line)) == -1)
+		if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
 		{
 			perror("write");
 			free(line);
@@ -133,5 +112,4 @@ static void	write_heredoc_content(int fd, char *delimiter)
 		}
 		free(line);
 	}
-	rl_event_hook = NULL;
 }

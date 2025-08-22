@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:46 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/22 07:09:13 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/22 10:08:57 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,5 @@ void				setup_signals_child(void);
 void				setup_signals_heredoc(void);
 void				setup_signals_ignore(void);
 int					wait_all_children(t_executor *executor, int *last_status);
-int					wait_for_child(pid_t pid);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_word_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/21 06:22:52 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/22 11:43:51 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 	while (input[*i + len] && !is_quote(input[*i + len])
 		&& !is_space(input[*i + len]) && !is_special(input[*i + len]))
 	{
-		if (ft_strncmp(&input[*i + len], "$?", 2))
+		if (ft_strncmp(&input[*i + len], "$?", 2) == 0)
 			has_dollar_sign = true;
 		len++;
 	}

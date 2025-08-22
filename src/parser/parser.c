@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 09:38:48 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/22 11:33:33 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ int	parse_quote(char *input, int *i, t_quote *quote)
 	if (!quote->quoted_word)
 		return (-1);
 	if (input[*i] == '\"' && has_dollar_sign)
-		if (expand_env_var_new(&quote->quoted_word, quote->shell, quote->executor) < 0)
-			return (-1);
+		if (ft_strncmp(&input[*i], "\"$\"", 3) != 0)
+			if (expand_env_var_new(&quote->quoted_word, quote->shell, quote->executor) < 0)
+				return (-1);
 	*i += len + 1;
 	return (0);
 }

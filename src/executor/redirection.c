@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 08:50:50 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/22 13:22:42 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,37 @@ int	setup_input_redirection(t_command *command)
 
 int	setup_output_redirection(t_command *command)
 {
-	int	fd;
-	int	flags;
+	int		fd;
+	int		flags;
+    t_redir *redir;
 
-	if (!command || !command->outfile)
-		return (SUCCESS);
-	if (command->append)
-		flags = O_WRONLY | O_CREAT | O_APPEND;
-	else
-		flags = O_WRONLY | O_CREAT | O_TRUNC;
-	fd = open(command->outfile, flags, 0644);
-	if (fd < 0)
+    if (!command)
+        return FAILURE;
+    redir = command->outfiles;
+	while (redir)
 	{
-		perror(command->outfile);
-		return (FAILURE);
-	}
-	if (dup2(fd, STDOUT_FILENO) < 0)
-	{
+		// if (!command || !command->outfile)
+		// 	return (SUCCESS);
+		if (redir->append)
+			flags = O_WRONLY | O_CREAT | O_APPEND;
+		else
+			flags = O_WRONLY | O_CREAT | O_TRUNC;
+		fd = open(redir->filename, flags, 0644);
+		if (fd < 0)
+		{
+			perror(redir->filename);
+			return (FAILURE);
+		}
+		if (!redir->next)
+		{
+			if (dup2(fd, STDOUT_FILENO) < 0)
+			{
+				close(fd);
+				return (FAILURE);
+			}
+		}
 		close(fd);
-		return (FAILURE);
+		redir = redir->next;
 	}
-	close(fd);
 	return (SUCCESS);
 }

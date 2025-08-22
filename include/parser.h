@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 09:37:41 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/22 12:45:04 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,13 @@ typedef struct s_quote
 	t_executor				*executor;
 }							t_quote;
 
+typedef struct s_redir
+{
+	char    				*filename;
+    bool    				append;
+    struct s_redir			*next;
+}   						t_redir;
+
 typedef struct s_command
 {
 	char					**argv;
@@ -63,6 +70,7 @@ typedef struct s_command
 	int						is_builtin;
 	int						is_last;
 	int						pipe_out;
+	t_redir					*outfiles;
 	struct s_command		*next;
 }							t_command;
 
