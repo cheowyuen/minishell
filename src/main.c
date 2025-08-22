@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 22:57:42 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:23:09 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ static int	handle_input_processing(char *input, t_token *tokens,
 	}
 	if (g_signal_status == SIGNAL_INT)
 	{
+		executor->last_exit_code = 130; // SIGINT
 		g_signal_status = SIGNAL_NONE;
 		if (!input || !*input || is_only_space_or_tab(input))
 			return (free_input_failure(input));
