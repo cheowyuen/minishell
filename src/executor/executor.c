@@ -6,12 +6,13 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 19:15:55 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/22 22:21:47 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "utils.h"
+#include "signals.h"
 
 int	exec_cmd(t_executor *executor, t_command *command)
 {
@@ -60,6 +61,7 @@ int	exec_single_external(t_executor *executor, t_command *command)
 	pid = fork();
 	if (pid == 0)
 	{
+		setup_signals_child();
 		if (setup_single_redirection(command) == FAILURE)
 		{
 			free_inherited_state_for_child(executor, command);
@@ -70,15 +72,22 @@ int	exec_single_external(t_executor *executor, t_command *command)
 	}
 	else if (pid > 0)
 	{
+		setup_signals_ignore();  // Parent ignores signals while waiting
 		if (waitpid(pid, &status, 0) < 0)
 		{
 			perror("waitpid");
+			setup_signals_prompt();  // Restore parent signals
 			return (FAILURE);
 		}
+		setup_signals_prompt();  // Restore parent signals
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
 		if (WIFSIGNALED(status))
+		{
+			if (WTERMSIG(status) == SIGINT)
+				write(STDOUT_FILENO, "\n", 1);
 			return (EXIT_SIGNAL_BASE + WTERMSIG(status));
+		}
 	}
 	perror("fork");
 	return (FAILURE);

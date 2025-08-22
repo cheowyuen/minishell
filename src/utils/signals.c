@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:52:49 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 09:21:30 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/22 22:14:16 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signals.h"
 
-volatile sig_atomic_t	g_signal_status;
+volatile sig_atomic_t	g_signal_status = SIGNAL_NONE;
 
 void	setup_signals_prompt(void)
 {
