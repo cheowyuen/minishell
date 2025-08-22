@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:42:48 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 22:13:10 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:40:45 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ void	free_str_array(char **arr)
 	free(arr);
 }
 
-void	free_inherited_state_for_child(t_executor *executor, t_command *commands)
+void	free_inherited_state_for_child(t_executor *executor,
+		t_command *commands)
 {
 	if (commands)
 		free_commands(&commands);

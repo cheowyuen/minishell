@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/22 16:23:09 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:44:35 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	main(int argc, char **argv, char **envp)
 	t_executor	executor;
 	t_command	command;
 	int			exit_code;
-	
+
 	(void)argc;
 	(void)argv;
 	setup_signals_prompt();
@@ -74,14 +74,14 @@ static int	handle_input_processing(char *input, t_token *tokens,
 	}
 	if (g_signal_status == SIGNAL_INT)
 	{
-		executor->last_exit_code = 130; // SIGINT
+		executor->last_exit_code = 130;
 		g_signal_status = SIGNAL_NONE;
 		if (!input || !*input || is_only_space_or_tab(input))
 			return (free_input_failure(input));
 	}
 	if (*input && ft_strlen(input) > 0 && !is_only_space_or_tab(input))
 	{
-		add_history(input); // moved so it does not stuck half printed input
+		add_history(input);
 		if (parse_and_execute(input, tokens, executor) < 0)
 			return (free_input_failure(input));
 	}
@@ -104,10 +104,11 @@ static int	run_shell_loop(t_executor *executor)
 		{
 			rl_replace_line("", 0);
 			rl_on_new_line();
-			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
+			input = readline("\001" CLR_GREEN "\002"
+					PROMPT "\001" RESET "\002");
 		}
 		else
-			input = readline(PROMPT); // DO FORGET TO REMOVE PROMPT AND REPLACE WITH ""
+			input = readline(PROMPT);
 		result = handle_input_processing(input, tokens, executor);
 		if (result == -1)
 			break ;

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:48:32 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 22:14:53 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:45:49 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	builtin_pwd(t_executor *executor)
 {
 	char	*cwd;
-	
+
 	if (executor->logical_pwd)
 	{
 		printf("%s\n", executor->logical_pwd);

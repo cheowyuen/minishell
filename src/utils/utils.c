@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:33:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/16 00:19:52 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:41:43 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,3 @@ int	free_input_failure(char *input)
 	free(input);
 	return (1);
 }
-
