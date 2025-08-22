@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 12:36:29 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/22 07:15:01 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "signals.h"
 #include "utils.h"
+#include "minishell.h"
 
 static int	create_heredoc_pipe(int pipefd[2]);
 static int	fork_heredoc_writer(int pipefd[2], char *delimiter);
@@ -42,6 +43,16 @@ static int	create_heredoc_pipe(int pipefd[2])
 	return (SUCCESS);
 }
 
+int heredoc_hook(void)
+{
+    if (g_signal_status == SIGINT)
+    {
+        rl_done = 1;
+        g_signal_status = 0;
+    }
+    return 0;
+}
+
 static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 {
 	pid_t	pid;
@@ -58,7 +69,6 @@ static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 	if (pid == 0)
 	{
 		close(pipefd[0]);
-		setup_signals_heredoc();
 		write_heredoc_content(pipefd[1], delimiter);
 		close(pipefd[1]);
 		exit(0);
@@ -66,9 +76,13 @@ static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 	else
 	{
 		close(pipefd[1]);
-		setup_signals_ignore();
-		status = wait_for_child(pid);
-		setup_signals_prompt();
+		printf("Before waitpid\n");
+		if (waitpid(pid, &status, 0) == WAITPID_ERROR)
+		{
+			perror("waitpid");
+			return (FAILURE);
+		}
+		printf("After waitpid\n");
 		return (status);
 	}
 	return (SUCCESS);
@@ -89,11 +103,18 @@ static int	setup_heredoc_input(int pipefd[2])
 static void	write_heredoc_content(int fd, char *delimiter)
 {
 	char	*line;
-
+	
+	rl_event_hook = heredoc_hook;
+	signal(SIGINT, sigint_handler); 
 	while (1)
 	{
 		write(1, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
+		if (g_signal_status == 2)
+		{
+			free(line);
+			break;
+		}
 		if (!line)
 			break ;	
 		if (ft_strcmp(line, delimiter) == 0 ||
@@ -104,7 +125,7 @@ static void	write_heredoc_content(int fd, char *delimiter)
 			free(line);
 			break ;
 		}
-		if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
+		if (write(fd, line, ft_strlen(line)) == -1)
 		{
 			perror("write");
 			free(line);
@@ -112,4 +133,5 @@ static void	write_heredoc_content(int fd, char *delimiter)
 		}
 		free(line);
 	}
+	rl_event_hook = NULL;
 }

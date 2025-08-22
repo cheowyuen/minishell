@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 12:57:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 12:31:57 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/21 20:38:10 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,11 @@ static char	*append_buffer(char *line, char *buffer)
 	free(temp);
 	return (line);
 }
-
+#include <stdio.h>
 static char	*read_and_append(int fd, char *line)
 {
 	char	buffer[BUFFER_SIZE + 1];
 	ssize_t	bytes_read;
-
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read == -1)
 	{
