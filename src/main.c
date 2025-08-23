@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 20:17:44 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:33:56 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	parse_and_execute(char *input, t_token **tokens,
 	if (parse_input(input, tokens, &shell, executor) < 0
 		|| parse_commands(*tokens, &commands) < 0)
 	{
-		ft_dprintf(STDERR_FILENO,"minishell: unsupported syntax error\n");
+		ft_dprintf(STDERR_FILENO,"minishell: unsupported syntax\n");
 		executor->last_exit_code = 2; //exit code 2 for syntax errors
 		return (-1);
 	}
