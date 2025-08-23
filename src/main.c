@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/22 16:44:35 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:36:29 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,10 @@ static int	parse_and_execute(char *input, t_token *tokens,
 	if (parse_input(input, &tokens, &shell, executor) < 0)
 		return (-1);
 	if (parse_commands(tokens, &commands) < 0)
+	{
+		executor->last_exit_code = 2;  // exit code 2 for syntax errors
 		return (-1);
+	}
 	ft_lstclear(&tokens);
 	if (commands)
 	{

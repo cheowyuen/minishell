@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 22:13:10 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:25:50 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@
 # define EXIT_SIGNAL_BASE 128
 
 # define INVALID_ID "not a valid identifier"
+
+// Max heredoc limit per command line
+# define HEREDOC_MAX 16
 
 // Environment variable structure to save key-value pairs
 typedef struct s_env
