@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 08:50:22 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/23 20:41:05 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	setup_single_redirection(t_command *command)
 		if (setup_input_redirection(command) == FAILURE)
 			return (FAILURE);
 	}
-	if (command->outfile)
+	if (command->outfiles)
 	{
 		if (setup_output_redirection(command) == FAILURE)
 			return (FAILURE);
@@ -52,7 +52,7 @@ int	exec_single_external(t_executor *executor, t_command *command)
 {
 	pid_t	pid;
 	int		status;
-
+	
 	pid = fork();
 	if (pid == 0)
 	{

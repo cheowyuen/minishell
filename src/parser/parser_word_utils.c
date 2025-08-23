@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_word_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/22 11:43:51 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/23 18:18:28 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 	if (!*word)
 		return (-1);
 	if (has_dollar_sign)
-		if (expand_env_var_new(word, quote->shell, quote->executor) < 0)
+		if (expand_env_var(word, quote->shell, quote->executor) < 0)
 			return (-1);
 	*i += len;
 	return (0);

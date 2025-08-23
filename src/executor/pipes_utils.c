@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 08:50:18 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/23 18:42:34 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	setup_redirection_child_process(t_executor *executor,
 			exit(EXIT_FAILURE);
 		}
 	}
-	if (command->outfile)
+	if (command->outfiles)
 	{
 		if (setup_output_redirection(command) == FAILURE)
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 09:38:16 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/23 20:26:21 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	handle_special(t_token **tokens, t_command **current
 	}
 	else if (ft_strcmp((*tokens)->token, ">>") == 0)
 	{
-		if (set_outfile(tokens, *current, 1) < 0)
+		if (set_outfile(tokens, 1, &(*current)->outfiles) < 0)
 			return (free_tokens_commands(tokens, &commands));
 	}
 	else if ((*tokens)->token[0] == '<')
@@ -68,7 +68,7 @@ static int	handle_special(t_token **tokens, t_command **current
 	}
 	else if ((*tokens)->token[0] == '>')
 	{
-		if (set_outfile(tokens, *current, 0) < 0)
+		if (set_outfile(tokens, 0, &(*current)->outfiles) < 0)
 			return (free_tokens_commands(tokens, &commands));
 	}
 	else

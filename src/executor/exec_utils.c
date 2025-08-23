@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/16 00:18:51 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:41:33 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	add_envp_to_executor(t_executor *executor, char **envp)
 static int	validate_single_command(t_executor *executor, t_command *command)
 {
 	char	*cmd_path;
-
+	
 	if (command->is_builtin)
 		return (SUCCESS);
 	if (!command->argv || !command->argv[0] || !command->argv[0][0])
@@ -92,7 +92,7 @@ int	validate_commands_exist(t_executor *executor, t_command *command)
 {
 	t_command	*current;
 	int			has_errors;
-
+	
 	has_errors = 0;
 	current = command;
 	while (current)
