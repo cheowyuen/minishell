@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 21:05:32 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/23 21:12:04 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ void	sigint_handler(int sig)
 	(void)sig;
 	g_signal_status = sig;
 	write(STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
+	// rl_replace_line("", 0);
+	// rl_on_new_line();
+	// rl_redisplay();
 	
 }
