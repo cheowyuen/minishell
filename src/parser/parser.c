@@ -1,18 +1,12 @@
-/* **************************************************		{
-			if (handle_unquoted_word(&joined, quote, input, i) < 0)
-				return (free_tokens_input(tokens, NULL, 1));
-		}{
-			if (handle_unquoted_word(&joined, quote, input, i) < 0)
-				return (free_tokens_only(tokens));
-		}****************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 09:38:48 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/23 21:12:39 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +14,7 @@
 #include "parser.h"
 
 int	parse_quote(char *input, int *i, t_quote *quote)
-{
+{	
 	int		len;
 	bool	has_dollar_sign;
 
