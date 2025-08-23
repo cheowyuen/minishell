@@ -3,17 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< HEAD
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/22 22:21:47 by lsurco-t         ###   ########.fr       */
-=======
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 20:40:48 by cheowyuenwo      ###   ########.fr       */
->>>>>>> parser
+/*   Updated: 2025/08/23 21:11:00 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +92,5 @@ int	setup_output_redirection(t_command *command)
             return (FAILURE);
 		redir = redir->next;
 	}
-	if (dup2(fd, STDOUT_FILENO) < 0)
-	{
-		perror("dup2");
-		close(fd);
-		return (FAILURE);
-	}
-	close(fd);
 	return (SUCCESS);
 }
