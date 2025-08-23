@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:35:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/22 16:45:28 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 11:12:31 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,8 @@ int		free_input_failure(char *input);
 // Free inherited parent state in a forked child before exit
 void	free_inherited_state_for_child(t_executor *executor,
 			t_command *commands);
+
+// Sort linked list of environment variables alphabetically by key
+void	sort_env_list_alpha(t_env **env_list);
 
 #endif
