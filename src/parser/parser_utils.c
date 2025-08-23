@@ -20,7 +20,7 @@ char	*ft_strndup(const char *src, int n)
 
 	if (!src)
 		return (NULL);
-	duplicate = (char *) malloc ((n + 1) * sizeof(char));
+	duplicate = (char *)malloc((n + 1) * sizeof(char));
 	if (!duplicate)
 		return (NULL);
 	i = 0;

@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "builtin.h"
+#include "executor.h"
 #include "minishell.h"
 #include "parser.h"
-#include "executor.h"
-#include "builtin.h"
 
-static int	assign_new_token_new(char **word, char	*tmp, char	*right)
+static int	assign_new_token_new(char **word, char *tmp, char *right)
 {
 	char	*new_token;
 
@@ -43,8 +43,8 @@ static int	join_token_new(char **word, int i, int len, t_var var)
 		free(var.value);
 	if (!tmp)
 		return (-1);
-	right = ft_substr(*word, i + len + var.has_braces,
-			ft_strlen(*word) - i - len);
+	right = ft_substr(*word, i + len + var.has_braces, ft_strlen(*word) - i
+			- len);
 	if (!right)
 		return (-1);
 	return (assign_new_token_new(word, tmp, right));
@@ -56,8 +56,8 @@ static int	get_value_new(char **word, int i, int len, t_var var)
 
 	if ((*word)[i + 1] != '?')
 	{
-		while ((*word)[i + len] && (ft_isalnum((*word)[i + len])
-				|| (*word)[i + len] == '_'))
+		while ((*word)[i + len] && (ft_isalnum((*word)[i + len]) || (*word)[i
+				+ len] == '_'))
 			len++;
 		variable = ft_strndup(&(*word)[i + 1], len - 1);
 		if (!variable)
@@ -77,7 +77,8 @@ static int	get_value_new(char **word, int i, int len, t_var var)
 	return (join_token_new(word, i, len, var));
 }
 
-static int	get_var_new(char **word, int i, t_shell *shell, t_executor *executor)
+static int	get_var_new(char **word, int i, t_shell *shell,
+		t_executor *executor)
 {
 	t_var	var;
 	int		len;
@@ -108,8 +109,8 @@ static int	get_var_new(char **word, int i, t_shell *shell, t_executor *executor)
 
 int	expand_env_var_new(char **word, t_shell *shell, t_executor *executor)
 {
-	int		i;
-	
+	int	i;
+
 	i = 0;
 	while ((*word)[i])
 	{

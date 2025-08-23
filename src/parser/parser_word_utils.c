@@ -53,8 +53,8 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 
 	len = 0;
 	has_dollar_sign = false;
-	while (input[*i + len] && !is_quote(input[*i + len])
-		&& !is_space(input[*i + len]) && !is_special(input[*i + len]))
+	while (input[*i + len] && !is_quote(input[*i + len]) && !is_space(input[*i
+			+ len]) && !is_special(input[*i + len]))
 	{
 		if (ft_strncmp(&input[*i + len], "$?", 2))
 			has_dollar_sign = true;

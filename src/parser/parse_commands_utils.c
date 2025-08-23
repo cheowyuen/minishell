@@ -76,10 +76,11 @@ int	set_outfile(t_token **tokens, t_command *current, int append)
 	*tokens = (*tokens)->next;
 	if (!*tokens)
 	{
-		ft_dprintf(STDERR_FILENO, "minishell: syntax error near unexpected token `newline'\n");
+		ft_dprintf(STDERR_FILENO,
+			"minishell: syntax error near unexpected token `newline'\n");
 		return (-1);
 	}
-	current->outfile = ft_strdup((*tokens)->token); 
+	current->outfile = ft_strdup((*tokens)->token);
 	if (!current->outfile)
 		return (-1);
 	current->append = append;
@@ -91,10 +92,12 @@ int	set_infile(t_token **tokens, t_command *current)
 	*tokens = (*tokens)->next;
 	if (!*tokens)
 	{
-		ft_dprintf(STDERR_FILENO, "minishell: syntax error near unexpected token `newline'\n");
+		ft_dprintf(STDERR_FILENO,
+			"minishell: syntax error near unexpected token `newline'\n");
 		return (-1);
 	}
-	current->infile = ft_strdup((*tokens)->token);  // Copying the string so we can free it later
+	current->infile = ft_strdup((*tokens)->token);
+		// Copying the string so we can free it later
 	if (!current->infile)
 		return (-1);
 	return (0);

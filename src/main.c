@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 18:36:29 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:07:41 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	main(int argc, char **argv, char **envp)
 	return (exit_code);
 }
 
-static int	parse_and_execute(char *input, t_token *tokens,
+static int	parse_and_execute(char *input, t_token **tokens,
 		t_executor *executor)
 {
 	t_shell		shell;
@@ -51,14 +51,14 @@ static int	parse_and_execute(char *input, t_token *tokens,
 
 	commands = NULL;
 	shell.exit_code = executor->last_exit_code;
-	if (parse_input(input, &tokens, &shell, executor) < 0)
-		return (-1);
-	if (parse_commands(tokens, &commands) < 0)
+	if (parse_input(input, tokens, &shell, executor) < 0
+		|| parse_commands(*tokens, &commands) < 0)
 	{
-		executor->last_exit_code = 2;  // exit code 2 for syntax errors
+		executor->last_exit_code = 2; //exit code 2 for syntax errors
 		return (-1);
 	}
-	ft_lstclear(&tokens);
+	if (*tokens) // Only free if tokens wasn't already freed during parsing
+		ft_lstclear(tokens);
 	if (commands)
 	{
 		result = exec_cmd(executor, commands);
@@ -85,7 +85,7 @@ static int	handle_input_processing(char *input, t_token *tokens,
 	if (*input && ft_strlen(input) > 0 && !is_only_space_or_tab(input))
 	{
 		add_history(input);
-		if (parse_and_execute(input, tokens, executor) < 0)
+		if (parse_and_execute(input, &tokens, executor) < 0)
 			return (free_input_failure(input));
 	}
 	free(input);
@@ -107,8 +107,7 @@ static int	run_shell_loop(t_executor *executor)
 		{
 			rl_replace_line("", 0);
 			rl_on_new_line();
-			input = readline("\001" CLR_GREEN "\002"
-					PROMPT "\001" RESET "\002");
+			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
 		else
 			input = readline(PROMPT);

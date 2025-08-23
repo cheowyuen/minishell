@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "builtin.h"
+#include "executor.h"
 #include "minishell.h"
 #include "parser.h"
-#include "executor.h"
-#include "builtin.h"
 
-static int	assign_new_token(t_token *tokens, char	*tmp, char	*right)
+static int	assign_new_token(t_token *tokens, char *tmp, char *right)
 {
 	char	*new_token;
 
@@ -78,7 +78,8 @@ static int	get_value(t_token *tokens, int i, int len, t_var var)
 	return (join_token(tokens, i, len, var));
 }
 
-static int	get_var(t_token *tokens, int i, t_shell *shell, t_executor *executor)
+static int	get_var(t_token *tokens, int i, t_shell *shell,
+		t_executor *executor)
 {
 	t_var	var;
 	int		len;
@@ -110,7 +111,7 @@ static int	get_var(t_token *tokens, int i, t_shell *shell, t_executor *executor)
 
 int	expand_env_var(t_token *tokens, t_shell *shell, t_executor *executor)
 {
-	int		i;
+	int	i;
 
 	while (tokens)
 	{

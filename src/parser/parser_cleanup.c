@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:30:25 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/23 18:34:31 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:01:59 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,17 @@ int	free_tokens_commands(t_token **tokens, t_command **commands)
 	return (-1);
 }
 
-int	free_tokens_input(t_token **tokens, char *input)
+int	free_tokens_input(t_token **tokens, char *input, int flag)
 {
-	free_tokens(tokens);
-	if (input)
-		free(input);
+	if (flag)
+		free_tokens(tokens);
+	else if (!flag)
+	{
+		if (input)
+		{
+			free_tokens(tokens);
+			free(input);
+		}
+	}
 	return (-1);
 }
