@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 10:58:28 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 22:58:07 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 11:02:02 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,12 @@ int	perform_directory_change(t_executor *executor, char *target_copy,
 	}
 	test_cwd = getcwd(NULL, 0);
 	if (!test_cwd)
-		ft_dprintf(STDERR_FILENO, "cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+	{
+		ft_dprintf(STDERR_FILENO,
+			"minishell: cd: error retrieving current directory: "
+			"getcwd: cannot access parent directories: %s\n",
+			strerror(errno));
+	}
 	else
 		free(test_cwd);
 	if (executor->logical_pwd)
