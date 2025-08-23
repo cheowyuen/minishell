@@ -6,12 +6,14 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/21 09:32:37 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/22 10:09:30 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "signals.h"
+#include "utils.h"
+#include "minishell.h"
 
 static int	create_heredoc_pipe(int pipefd[2]);
 static int	fork_heredoc_writer(int pipefd[2], char *delimiter);
@@ -64,11 +66,14 @@ static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 	}
 	else
 	{
-		close(pipefd[1]);
+		close(pipefd[1]); 
 		setup_signals_ignore();
-		status = wait_for_child(pid);
+		if (waitpid(pid, &status, 0) == WAITPID_ERROR)
+		{
+			perror("waitpid");
+			return (FAILURE);
+		}
 		setup_signals_prompt();
-		return (status);
 	}
 	return (SUCCESS);
 }
@@ -88,12 +93,12 @@ static int	setup_heredoc_input(int pipefd[2])
 static void	write_heredoc_content(int fd, char *delimiter)
 {
 	char	*line;
-
+	
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
-			break ;
+			break ;	
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);

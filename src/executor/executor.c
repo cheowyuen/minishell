@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 15:14:43 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 21:01:07 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	exec_cmd(t_executor *executor, t_command *command)
 	if (!command->argv || !command->argv[0] || !command->argv[0][0])
 	{
 		if (!command->next && !command->pipe_out && !command->infile && 
-			!command->outfile && !command->has_heredoc)
+			!command->outfiles && !command->has_heredoc)
 			return (SUCCESS);
 	}
 	executor->commands = command;
@@ -45,7 +45,7 @@ int	setup_single_redirection(t_command *command)
 		if (setup_input_redirection(command) == FAILURE)
 			return (FAILURE);
 	}
-	if (command->outfile)
+	if (command->outfiles)
 	{
 		if (setup_output_redirection(command) == FAILURE)
 			return (FAILURE);
@@ -57,7 +57,7 @@ int	exec_single_external(t_executor *executor, t_command *command)
 {
 	pid_t	pid;
 	int		status;
-
+	
 	pid = fork();
 	if (pid == 0)
 	{

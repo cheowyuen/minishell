@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/21 06:22:52 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/23 18:18:28 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 	while (input[*i + len] && !is_quote(input[*i + len]) && !is_space(input[*i
 			+ len]) && !is_special(input[*i + len]))
 	{
-		if (ft_strncmp(&input[*i + len], "$?", 2))
+		if (ft_strncmp(&input[*i + len], "$?", 2) == 0)
 			has_dollar_sign = true;
 		len++;
 	}
@@ -64,7 +64,7 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 	if (!*word)
 		return (-1);
 	if (has_dollar_sign)
-		if (expand_env_var_new(word, quote->shell, quote->executor) < 0)
+		if (expand_env_var(word, quote->shell, quote->executor) < 0)
 			return (-1);
 	*i += len;
 	return (0);

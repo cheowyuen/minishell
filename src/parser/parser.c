@@ -1,18 +1,12 @@
-/* **************************************************		{
-			if (handle_unquoted_word(&joined, quote, input, i) < 0)
-				return (free_tokens_input(tokens, NULL, 1));
-		}{
-			if (handle_unquoted_word(&joined, quote, input, i) < 0)
-				return (free_tokens_only(tokens));
-		}****************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 09:38:48 by cwong            ###   ########.fr       */
+/*   Created: 2025/08/23 20:51:16 by cheowyuenwo       #+#    #+#             */
+/*   Updated: 2025/08/23 20:51:30 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +32,9 @@ int	parse_quote(char *input, int *i, t_quote *quote)
 	if (!quote->quoted_word)
 		return (-1);
 	if (input[*i] == '\"' && has_dollar_sign)
-		if (expand_env_var_new(&quote->quoted_word, quote->shell,
-				quote->executor) < 0)
-			return (-1);
+		if (ft_strncmp(&input[*i], "\"$\"", 3) != 0)
+			if (expand_env_var(&quote->quoted_word, quote->shell, quote->executor) < 0)
+				return (-1);
 	*i += len + 1;
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/23 18:35:28 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:52:05 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ static int	handle_special(t_token **tokens, t_command **current,
 	}
 	else if (ft_strcmp((*tokens)->token, ">>") == 0)
 	{
-		if (set_outfile(tokens, *current, 1) < 0)
-			return (free_tokens_commands(tokens, commands));
+		if (set_outfile(tokens, 1, &(*current)->outfiles) < 0)
+			return (free_tokens_commands(tokens, &commands));
 	}
 	else if ((*tokens)->token[0] == '<')
 	{
@@ -77,8 +77,8 @@ static int	handle_special(t_token **tokens, t_command **current,
 	}
 	else if ((*tokens)->token[0] == '>')
 	{
-		if (set_outfile(tokens, *current, 0) < 0)
-			return (free_tokens_commands(tokens, commands));
+		if (set_outfile(tokens, 0, &(*current)->outfiles) < 0)
+			return (free_tokens_commands(tokens, &commands));
 	}
 	else
 	{

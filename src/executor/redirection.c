@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< HEAD
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
 /*   Updated: 2025/08/22 22:21:47 by lsurco-t         ###   ########.fr       */
+=======
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
+/*   Updated: 2025/08/23 20:40:48 by cheowyuenwo      ###   ########.fr       */
+>>>>>>> parser
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +45,59 @@ int	setup_input_redirection(t_command *command)
 	return (SUCCESS);
 }
 
+static int open_redir_file(t_redir *redir)
+{
+	int		fd;
+	int		flags;
+	
+	if (redir->append)
+			flags = O_WRONLY | O_CREAT | O_APPEND;
+		else
+			flags = O_WRONLY | O_CREAT | O_TRUNC;
+    fd = open(redir->filename, flags, 0644);
+    if (fd < 0)
+    {
+        perror(redir->filename);
+        return (-1);
+    }
+    return (fd);
+}
+
+static int redirect_stdout(int fd, t_redir *redir)
+{
+    if (!redir->next)
+    {
+        if (dup2(fd, STDOUT_FILENO) < 0)
+        {
+            close(fd);
+            return (-1);
+        }
+    }
+    close(fd);
+    return (SUCCESS);
+}
+
 int	setup_output_redirection(t_command *command)
 {
-	int	fd;
-	int	flags;
+	int		fd;
+    t_redir *redir;
 
-	if (!command || !command->outfile)
+    if (!command)
+        return (FAILURE);
+	if (!command->outfiles)
 		return (SUCCESS);
-	if (command->append)
-		flags = O_WRONLY | O_CREAT | O_APPEND;
-	else
-		flags = O_WRONLY | O_CREAT | O_TRUNC;
-	fd = open(command->outfile, flags, 0644);
-	if (fd < 0)
+    redir = command->outfiles;
+	while (redir)
 	{
-		perror(command->outfile);
-		return (FAILURE);
+		fd = open_redir_file(redir);
+		if (fd < 0)
+		{
+			perror(redir->filename);
+			return (FAILURE);
+		}
+		if (redirect_stdout(fd, redir) < 0)
+            return (FAILURE);
+		redir = redir->next;
 	}
 	if (dup2(fd, STDOUT_FILENO) < 0)
 	{

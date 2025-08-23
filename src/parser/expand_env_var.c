@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_var.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/19 11:39:09 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/23 20:53:00 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "minishell.h"
 #include "parser.h"
 
-static int	assign_new_token(t_token *tokens, char *tmp, char *right)
+static int	assign_new_token(char **word, char	*tmp, char	*right)
 {
 	char	*new_token;
 
@@ -23,46 +23,44 @@ static int	assign_new_token(t_token *tokens, char *tmp, char *right)
 	free(tmp);
 	free(right);
 	if (!new_token)
-		return (free_tokens(&tokens));
-	free(tokens->token);
-	tokens->token = new_token;
+		return (-1);
+	*word = new_token;
 	return (0);
 }
 
-static int	join_token(t_token *tokens, int i, int len, t_var var)
+static int	join_token(char **word, int i, int len, t_var var)
 {
 	char	*tmp;
 	char	*left;
 	char	*right;
 
-	left = ft_substr(tokens->token, 0, i - var.has_braces);
+	left = ft_substr(*word, 0, i - var.has_braces);
 	if (!left)
-		return (free_tokens(&tokens));
+		return (-1);
 	tmp = ft_strjoin(left, var.value);
 	free(left);
 	if (var.should_free)
 		free(var.value);
 	if (!tmp)
-		return (free_tokens(&tokens));
-	right = ft_substr(tokens->token, i + len + var.has_braces,
-			ft_strlen(tokens->token) - i - len);
+		return (-1);
+	right = ft_substr(*word, i + len + var.has_braces,
+			ft_strlen(*word) - i - len);
 	if (!right)
-		return (free_tokens(&tokens));
-	return (assign_new_token(tokens, tmp, right));
+		return (-1);
+	return (assign_new_token(word, tmp, right));
 }
 
-static int	get_value(t_token *tokens, int i, int len, t_var var)
+static int	get_value(char **word, int i, int len, t_var var)
 {
 	char	*variable;
-
-	if (tokens->token[i + 1] != '?')
+	if ((*word)[i + 1] != '?')
 	{
-		while (tokens->token[i + len] && (ft_isalnum(tokens->token[i + len])
-				|| tokens->token[i + len] == '_'))
+		while ((*word)[i + len] && (ft_isalnum((*word)[i + len])
+				|| (*word)[i + len] == '_'))
 			len++;
-		variable = ft_strndup(&tokens->token[i + 1], len - 1);
+		variable = ft_strndup(&(*word)[i + 1], len - 1);
 		if (!variable)
-			return (free_tokens(&tokens));
+			return (-1);
 		var.value = get_env_var(var.executor, variable);
 		free(variable);
 		if (!var.value)
@@ -73,13 +71,12 @@ static int	get_value(t_token *tokens, int i, int len, t_var var)
 		else
 			var.should_free = false;
 		if (!var.value)
-			return (free_tokens(&tokens));
+			return (-1);
 	}
-	return (join_token(tokens, i, len, var));
+	return (join_token(word, i, len, var));
 }
 
-static int	get_var(t_token *tokens, int i, t_shell *shell,
-		t_executor *executor)
+static int	get_var(char **word, int i, t_shell *shell, t_executor *executor)
 {
 	t_var	var;
 	int		len;
@@ -88,49 +85,41 @@ static int	get_var(t_token *tokens, int i, t_shell *shell,
 	var.value = NULL;
 	var.should_free = false;
 	var.executor = executor;
-	if (tokens->token[i + 1] == '{')
+	if ((*word)[i + 1] == '{')
 	{
 		var.has_braces = true;
 		i++;
 	}
-	if (tokens->token[i + 1] == '?')
+	if ((*word)[i + 1] == '?')
 	{
-		if (var.has_braces && ft_strncmp(&tokens->token[i], "{?}", 4) != 0)
-			return (free_tokens(&tokens));
+		if (var.has_braces && ft_strncmp(word[i], "{?}", 4) != 0)
+			return (-1);
 		len = 2;
-		shell->exit_code = 0;
 		var.value = ft_itoa(shell->exit_code);
 		var.should_free = true;
 		if (!var.value)
-			return (free_tokens(&tokens));
+			return (-1);
 	}
 	else
 		len = 1;
-	return (get_value(tokens, i, len, var));
+	return (get_value(word, i, len, var));
 }
 
-int	expand_env_var(t_token *tokens, t_shell *shell, t_executor *executor)
+int	expand_env_var(char **word, t_shell *shell, t_executor *executor)
 {
-	int	i;
-
-	while (tokens)
+	int		i;
+	
+	i = 0;
+	while ((*word)[i])
 	{
-		if (tokens->quote_type == DOUBLE_ENV || tokens->quote_type == NONE)
+		if ((*word)[i] == '$')
 		{
+			if (get_var(word, i, shell, executor) < 0)
+				return (-1);
 			i = 0;
-			while (tokens->token[i])
-			{
-				if (tokens->token[i] == '$')
-				{
-					if (get_var(tokens, i, shell, executor))
-						return (-1);
-					i = 0;
-				}
-				else
-					i++;
-			}
 		}
-		tokens = tokens->next;
+		else
+			i++;
 	}
 	return (0);
 }

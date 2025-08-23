@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 08:47:32 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/21 06:14:41 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/23 20:52:23 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,40 @@ t_command	*create_command(void)
 		return (NULL);
 	new_command->argv = NULL;
 	new_command->infile = NULL;
-	new_command->outfile = NULL;
 	new_command->append = 0;
 	new_command->has_heredoc = 0;
 	new_command->heredoc_delim = NULL;
 	new_command->is_builtin = 0;
 	new_command->is_last = 0;
 	new_command->pipe_out = 0;
+	new_command->outfiles = NULL;
 	new_command->next = NULL;
 	return (new_command);
 }
 
-int	set_outfile(t_token **tokens, t_command *current, int append)
+static void	ft_lstadd_back_redir(t_redir **lst, t_redir *new)
 {
+	t_redir	*end;
+
+	if (!lst || !new)
+		return ;
+	if (!*lst)
+	{
+		*lst = new;
+		new->next = NULL;
+		return ;
+	}
+	end = *lst;
+	while (end->next)
+		end = end->next;
+	end->next = new;
+	new->next = NULL;
+}
+
+int	set_outfile(t_token **tokens, int append, t_redir **files)
+{
+	t_redir	*new_file;
+	
 	*tokens = (*tokens)->next;
 	if (!*tokens)
 	{
@@ -80,10 +101,18 @@ int	set_outfile(t_token **tokens, t_command *current, int append)
 			"minishell: syntax error near unexpected token `newline'\n");
 		return (-1);
 	}
-	current->outfile = ft_strdup((*tokens)->token);
-	if (!current->outfile)
+	new_file = malloc(sizeof(t_redir));
+	if  (!new_file)
 		return (-1);
-	current->append = append;
+	new_file->filename = ft_strdup((*tokens)->token); 
+	if (!new_file->filename)
+	{
+		free(new_file);
+		return (-1);
+	}
+	new_file->append = append;
+	new_file->next = NULL;
+	ft_lstadd_back_redir(files,  new_file);
 	return (0);
 }
 
