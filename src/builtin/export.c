@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:46:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 11:25:22 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 12:45:14 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ void	builtin_export(t_executor *executor)
 		key = NULL;
 		if (check_valid_identifier(executor->commands->argv[i], equal_sign,
 				key) == FAILURE)
-		{
 			executor->last_exit_code = FAILURE;
-			return ;
-		}
 		if (handle_export_argument(executor, executor->commands->argv[i],
 				equal_sign) == FAILURE)
 		{
