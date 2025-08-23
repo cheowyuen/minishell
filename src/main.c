@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 21:11:57 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/23 21:20:14 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char **envp)
 	run_shell_loop(&executor);
 	exit_code = executor.last_exit_code;
 	free_executor(&executor);
-	// rl_clear_history();
+	rl_clear_history();
 	return (exit_code);
 }
 
@@ -106,8 +106,8 @@ static int	run_shell_loop(t_executor *executor)
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			// rl_replace_line("", 0);
-			// rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_on_new_line();
 			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
 		else

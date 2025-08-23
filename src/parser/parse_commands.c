@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/23 20:52:05 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/23 21:18:11 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	handle_special(t_token **tokens, t_command **current,
 	else if (ft_strcmp((*tokens)->token, ">>") == 0)
 	{
 		if (set_outfile(tokens, 1, &(*current)->outfiles) < 0)
-			return (free_tokens_commands(tokens, &commands));
+			return (free_tokens_commands(tokens, commands));
 	}
 	else if ((*tokens)->token[0] == '<')
 	{
@@ -78,7 +78,7 @@ static int	handle_special(t_token **tokens, t_command **current,
 	else if ((*tokens)->token[0] == '>')
 	{
 		if (set_outfile(tokens, 0, &(*current)->outfiles) < 0)
-			return (free_tokens_commands(tokens, &commands));
+			return (free_tokens_commands(tokens, commands));
 	}
 	else
 	{

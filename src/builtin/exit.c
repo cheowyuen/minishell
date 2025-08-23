@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 21:12:30 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/23 21:20:02 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static int	validate_exit_args(char **argv, int *exit_code)
 
 static void	cleanup_and_exit(t_executor *executor, int exit_code)
 {
-	// rl_clear_history();
+	rl_clear_history();
 	if (executor->commands)
 	{
 		free_commands(&executor->commands);
