@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/23 20:51:16 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/23 20:51:30 by cheowyuenwo      ###   ########.fr       */
+/*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
+/*   Updated: 2025/08/23 21:25:34 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "parser.h"
 
 int	parse_quote(char *input, int *i, t_quote *quote)
-{
+{	
 	int		len;
 	bool	has_dollar_sign;
 
