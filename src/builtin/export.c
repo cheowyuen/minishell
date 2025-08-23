@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:46:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 12:45:14 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 13:35:32 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ void	builtin_export(t_executor *executor)
 	int		i;
 	char	*equal_sign;
 	char	*key;
+	int		err_code;
 
 	i = 1;
+	err_code = 0;
 	list_exported_variables(executor);
 	while (executor->commands->argv[i])
 	{
@@ -32,16 +34,16 @@ void	builtin_export(t_executor *executor)
 		key = NULL;
 		if (check_valid_identifier(executor->commands->argv[i], equal_sign,
 				key) == FAILURE)
-			executor->last_exit_code = FAILURE;
-		if (handle_export_argument(executor, executor->commands->argv[i],
+			err_code = 1;
+		else if (handle_export_argument(executor, executor->commands->argv[i],
 				equal_sign) == FAILURE)
-		{
-			executor->last_exit_code = FAILURE;
 			return ;
-		}
-		i++;
+		i++;	
 	}
-	executor->last_exit_code = SUCCESS;
+	if (err_code)
+		executor->last_exit_code = FAILURE;
+	else
+		executor->last_exit_code = SUCCESS;
 }
 
 static int	check_valid_identifier(char *arg, char *equal_sign, char *key)
@@ -81,13 +83,17 @@ static int	handle_export_argument(t_executor *executor, const char *arg,
 		if (add_env_variable(executor, arg) == FAILURE)
 		{
 			print_error_stderr("minishell: export: failed to add variable\n");
+			executor->last_exit_code = FAILURE;
 			return (FAILURE);
 		}
 	}
 	else
 	{
 		if (mark_as_exported(executor, arg) == FAILURE)
+		{
+			executor->last_exit_code = FAILURE;
 			return (FAILURE);
+		}
 	}
 	return (SUCCESS);
 }
