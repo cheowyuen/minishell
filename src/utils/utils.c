@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:33:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 11:16:03 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 11:25:46 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,8 @@ void	sort_env_list_alpha(t_env **env_list)
 	t_env	*current;
 	t_env	*next;
 	char	*temp;
+	char	*temp_value;
 
-	if (!env_list || !*env_list)
-		return ;
 	current = *env_list;
 	while (current)
 	{
@@ -57,6 +56,9 @@ void	sort_env_list_alpha(t_env **env_list)
 			if (ft_strcmp(current->key, next->key) > 0)
 			{
 				temp = current->key;
+				temp_value = current->value;
+				current->value = next->value;
+				next->value = temp_value;
 				current->key = next->key;
 				next->key = temp;
 			}

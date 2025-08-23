@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:46:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 11:12:50 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/23 11:25:22 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ static void	list_exported_variables(t_executor *executor)
 	t_env	*env;
 
 	env = executor->env_list;
+	if (!env)
+		return ;
 	sort_env_list_alpha(&env);
 	if (!executor->commands->argv[1])
 	{
