@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/23 21:25:34 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/24 23:20:30 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	parse_quote(char *input, int *i, t_quote *quote)
 		return (-1);
 	if (input[*i] == '\"' && has_dollar_sign)
 		if (ft_strncmp(&input[*i], "\"$\"", 3) != 0)
-			if (expand_env_var(&quote->quoted_word, quote->shell, quote->executor) < 0)
+			if (expand_env_var(&quote->quoted_word, quote->executor) < 0)
 				return (-1);
 	*i += len + 1;
 	return (0);
@@ -42,14 +42,17 @@ int	parse_quote(char *input, int *i, t_quote *quote)
 static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 {
 	char	*joined;
+	bool	is_quoted;
 
 	joined = ft_strdup("");
 	if (!joined)
 		return (free_tokens_input(tokens, NULL, 1));
+	is_quoted = false;
 	while (input[*i] && !is_space(input[*i]) && !is_special(input[*i]))
 	{
 		if (is_quote(input[*i]))
 		{
+			is_quoted = true;
 			if (handle_quoted_word(&joined, quote, input, i) < 0)
 				return (free_tokens_input(tokens, NULL, 1));
 		}
@@ -59,7 +62,7 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 				return (free_tokens_input(tokens, NULL, 1));
 		}
 	}
-	if (add_token(tokens, quote->quote_type, joined, ft_strlen(joined)) < 0)
+	if (add_token(tokens, is_quoted, joined, ft_strlen(joined)) < 0)
 		return (free_tokens_input(tokens, NULL, 1));
 	return (0);
 }
@@ -71,7 +74,7 @@ static int	parse_special(char *input, int *i, t_token **tokens)
 	j = 1;
 	if (input[*i + 1] == input[*i])
 		j = 2;
-	if (add_token(tokens, NONE, &input[*i], j) < 0)
+	if (add_token(tokens, false, &input[*i], j) < 0)
 		return (free_tokens_input(tokens, NULL, 1));
 	*i += j;
 	return (0);
@@ -93,15 +96,12 @@ static int	handle_parsing(char *input, int *i, t_token **tokens,
 	return (0);
 }
 
-int	parse_input(char *input, t_token **tokens, t_shell *shell,
-		t_executor *executor)
+int	parse_input(char *input, t_token **tokens, t_executor *executor)
 {
 	int		i;
 	t_quote	quote;
 
-	quote.quote_type = NONE;
 	quote.quoted_word = NULL;
-	quote.shell = shell;
 	quote.executor = executor;
 	i = 0;
 	while (input[i])

@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/23 20:46:10 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/24 23:22:11 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,17 @@
 
 typedef struct s_executor	t_executor;
 
-typedef enum e_quote_type
-{
-	NONE,
-	SINGLE,
-	DOUBLE,
-	DOUBLE_ENV
-}							t_quote_type;
+// typedef enum e_quote_type
+// {
+// 	NONE,
+// 	SINGLE,
+// 	DOUBLE
+// }							t_quote_type;
 
 typedef struct s_token
 {
 	char					*token;
-	t_quote_type			quote_type;
+	bool					is_quoted;
 	bool					has_dollar_sign;
 	struct s_token			*next;
 }							t_token;
@@ -39,16 +38,16 @@ typedef struct s_var
 	t_executor				*executor;
 }							t_var;
 
-typedef struct s_shell
-{
-	int						exit_code;
-}							t_shell;
+// typedef struct s_shell
+// {
+// 	int						exit_code;
+// }							t_shell;
 
 typedef struct s_quote
 {
 	char					*quoted_word;
-	t_quote_type			quote_type;
-	t_shell					*shell;
+	bool					is_heredoc;
+	// t_shell					*shell;
 	t_executor				*executor;
 }							t_quote;
 
@@ -66,6 +65,7 @@ typedef struct s_command
 	int						append;
 	int						has_heredoc;
 	char					*heredoc_delim;
+	bool					is_quoted;
 	int						is_builtin;
 	int						is_last;
 	int						pipe_out;
@@ -73,11 +73,10 @@ typedef struct s_command
 	struct s_command		*next;
 }							t_command;
 
-int							parse_input(char *input, t_token **tokens,
-								t_shell *shell, t_executor *executor);
+int							parse_input(char *input, t_token **tokens, t_executor *executor);
 int							free_tokens_input(t_token **tokens, char *input, int flag);
-int							add_token(t_token **tokens, t_quote_type quote_type,
-								char *content, int len);
+int							add_token(t_token **tokens, bool is_quoted, char *content,
+								int len);
 int							is_special(char c);
 int							is_quote(char c);
 int							is_space(char c);
@@ -95,14 +94,12 @@ int							set_infile(t_token **tokens, t_command *current);
 int							is_builtin(char *cmd);
 t_command					*create_command(void);
 int							count_tokens(t_token *tokens);
-int							get_word(char *input, int *i, t_quote *quote,
-								char **word);
-int							expand_env_var(char **word, t_shell *shell,
-								t_executor *executor);
+int							expand_env_var(char **word, t_executor *executor);
 int							parse_quote(char *input, int *i, t_quote *quote);
 int							handle_quoted_word(char **joined, t_quote *quote,
 								char *input, int *i);
 int							handle_unquoted_word(char **joined, t_quote *quote,
 								char *input, int *i);
+int							get_word(char *input, int *i, t_quote *quote, char **word);
 
 #endif

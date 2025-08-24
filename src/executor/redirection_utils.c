@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/22 10:09:30 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/24 23:24:11 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 #include "signals.h"
 #include "utils.h"
 #include "minishell.h"
+#include "parser.h"
 
 static int	create_heredoc_pipe(int pipefd[2]);
-static int	fork_heredoc_writer(int pipefd[2], char *delimiter);
+static int	fork_heredoc_writer(int pipefd[2], char *delimiter, t_executor *executor);
 static int	setup_heredoc_input(int pipefd[2]);
-static void	write_heredoc_content(int fd, char *delimiter);
+static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor);
 
-int	setup_heredoc(t_command *command)
+int	setup_heredoc(t_command *command, t_executor *executor)
 {
 	int	pipefd[2];
 	
@@ -28,7 +29,7 @@ int	setup_heredoc(t_command *command)
 		return (FAILURE);
 	if (create_heredoc_pipe(pipefd) == FAILURE)
 		return (FAILURE);
-	if (fork_heredoc_writer(pipefd, command->heredoc_delim) == FAILURE)
+	if (fork_heredoc_writer(pipefd, command->heredoc_delim, executor) == FAILURE)
 		return (FAILURE);
 	return (setup_heredoc_input(pipefd));
 }
@@ -43,7 +44,7 @@ static int	create_heredoc_pipe(int pipefd[2])
 	return (SUCCESS);
 }
 
-static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
+static int	fork_heredoc_writer(int pipefd[2], char *delimiter, t_executor *executor)
 {
 	pid_t	pid;
 	int		status;
@@ -60,7 +61,7 @@ static int	fork_heredoc_writer(int pipefd[2], char *delimiter)
 	{
 		close(pipefd[0]);
 		setup_signals_heredoc();
-		write_heredoc_content(pipefd[1], delimiter);
+		write_heredoc_content(pipefd[1], delimiter, executor);
 		close(pipefd[1]);
 		exit(0);
 	}
@@ -90,10 +91,16 @@ static int	setup_heredoc_input(int pipefd[2])
 	return (SUCCESS);
 }
 
-static void	write_heredoc_content(int fd, char *delimiter)
+static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor)
 {
 	char	*line;
-	
+	t_quote	quote;
+	char	*word;
+	int		i;
+
+	i = 0;
+	quote.executor = executor;
+	quote.is_heredoc = true;
 	while (1)
 	{
 		line = readline("> ");
@@ -104,7 +111,23 @@ static void	write_heredoc_content(int fd, char *delimiter)
 			free(line);
 			break ;
 		}
-		if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
+		if (!executor->commands->is_quoted)
+		{
+			if (get_word(line, &i, &quote, &word) < 0)
+			{
+				perror("write");
+				free(line);
+				break ;
+			}
+			if (write(fd, word, ft_strlen(word)) == -1 || write(fd, "\n", 1) == -1)
+			{
+				perror("write");
+				free(line);
+				break ;
+			}
+			free(word);
+		}
+		else if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
 		{
 			perror("write");
 			free(line);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_list_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/23 19:53:41 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/24 20:41:21 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	ft_lstadd_back(t_token **lst, t_token *new)
 	new->next = NULL;
 }
 
-static t_token	*ft_lstnew(int quote_type, char *content, int len)
+static t_token	*ft_lstnew(bool is_quoted, char *content, int len)
 {
 	t_token	*new_node;
 
@@ -61,16 +61,16 @@ static t_token	*ft_lstnew(int quote_type, char *content, int len)
 		free(new_node);
 		return (NULL);
 	}
-	new_node->quote_type = quote_type;
+	new_node->is_quoted = is_quoted;
 	new_node->next = NULL;
 	return (new_node);
 }
 
-int	add_token(t_token **tokens, t_quote_type quote_type, char *content, int len)
+int	add_token(t_token **tokens, bool is_quoted, char *content, int len)
 {
 	t_token	*new_token;
 
-	new_token = ft_lstnew(quote_type, content, len);
+	new_token = ft_lstnew(is_quoted, content, len);
 	if (!new_token)
 		return (-1);
 	ft_lstadd_back(tokens, new_token);

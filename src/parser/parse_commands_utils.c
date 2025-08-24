@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 08:47:32 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/23 21:18:09 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/24 21:08:20 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ t_command	*create_command(void)
 	new_command->append = 0;
 	new_command->has_heredoc = 0;
 	new_command->heredoc_delim = NULL;
+	new_command->is_quoted = false;
 	new_command->is_builtin = 0;
 	new_command->is_last = 0;
 	new_command->pipe_out = 0;

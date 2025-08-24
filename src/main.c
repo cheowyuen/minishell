@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 21:20:14 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/24 23:21:28 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,18 @@ int	main(int argc, char **argv, char **envp)
 	run_shell_loop(&executor);
 	exit_code = executor.last_exit_code;
 	free_executor(&executor);
-	rl_clear_history();
+	// rl_clear_history();
 	return (exit_code);
 }
 
 static int	parse_and_execute(char *input, t_token **tokens,
 		t_executor *executor)
 {
-	t_shell		shell;
 	t_command	*commands;
 	int			result;
 
 	commands = NULL;
-	shell.exit_code = executor->last_exit_code;
-	if (parse_input(input, tokens, &shell, executor) < 0
+	if (parse_input(input, tokens, executor) < 0
 		|| parse_commands(*tokens, &commands) < 0)
 	{
 		ft_dprintf(STDERR_FILENO,"minishell: unsupported syntax\n");
@@ -106,8 +104,8 @@ static int	run_shell_loop(t_executor *executor)
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			rl_replace_line("", 0);
-			rl_on_new_line();
+			// rl_replace_line("", 0);
+			// rl_on_new_line();
 			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
 		else

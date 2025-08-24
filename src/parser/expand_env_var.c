@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/23 20:53:00 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/24 23:17:51 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static int	get_value(char **word, int i, int len, t_var var)
 	return (join_token(word, i, len, var));
 }
 
-static int	get_var(char **word, int i, t_shell *shell, t_executor *executor)
+static int	get_var(char **word, int i, t_executor *executor)
 {
 	t_var	var;
 	int		len;
@@ -95,7 +95,7 @@ static int	get_var(char **word, int i, t_shell *shell, t_executor *executor)
 		if (var.has_braces && ft_strncmp(word[i], "{?}", 4) != 0)
 			return (-1);
 		len = 2;
-		var.value = ft_itoa(shell->exit_code);
+		var.value = ft_itoa(executor->last_exit_code);
 		var.should_free = true;
 		if (!var.value)
 			return (-1);
@@ -105,7 +105,7 @@ static int	get_var(char **word, int i, t_shell *shell, t_executor *executor)
 	return (get_value(word, i, len, var));
 }
 
-int	expand_env_var(char **word, t_shell *shell, t_executor *executor)
+int	expand_env_var(char **word, t_executor *executor)
 {
 	int		i;
 	
@@ -114,7 +114,7 @@ int	expand_env_var(char **word, t_shell *shell, t_executor *executor)
 	{
 		if ((*word)[i] == '$')
 		{
-			if (get_var(word, i, shell, executor) < 0)
+			if (get_var(word, i, executor) < 0)
 				return (-1);
 			i = 0;
 		}

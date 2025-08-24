@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/23 21:18:11 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/24 21:21:05 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static int	handle_special(t_token **tokens, t_command **current,
 			return (free_tokens_commands(tokens, commands));
 		}
 		(*current)->has_heredoc = 1;
+		(*current)->is_quoted = (*tokens)->is_quoted;
 		(*current)->heredoc_delim = ft_strdup((*tokens)->token);
 		if (!(*current)->heredoc_delim)
 			return (free_tokens_commands(tokens, commands));

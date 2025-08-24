@@ -6,20 +6,20 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 21:11:00 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/24 22:37:04 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-int	setup_input_redirection(t_command *command)
+int	setup_input_redirection(t_command *command, t_executor *executor)
 {
 	int	fd;
 	
 	if (!command)
 		return (SUCCESS);
 	if (command->has_heredoc)
-		return (setup_heredoc(command));
+		return (setup_heredoc(command, executor));
 	if (!command->infile)
 		return (SUCCESS);
 	fd = open(command->infile, O_RDONLY);
@@ -77,7 +77,7 @@ int	setup_output_redirection(t_command *command)
 
     if (!command)
         return (FAILURE);
-	if (!command->outfiles)
+	else if (!command->outfiles)
 		return (SUCCESS);
     redir = command->outfiles;
 	while (redir)

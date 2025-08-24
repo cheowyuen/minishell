@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:00:21 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 20:46:40 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/24 23:08:29 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	exec_builtin_with_redirection(t_executor *executor, t_command *command)
 	int	saved_stdin;
 	int	saved_stdout;
 	int	is_exit_command;
-
+	
 	is_exit_command = (ft_strcmp(command->argv[0], "exit") == 0);
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
@@ -59,7 +59,7 @@ int	exec_builtin_with_redirection(t_executor *executor, t_command *command)
 			close(saved_stdout);
 		return (FAILURE);
 	}
-	if (setup_single_redirection(command) == FAILURE)
+	if (setup_single_redirection(command, executor) == FAILURE)
 	{
 		restore_fds(saved_stdin, saved_stdout);
 		return (FAILURE);

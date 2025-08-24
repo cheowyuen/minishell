@@ -6,12 +6,45 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/23 18:18:28 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/24 23:19:48 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
+#include "executor.h"
+
+int	get_word(char *input, int *i, t_quote *quote, char **word)
+{
+	int		len;
+	bool	has_dollar_sign;
+
+	len = 0;
+	has_dollar_sign = false;
+	while (input[*i + len] && !is_quote(input[*i + len]) && !is_space(input[*i
+			+ len]) && !is_special(input[*i + len]))
+	{
+		if (quote->is_heredoc && input[*i + len] == '$')
+		{
+			has_dollar_sign = true;
+		}
+		else if (!quote->is_heredoc && ft_strncmp(&input[*i + len], "$?", 2) == 0)
+		{
+			has_dollar_sign = true;
+		}
+		len++;
+	}
+	*word = ft_strndup(&input[*i], len);
+	if (!*word)
+		return (-1);
+	if (has_dollar_sign)
+	{
+		if (expand_env_var(word, quote->executor) < 0)
+			return (-1);
+	}
+	*i += len;
+	return (0);
+}
 
 int	handle_quoted_word(char **joined, t_quote *quote, char *input, int *i)
 {
@@ -35,6 +68,7 @@ int	handle_unquoted_word(char **joined, t_quote *quote, char *input, int *i)
 	char	*temp;
 
 	word = NULL;
+	quote->is_heredoc = false;
 	if (get_word(input, i, quote, &word) < 0)
 		return (-1);
 	temp = ft_strjoin(*joined, word);
@@ -43,29 +77,5 @@ int	handle_unquoted_word(char **joined, t_quote *quote, char *input, int *i)
 	if (!temp)
 		return (-1);
 	*joined = temp;
-	return (0);
-}
-
-int	get_word(char *input, int *i, t_quote *quote, char **word)
-{
-	int		len;
-	bool	has_dollar_sign;
-
-	len = 0;
-	has_dollar_sign = false;
-	while (input[*i + len] && !is_quote(input[*i + len]) && !is_space(input[*i
-			+ len]) && !is_special(input[*i + len]))
-	{
-		if (ft_strncmp(&input[*i + len], "$?", 2) == 0)
-			has_dollar_sign = true;
-		len++;
-	}
-	*word = ft_strndup(&input[*i], len);
-	if (!*word)
-		return (-1);
-	if (has_dollar_sign)
-		if (expand_env_var(word, quote->shell, quote->executor) < 0)
-			return (-1);
-	*i += len;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 21:01:07 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/24 22:35:50 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ int	exec_single_command(t_executor *executor, t_command *command)
 	return (exec_single_external(executor, command));
 }
 
-int	setup_single_redirection(t_command *command)
+int	setup_single_redirection(t_command *command, t_executor *executor)
 {
 	if (command->infile || command->has_heredoc)
 	{
-		if (setup_input_redirection(command) == FAILURE)
+		if (setup_input_redirection(command, executor) == FAILURE)
 			return (FAILURE);
 	}
 	if (command->outfiles)
@@ -62,7 +62,7 @@ int	exec_single_external(t_executor *executor, t_command *command)
 	if (pid == 0)
 	{
 		setup_signals_child();
-		if (setup_single_redirection(command) == FAILURE)
+		if (setup_single_redirection(command, executor) == FAILURE)
 		{
 			free_inherited_state_for_child(executor, command);
 			exit(EXIT_FAILURE);
