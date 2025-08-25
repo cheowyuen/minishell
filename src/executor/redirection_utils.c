@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/24 23:24:11 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/25 11:16:16 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor)
 	char	*word;
 	int		i;
 
-	i = 0;
 	quote.executor = executor;
 	quote.is_heredoc = true;
 	while (1)
@@ -111,6 +110,7 @@ static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor)
 			free(line);
 			break ;
 		}
+		i = 0;
 		if (!executor->commands->is_quoted)
 		{
 			if (get_word(line, &i, &quote, &word) < 0)
