@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 21:00:18 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/25 10:28:50 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	setup_redirection_child_process(t_executor *executor,
 {
 	if (command->infile || command->has_heredoc)
 	{
-		if (setup_input_redirection(command) == FAILURE)
+		if (setup_input_redirection(command, executor) == FAILURE)
 		{
 			close_all_pipes_children(executor);
 			exit(EXIT_FAILURE);
