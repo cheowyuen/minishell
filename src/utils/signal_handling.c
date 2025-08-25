@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 18:00:59 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/25 22:02:05 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	wait_all_children(t_executor *executor, int *last_status)
 void	sigint_handler(int sig)
 {
 	(void)sig;
-	g_signal_status = sig;
+	g_signal_status = SIGNAL_INT;
 	write(STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
