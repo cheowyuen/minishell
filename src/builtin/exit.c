@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 21:30:04 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/25 10:52:35 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static int	validate_exit_args(char **argv, int *exit_code)
 
 static void	cleanup_and_exit(t_executor *executor, int exit_code)
 {
-	// rl_clear_history();
+	rl_clear_history();
 	if (executor->commands)
 	{
 		free_commands(&executor->commands);
