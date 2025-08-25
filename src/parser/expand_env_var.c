@@ -85,14 +85,23 @@ static int	get_var(char **word, int i, t_executor *executor)
 	var.value = NULL;
 	var.should_free = false;
 	var.executor = executor;
+	
+	// Check if $ is followed by valid variable character or special cases
+	if (!(*word)[i + 1] || ((*word)[i + 1] != '?' && (*word)[i + 1] != '{' 
+		&& !ft_isalpha((*word)[i + 1]) && (*word)[i + 1] != '_'))
+		return (0); // Skip expansion, leave $ as literal
+	
 	if ((*word)[i + 1] == '{')
 	{
 		var.has_braces = true;
 		i++;
+		// Check for empty braces ${} 
+		if ((*word)[i + 1] == '}')
+			return (-1); // Error: bad substitution
 	}
 	if ((*word)[i + 1] == '?')
 	{
-		if (var.has_braces && ft_strncmp(word[i], "{?}", 4) != 0)
+		if (var.has_braces && ft_strncmp(&(*word)[i], "{?}", 3) != 0)
 			return (-1);
 		len = 2;
 		var.value = ft_itoa(executor->last_exit_code);
@@ -102,21 +111,28 @@ static int	get_var(char **word, int i, t_executor *executor)
 	}
 	else
 		len = 1;
-	return (get_value(word, i, len, var));
+	if (get_value(word, i, len, var) < 0)
+		return (-1);
+	return (1); // Successful expansion
 }
 
 int	expand_env_var(char **word, t_executor *executor)
 {
 	int		i;
+	int		result;
 	
 	i = 0;
 	while ((*word)[i])
 	{
 		if ((*word)[i] == '$')
 		{
-			if (get_var(word, i, executor) < 0)
+			result = get_var(word, i, executor);
+			if (result < 0)
 				return (-1);
-			i = 0;
+			if (result == 0)
+				i++; // No expansion, move past this $
+			else
+				i = 0; // Expansion happened, restart from beginning
 		}
 		else
 			i++;

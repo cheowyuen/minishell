@@ -24,11 +24,7 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 	while (input[*i + len] && !is_quote(input[*i + len]) && !is_space(input[*i
 			+ len]) && !is_special(input[*i + len]))
 	{
-		if (quote->is_heredoc && input[*i + len] == '$')
-		{
-			has_dollar_sign = true;
-		}
-		else if (!quote->is_heredoc && ft_strncmp(&input[*i + len], "$?", 2) == 0)
+		if (input[*i + len] == '$')
 		{
 			has_dollar_sign = true;
 		}
