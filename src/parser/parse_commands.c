@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/24 21:21:05 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/25 17:24:44 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,30 @@ static int	handle_commands(t_token **tokens, t_command *current,
 {
 	int	count;
 	int	i;
+	int	argv_index;
 
 	count = count_tokens(*tokens);
 	current->argv = ft_calloc(count + 1, sizeof(char *));
 	if (!current->argv)
 		return (free_tokens_commands(tokens, commands));
 	i = 0;
+	argv_index = 0;
 	while (i < count)
 	{
-		current->argv[i] = ft_strdup((*tokens)->token);
-		if (!current->argv[i])
-			return (free_tokens_commands(tokens, commands));
-		if (i == 0 && is_builtin((*tokens)->token))
-			current->is_builtin = 1;
+		// Skip empty tokens (from environment variables that expand to empty)
+		if ((*tokens)->token && (*tokens)->token[0])
+		{
+			current->argv[argv_index] = ft_strdup((*tokens)->token);
+			if (!current->argv[argv_index])
+				return (free_tokens_commands(tokens, commands));
+			if (argv_index == 0 && is_builtin((*tokens)->token))
+				current->is_builtin = 1;
+			argv_index++;
+		}
 		*tokens = (*tokens)->next;
 		i++;
 	}
-	current->argv[i] = NULL;
+	current->argv[argv_index] = NULL;
 	return (0);
 }
 
