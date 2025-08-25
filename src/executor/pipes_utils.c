@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 10:28:50 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/25 22:38:37 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,16 +90,15 @@ int	close_children_process(t_executor *executor)
 	last_status = 0;
 	if (wait_all_children(executor, &last_status) < 0)
 		return (FAILURE);
+	// Handle SIGQUIT (core dump message)
+	if (WIFSIGNALED(last_status) && WTERMSIG(last_status) == SIGQUIT)
+		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+	// Set exit code based on the rightmost command
 	if (WIFSIGNALED(last_status))
-	{
-		if (WTERMSIG(last_status) == SIGINT)
-			write(STDOUT_FILENO, "\n", 1);
-		else if (WTERMSIG(last_status) == SIGQUIT)
-			write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
 		executor->last_exit_code = EXIT_SIGNAL_BASE + WTERMSIG(last_status);
-	}
-	if (WIFEXITED(last_status))
+	else if (WIFEXITED(last_status))
 		executor->last_exit_code = WEXITSTATUS(last_status);
+		
 	return (SUCCESS);
 }
 

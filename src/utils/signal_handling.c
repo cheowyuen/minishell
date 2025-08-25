@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 22:02:05 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/25 22:34:55 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ int	wait_all_children(t_executor *executor, int *last_status)
 			perror("waitpid");
 			return (FAILURE);
 		}
+		// Check if this child was interrupted by SIGINT
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+			write(STDOUT_FILENO, "\n", 1); // Print newline immediately
 		*last_status = set_last_status(executor, pid, status);
 		children_left--;
 	}
