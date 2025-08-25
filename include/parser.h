@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/24 23:22:11 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/25 17:59:33 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,6 @@ int							handle_quoted_word(char **joined, t_quote *quote,
 int							handle_unquoted_word(char **joined, t_quote *quote,
 								char *input, int *i);
 int							get_word(char *input, int *i, t_quote *quote, char **word);
+int							validate_syntax(t_token *tokens, t_executor *executor);
 
 #endif

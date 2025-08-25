@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 21:02:24 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/25 17:47:14 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	exec_external_command(t_executor *executor, t_command *command)
 	char		*cmd_path;
 	struct stat	st;
 
-	if (!command->argv[0] || !command->argv[0][0])
+	if (!command->argv || !command->argv[0] || !command->argv[0][0])
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: : command not found\n");
 		exit(EXIT_CMD_NOT_FOUND);

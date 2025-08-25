@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 15:11:17 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:47:14 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 		free_inherited_state_for_child(executor, command);
 		exit(executor->last_exit_code);
 	}
-	else if (!command->argv[0] || !command->argv[0][0])
+	else if (!command->argv || !command->argv[0] || !command->argv[0][0])
 	{
 		// Handle empty commands (like $EMPTY that expands to nothing)
 		free_inherited_state_for_child(executor, command);

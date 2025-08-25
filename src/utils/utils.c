@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:33:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 11:25:46 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:54:42 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,19 @@ void	print_error_stderr(const char *msg)
 		perror("write");
 		return ;
 	}
+}
+
+int	print_syntax_error(char *token, t_executor *executor, int flag)
+{
+	if (flag == 2)
+	{
+		ft_dprintf(STDERR_FILENO,"minishell: unsupported syntax\n");
+		executor->last_exit_code = 2; //exit code 2 for syntax errors
+		return (-1);
+	}
+	ft_dprintf(STDERR_FILENO,
+		"minishell: syntax error near unexpected token `%s'\n", token);
+	return (-1);
 }
 
 int	is_only_space_or_tab(char *str)

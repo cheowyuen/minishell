@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:35:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/23 20:46:31 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/25 17:57:34 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 // Generic error handling
 void	print_error_stderr(const char *msg);
+int		print_syntax_error(char *token, t_executor *executor, int flag);
 int		is_only_space_or_tab(char *str);
 
 // Generic memory management utilities

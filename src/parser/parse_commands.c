@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/25 17:24:44 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:47:14 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	argv_index = 0;
 	while (i < count)
 	{
-		// Skip empty tokens (from environment variables that expand to empty)
-		if ((*tokens)->token && (*tokens)->token[0])
+		if ((*tokens)->token && (*tokens)->token[0]) // Skip empty tokens (from environment variables that expand to empty)
 		{
 			current->argv[argv_index] = ft_strdup((*tokens)->token);
 			if (!current->argv[argv_index])
@@ -110,7 +109,7 @@ static int	process_tokens(t_token *tokens, t_command **commands)
 	heredoc_count = 0;
 	while (tokens)
 	{
-		if (is_special(tokens->token[0]))
+		if (!tokens->is_quoted && is_special(tokens->token[0]))
 		{
 			if (handle_special(&tokens, &current, commands, &heredoc_count) < 0)
 				return (-1);

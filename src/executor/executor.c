@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 17:24:42 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:47:14 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	exec_single_command(t_executor *executor, t_command *command)
 	if (command->is_builtin)
 		return (exec_builtin_with_redirection(executor, command));
 	// Handle empty commands (like when all tokens expand to empty)
-	if (!command->argv[0] || !command->argv[0][0])
+	if (!command->argv || !command->argv[0] || !command->argv[0][0])
 		return (SUCCESS);
 	return (exec_single_external(executor, command));
 }

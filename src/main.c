@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 11:21:53 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/25 18:03:52 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,15 @@ static int	parse_and_execute(char *input, t_token **tokens,
 	int			result;
 
 	commands = NULL;
-	if (parse_input(input, tokens, executor) < 0
-		|| parse_commands(*tokens, &commands) < 0)
+	if (parse_input(input, tokens, executor) < 0)
+		print_syntax_error("unsupported syntax", executor, 2);
+	if (validate_syntax(*tokens, executor) < 0)
 	{
-		ft_dprintf(STDERR_FILENO,"minishell: unsupported syntax\n");
 		executor->last_exit_code = 2; //exit code 2 for syntax errors
 		return (-1);
 	}
+	if (parse_commands(*tokens, &commands) < 0)
+		print_syntax_error("unsupported syntax", executor, 2);
 	if (*tokens) // Only free if tokens wasn't already freed during parsing
 		ft_lstclear(tokens);
 	if (commands)

@@ -3,22 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 08:47:32 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/24 21:08:20 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/25 17:51:40 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
+#include "utils.h"
 
 int	count_tokens(t_token *tokens)
 {
 	int	count;
 
 	count = 0;
-	while (tokens && !is_special(tokens->token[0]))
+	while (tokens && (!is_special(tokens->token[0]) || tokens->is_quoted))
 	{
 		count++;
 		tokens = tokens->next;
