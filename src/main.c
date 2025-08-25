@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 21:03:28 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/25 21:23:47 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,14 @@ static int	parse_and_execute(char *input, t_token **tokens,
 
 	commands = NULL;
 	if (parse_input(input, tokens, executor) < 0)
-		return (print_syntax_error("unsupported", executor, 2));
+		return (print_syntax_error(NULL, executor, 2));
 	if (validate_syntax(*tokens, executor) < 0)
 	{
 		executor->last_exit_code = 2; //exit code 2 for syntax errors
 		return (-1);
 	}
 	if (parse_commands(*tokens, &commands) < 0)
-		return (print_syntax_error("unsupported syntax", executor, 2));
+		return (print_syntax_error(NULL, executor, 2));
 	if (*tokens) // Only free if tokens wasn't already freed during parsing
 		ft_lstclear(tokens);
 	if (commands)

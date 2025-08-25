@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:45:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 18:00:31 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/25 21:53:26 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,8 @@ static int	check_pipe_syntax(t_token *current, t_token *next,
 	if (!next)
 		return (print_syntax_error("newline", executor, 0));
 	// Check if next token is also a pipe or other special character (and not quoted)
-	if (!next->is_quoted && is_special(next->token[0]))
-	{
-		if (next->token[0] == '|')
-			return (print_syntax_error("|", executor, 0));
-		else
-			return (print_syntax_error(next->token, executor, 0));
-	}
+	if (!next->is_quoted && next->token[0] == '|')
+        return (print_syntax_error("|", executor, 0));
 	return (0);
 }
 
