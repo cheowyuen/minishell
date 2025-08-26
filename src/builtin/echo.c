@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:46:42 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:34:20 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/26 11:55:29 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	builtin_echo(t_executor *executor)
 	char	**args;
 	int		newline;
 	int		i;
-
+	
 	args = executor->commands->argv;
 	i = parse_echo_flags(args, &newline);
 	while (args[i])
