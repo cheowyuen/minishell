@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/25 15:27:34 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/26 11:51:44 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	handle_quoted_word(char **joined, t_quote *quote, char *input, int *i)
 	if (!temp)
 		return (-1);
 	*joined = temp;
+	free(temp);
 	return (0);
 }
 
@@ -73,5 +74,6 @@ int	handle_unquoted_word(char **joined, t_quote *quote, char *input, int *i)
 	if (!temp)
 		return (-1);
 	*joined = temp;
+	free(temp);
 	return (0);
 }
