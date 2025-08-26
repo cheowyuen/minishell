@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 17:47:14 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/26 21:22:18 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	exec_cmd(t_executor *executor, t_command *command)
 		return (FAILURE);
 	if (!command->argv || !command->argv[0] || !command->argv[0][0])
 	{
-		if (!command->next && !command->pipe_out && !command->infile && 
+		if (!command->next && !command->pipe_out && !command->infiles && 
 			!command->outfiles && !command->has_heredoc)
 			return (SUCCESS);
 	}
@@ -43,7 +43,7 @@ int	exec_single_command(t_executor *executor, t_command *command)
 
 int	setup_single_redirection(t_command *command, t_executor *executor)
 {
-	if (command->infile || command->has_heredoc)
+	if (command->infiles || command->has_heredoc)
 	{
 		if (setup_input_redirection(command, executor) == FAILURE)
 			return (FAILURE);

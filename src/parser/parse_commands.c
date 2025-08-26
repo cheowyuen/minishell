@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/26 12:03:21 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/26 21:21:33 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	handle_special(t_token **tokens, t_command **current,
 	}
 	else if ((*tokens)->token[0] == '<')
 	{
-		if (set_infile(tokens, *current) < 0)
+		if (set_infile(tokens, &(*current)->infiles) < 0)
 			return (free_tokens_commands(tokens, commands));
 	}
 	else if ((*tokens)->token[0] == '>')

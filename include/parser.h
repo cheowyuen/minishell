@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/25 17:59:33 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/26 21:05:12 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,6 @@
 # define PARSER_H
 
 typedef struct s_executor	t_executor;
-
-// typedef enum e_quote_type
-// {
-// 	NONE,
-// 	SINGLE,
-// 	DOUBLE
-// }							t_quote_type;
 
 typedef struct s_token
 {
@@ -38,30 +31,30 @@ typedef struct s_var
 	t_executor				*executor;
 }							t_var;
 
-// typedef struct s_shell
-// {
-// 	int						exit_code;
-// }							t_shell;
-
 typedef struct s_quote
 {
 	char					*quoted_word;
 	bool					is_heredoc;
-	// t_shell					*shell;
 	t_executor				*executor;
 }							t_quote;
 
-typedef struct s_redir
+typedef struct s_infile
+{
+    char					*filename;
+    struct s_infile			*next;
+}							t_infile;
+
+typedef struct s_outfile
 {
 	char    				*filename;
     bool    				append;
-    struct s_redir			*next;
-}   						t_redir;
+    struct s_outfile		*next;
+}   						t_outfile;
 
 typedef struct s_command
 {
 	char					**argv;
-	char					*infile;
+	t_infile				*infiles;
 	int						append;
 	int						has_heredoc;
 	char					*heredoc_delim;
@@ -69,7 +62,7 @@ typedef struct s_command
 	int						is_builtin;
 	int						is_last;
 	int						pipe_out;
-	t_redir					*outfiles;
+	t_outfile				*outfiles;
 	struct s_command		*next;
 }							t_command;
 
@@ -89,8 +82,8 @@ int							parse_commands(t_token *tokens,
 int							free_tokens_commands(t_token **tokens,
 								t_command **commands);
 int							set_outfile(t_token **tokens, int append,
-								t_redir **files);
-int							set_infile(t_token **tokens, t_command *current);
+								t_outfile **files);
+int							set_infile(t_token **tokens, t_infile **files);
 int							is_builtin(char *cmd);
 t_command					*create_command(void);
 int							count_tokens(t_token *tokens);

@@ -6,7 +6,7 @@
 /*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:30:25 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/23 20:51:46 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/26 21:07:14 by cheowyuenwo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ void	free_commands(t_command **commands)
 {
 	t_command	*temp;
 	int			i;
-	t_redir		*redir;
-	t_redir		*next;
+	t_infile	*infiles;
+	t_outfile	*outfiles;
+	t_outfile	*next;
+	t_infile	*next_infile;
 
 	if (!commands || !*commands)
 		return ;
@@ -43,19 +45,24 @@ void	free_commands(t_command **commands)
 			}
 			free(temp->argv);
 		}
-		if (temp->infile)
-			free(temp->infile);
-		
-		redir = temp->outfiles;
-		while (redir)
+		infiles = temp->infiles;
+		while (infiles)
 		{
-			next = redir->next;
-			if (redir->filename)
-				free(redir->filename);
-			free(redir);
-			redir = next;
+			next_infile = infiles->next;
+			if (infiles->filename)
+				free(infiles->filename);
+			free(infiles);
+			infiles = next_infile;
 		}
-			
+		outfiles = temp->outfiles;
+		while (outfiles)
+		{
+			next = outfiles->next;
+			if (outfiles->filename)
+				free(outfiles->filename);
+			free(outfiles);
+			outfiles = next;
+		}
 		if (temp->heredoc_delim)
 			free(temp->heredoc_delim);
 		free(temp);
