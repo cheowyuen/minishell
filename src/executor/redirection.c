@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/26 21:22:24 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/26 23:00:02 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,7 @@ int	setup_output_redirection(t_command *command)
 	{
 		fd = open_redir_file(outfiles);
 		if (fd < 0)
-		{
-			perror(outfiles->filename);
 			return (FAILURE);
-		}
 		if (redirect_stdout(fd, outfiles) < 0)
             return (FAILURE);
 		outfiles = outfiles->next;
