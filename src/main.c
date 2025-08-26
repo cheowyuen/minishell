@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 21:23:47 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/26 10:50:07 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,10 @@ static int	handle_input_processing(char *input, t_token *tokens,
 		t_executor *executor)
 {
 	if (!input)
+	{
+		printf("exit\n");
 		return (-1);
+	}
 	if (g_signal_status == SIGNAL_INT)
 	{
 		executor->last_exit_code = 130;
