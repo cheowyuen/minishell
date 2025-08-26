@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 08:47:32 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/25 17:51:40 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/26 11:35:49 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,15 @@ int	count_tokens(t_token *tokens)
 	int	count;
 
 	count = 0;
-	while (tokens && (!is_special(tokens->token[0]) || tokens->is_quoted))
+	while (tokens && ((ft_strcmp(tokens->token, "|") != 0) || tokens->is_quoted))
 	{
+		if (tokens->token[0] == '<' || tokens->token[0] == '>')
+		{
+			tokens = tokens->next;
+			if (tokens)
+				tokens = tokens->next;
+			continue ;
+		}
 		count++;
 		tokens = tokens->next;
 	}
