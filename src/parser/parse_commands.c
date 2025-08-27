@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 15:18:53 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 19:14:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	handle_special(t_token **tokens, t_command **current,
 		{
 			ft_dprintf(STDERR_FILENO,
 				"minishell: maximum here-document count exceeded\n");
-			free_tokens_commands(tokens, commands);
+			free_commands(commands);
 			return (HEREDOC_LIMIT_EXCEEDED);
 		}
 		*tokens = (*tokens)->next;
@@ -36,6 +36,8 @@ static int	handle_special(t_token **tokens, t_command **current,
 		}
 		(*current)->has_heredoc = 1;
 		(*current)->is_quoted = (*tokens)->is_quoted;
+		if ((*current)->heredoc_delim)
+			free((*current)->heredoc_delim);
 		(*current)->heredoc_delim = ft_strdup((*tokens)->token);
 		if (!(*current)->heredoc_delim)
 			return (free_tokens_commands(tokens, commands));

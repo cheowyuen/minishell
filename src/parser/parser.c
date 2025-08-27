@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/24 23:20:30 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/27 19:00:47 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,26 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 		{
 			is_quoted = true;
 			if (handle_quoted_word(&joined, quote, input, i) < 0)
+			{
+				free(joined);
 				return (free_tokens_input(tokens, NULL, 1));
+			}
 		}
 		else
 		{
 			if (handle_unquoted_word(&joined, quote, input, i) < 0)
+			{
+				free(joined);
 				return (free_tokens_input(tokens, NULL, 1));
+			}
 		}
 	}
 	if (add_token(tokens, is_quoted, joined, ft_strlen(joined)) < 0)
+	{
+		free(joined);
 		return (free_tokens_input(tokens, NULL, 1));
+	}
+	free(joined);
 	return (0);
 }
 

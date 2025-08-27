@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 15:47:47 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 19:10:20 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,15 @@ static int	parse_and_execute(char *input, t_token **tokens,
 	int parse_result = parse_commands(*tokens, &commands);
 	if (parse_result == HEREDOC_LIMIT_EXCEEDED)
 	{
+		ft_lstclear(tokens); // Free the tokens since they weren't freed in parse_commands
 		executor->last_exit_code = 2; // Exit code 2 for heredoc limit exceeded
 		return (HEREDOC_LIMIT_EXCEEDED);
 	}
 	if (parse_result < 0)
+	{
+		ft_lstclear(tokens); // Free the tokens since they weren't freed in parse_commands
 		return (print_syntax_error(NULL, executor, 2));
+	}
 	if (*tokens) // Only free if tokens wasn't already freed during parsing
 		ft_lstclear(tokens);
 	if (commands)

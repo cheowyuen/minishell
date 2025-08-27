@@ -48,6 +48,16 @@
 }
 
 {
+   readline_replace_line_buffer
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:*alloc
+   fun:xrealloc
+   fun:rl_extend_line_buffer
+   fun:rl_replace_line
+}
+
+{
    readline_expand_prompt
    Memcheck:Leak
    match-leak-kinds: reachable
