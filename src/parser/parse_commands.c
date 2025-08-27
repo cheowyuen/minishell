@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 14:49:39 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 15:18:53 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ static int	handle_special(t_token **tokens, t_command **current,
 		{
 			ft_dprintf(STDERR_FILENO,
 				"minishell: maximum here-document count exceeded\n");
-			return (free_tokens_commands(tokens, commands));
+			free_tokens_commands(tokens, commands);
+			return (HEREDOC_LIMIT_EXCEEDED);
 		}
 		*tokens = (*tokens)->next;
 		if (!*tokens)
@@ -77,8 +78,9 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	{
 		if (!tmp->is_quoted && (tmp->token[0] == '<' || tmp->token[0] == '>'))
         {
-			if (handle_special(&tmp, &current, commands, &heredoc_count) < 0)
-				return (-1);
+			int result = handle_special(&tmp, &current, commands, &heredoc_count);
+			if (result < 0)
+				return (result);  // Propagate special codes like HEREDOC_LIMIT_EXCEEDED
             continue ; 
         }
 		if (tmp->token && tmp->token[0]) // Skip empty tokens (from environment variables that expand to empty)
@@ -104,8 +106,9 @@ static int	process_tokens(t_token *tokens, t_command **commands)
 	current = *commands;
 	while (tokens)
 	{
-		if (handle_commands(&tokens, current, commands) < 0)
-			return (-1);
+		int result = handle_commands(&tokens, current, commands);
+		if (result < 0)
+			return (result);  // Propagate special codes like HEREDOC_LIMIT_EXCEEDED
 		if (tokens && !tokens->is_quoted && ft_strcmp(tokens->token, "|") == 0)
         {
             tokens = tokens->next;
@@ -125,7 +128,8 @@ int	parse_commands(t_token *tokens, t_command **commands)
 	*commands = create_command();
 	if (!*commands)
 		return (free_tokens(&tokens));
-	if (process_tokens(tokens, commands) < 0)
-		return (-1);
+	int result = process_tokens(tokens, commands);
+	if (result < 0)
+		return (result);  // Propagate special codes like HEREDOC_LIMIT_EXCEEDED
 	return (0);
 }

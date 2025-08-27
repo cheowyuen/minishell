@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 11:30:51 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/27 15:47:47 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,13 @@ static int	parse_and_execute(char *input, t_token **tokens,
 		executor->last_exit_code = 2; //exit code 2 for syntax errors
 		return (-1);
 	}
-	if (parse_commands(*tokens, &commands) < 0)
+	int parse_result = parse_commands(*tokens, &commands);
+	if (parse_result == HEREDOC_LIMIT_EXCEEDED)
+	{
+		executor->last_exit_code = 2; // Exit code 2 for heredoc limit exceeded
+		return (HEREDOC_LIMIT_EXCEEDED);
+	}
+	if (parse_result < 0)
 		return (print_syntax_error(NULL, executor, 2));
 	if (*tokens) // Only free if tokens wasn't already freed during parsing
 		ft_lstclear(tokens);
@@ -72,6 +78,8 @@ static int	parse_and_execute(char *input, t_token **tokens,
 static int	handle_input_processing(char *input, t_token *tokens,
 		t_executor *executor)
 {
+	int result;
+
 	if (!input)
 	{
 		printf("exit\n");
@@ -87,7 +95,13 @@ static int	handle_input_processing(char *input, t_token *tokens,
 	if (*input && ft_strlen(input) > 0 && !is_only_space_or_tab(input))
 	{
 		add_history(input);
-		if (parse_and_execute(input, &tokens, executor) < 0)
+		result = parse_and_execute(input, &tokens, executor);
+		if (result == HEREDOC_LIMIT_EXCEEDED)
+		{
+			free_input_failure(input);
+			return (-1);
+		}
+		else if (result < 0)
 			return (free_input_failure(input));
 	}
 	free(input);

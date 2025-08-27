@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 11:56:26 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/27 15:13:13 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 //     REDIR_APPEND,
 //     HEREDOC
 // }							t_redir_type;
+
+#define HEREDOC_LIMIT_EXCEEDED -2
 
 typedef struct s_executor	t_executor;
 
