@@ -6,20 +6,22 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 22:18:20 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 22:21:45 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-// typedef enum e_redir_type
-// {
-//     REDIR_IN,
-//     REDIR_OUT,
-//     REDIR_APPEND,
-//     HEREDOC
-// }							t_redir_type;
+#define HEREDOC_LIMIT_EXCEEDED -2
+
+typedef enum e_redir_type
+{
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	HEREDOC
+}							t_redir_type;
 
 typedef struct s_executor	t_executor;
 
