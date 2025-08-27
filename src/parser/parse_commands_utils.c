@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 08:47:32 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/26 21:05:34 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/27 11:57:37 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ t_command	*create_command(void)
 	new_command->is_last = 0;
 	new_command->pipe_out = 0;
 	new_command->outfiles = NULL;
+	// new_command->redirs = NULL;
 	new_command->next = NULL;
 	return (new_command);
 }
@@ -117,6 +118,25 @@ static void	ft_lstadd_back_infile(t_infile **lst, t_infile *new)
 	end->next = new;
 	new->next = NULL;
 }
+
+// static void	ft_lstadd_back_redir(t_infile **lst, t_redir *new)
+// {
+// 	t_redir	*end;
+
+// 	if (!lst || !new)
+// 		return ;
+// 	if (!*lst)
+// 	{
+// 		*lst = new;
+// 		new->next = NULL;
+// 		return ;
+// 	}
+// 	end = *lst;
+// 	while (end->next)
+// 		end = end->next;
+// 	end->next = new;
+// 	new->next = NULL;
+// }
 
 int	set_outfile(t_token **tokens, int append, t_outfile **files)
 {
@@ -168,3 +188,29 @@ int	set_infile(t_token **tokens, t_infile **files)
 	ft_lstadd_back_infile(files,  new_file);
 	return (0);
 }
+
+// int	set_redir(t_token **tokens, t_redir **files)
+// {
+// 	t_redir	*new_file;
+	
+// 	*tokens = (*tokens)->next;
+// 	if (!*tokens)
+// 	{
+// 		ft_dprintf(STDERR_FILENO,
+// 			"minishell: syntax error near unexpected token `newline'\n");
+// 		return (-1);
+// 	}
+// 	new_file = malloc(sizeof(t_redir));
+// 	if  (!new_file)
+// 		return (-1);
+// 	new_file->type = REDIR_IN;
+// 	new_file->filename = ft_strdup((*tokens)->token); 
+// 	if (!new_file->filename)
+// 	{
+// 		free(new_file);
+// 		return (-1);
+// 	}
+// 	new_file->next = NULL;
+// 	ft_lstadd_back_redir(files,  new_file);
+// 	return (0);
+// }
