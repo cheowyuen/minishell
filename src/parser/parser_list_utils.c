@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 22:18:57 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/28 00:41:45 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,10 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content)
 	// If quoted, don't split - treat as single token
 	if (is_quoted)
 		return (add_token(tokens, is_quoted, content, ft_strlen(content)));
-	
 	// Split on spaces for unquoted content
 	words = ft_split(content, ' ');
 	if (!words)
 		return (-1);
-	
 	// Add each word as a separate token
 	i = 0;
 	while (words[i])
@@ -114,7 +112,6 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content)
 		}
 		i++;
 	}
-	
 	free_str_array(words);
 	return (0);
 }
