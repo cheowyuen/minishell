@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 08:47:32 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 11:57:37 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/27 20:32:02 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,11 +144,7 @@ int	set_outfile(t_token **tokens, int append, t_outfile **files)
 	
 	*tokens = (*tokens)->next;
 	if (!*tokens)
-	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: syntax error near unexpected token `newline'\n");
-		return (-1);
-	}
+		return (print_syntax_error("newline", NULL, 0));
 	new_file = malloc(sizeof(t_outfile));
 	if  (!new_file)
 		return (-1);
@@ -170,11 +166,7 @@ int	set_infile(t_token **tokens, t_infile **files)
 	
 	*tokens = (*tokens)->next;
 	if (!*tokens)
-	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: syntax error near unexpected token `newline'\n");
-		return (-1);
-	}
+		return (print_syntax_error("newline", NULL, 0));
 	new_file = malloc(sizeof(t_infile));
 	if  (!new_file)
 		return (-1);
