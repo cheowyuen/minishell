@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/15 08:47:32 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 22:17:49 by lsurco-t         ###   ########.fr       */
+/*   Created: 2025/08/27 18:41:29 by cyuen             #+#    #+#             */
+/*   Updated: 2025/08/28 00:29:10 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,11 +196,7 @@ int	set_redir(t_token **tokens, t_redir **files)
 		new_file->type = REDIR_OUT;
 	*tokens = (*tokens)->next;
 	if (!*tokens)
-	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: syntax error near unexpected token `newline'\n");
-		return (-1);
-	}
+		return (print_syntax_error("newline", NULL, 0));
 	new_file->filename = ft_strdup((*tokens)->token); 
 	if (!new_file->filename)
 	{
