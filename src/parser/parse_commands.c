@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 19:14:25 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 20:33:54 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	int		argv_index;
 	t_token	*tmp;
 	int		heredoc_count;
+	int		result;
 
 	heredoc_count = 0;
 	count = count_tokens(*tokens);
@@ -80,7 +81,7 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	{
 		if (!tmp->is_quoted && (tmp->token[0] == '<' || tmp->token[0] == '>'))
         {
-			int result = handle_special(&tmp, &current, commands, &heredoc_count);
+			result = handle_special(&tmp, &current, commands, &heredoc_count);
 			if (result < 0)
 				return (result);  // Propagate special codes like HEREDOC_LIMIT_EXCEEDED
             continue ; 
