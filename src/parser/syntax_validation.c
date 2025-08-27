@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_validation.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:45:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 11:58:07 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/27 20:02:40 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,9 @@
 static int	check_redirection_syntax(t_token *current, t_token *next,
 		t_executor *executor)
 {
-	(void)current; // Unused parameter
+	(void)current;
 	if (!next)
 		return (print_syntax_error("newline", executor, 0));
-	// Check if next token is also a special character (and not quoted)
 	if (!next->is_quoted && is_special(next->token[0]))
 		return (print_syntax_error(next->token, executor, 0));
 	return (0);
@@ -29,12 +28,11 @@ static int	check_redirection_syntax(t_token *current, t_token *next,
 static int	check_pipe_syntax(t_token *current, t_token *next,
 		t_executor *executor)
 {
-	(void)current; // Unused parameter
+	(void)current;
 	if (!next)
 		return (print_syntax_error("newline", executor, 0));
-	// Check if next token is also a pipe or other special character (and not quoted)
 	if (!next->is_quoted && next->token[0] == '|')
-        return (print_syntax_error("|", executor, 0));
+		return (print_syntax_error("|", executor, 0));
 	return (0);
 }
 
@@ -45,7 +43,6 @@ int	validate_syntax(t_token *tokens, t_executor *executor)
 	if (!tokens)
 		return (0);
 	current = tokens;
-	// Check if first token is a pipe (and not quoted)
 	if (!current->is_quoted && current->token[0] == '|')
 		return (print_syntax_error("|", executor, 0));
 	while (current)
