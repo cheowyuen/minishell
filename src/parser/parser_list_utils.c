@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_list_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/24 20:41:21 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/27 19:57:57 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
+#include "utils.h"
 
 void	ft_lstclear(t_token **lst)
 {
@@ -74,5 +75,46 @@ int	add_token(t_token **tokens, bool is_quoted, char *content, int len)
 	if (!new_token)
 		return (-1);
 	ft_lstadd_back(tokens, new_token);
+	return (0);
+}
+
+static int	add_split_token(t_token **tokens, char *word)
+{
+	t_token	*new_token;
+
+	new_token = ft_lstnew(false, word, ft_strlen(word));
+	if (!new_token)
+		return (-1);
+	ft_lstadd_back(tokens, new_token);
+	return (0);
+}
+
+int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content)
+{
+	char	**words;
+	int		i;
+
+	// If quoted, don't split - treat as single token
+	if (is_quoted)
+		return (add_token(tokens, is_quoted, content, ft_strlen(content)));
+	
+	// Split on spaces for unquoted content
+	words = ft_split(content, ' ');
+	if (!words)
+		return (-1);
+	
+	// Add each word as a separate token
+	i = 0;
+	while (words[i])
+	{
+		if (add_split_token(tokens, words[i]) < 0)
+		{
+			free_str_array(words);
+			return (-1);
+		}
+		i++;
+	}
+	
+	free_str_array(words);
 	return (0);
 }

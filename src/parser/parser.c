@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 19:00:47 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 19:42:51 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 			}
 		}
 	}
-	if (add_token(tokens, is_quoted, joined, ft_strlen(joined)) < 0)
+	// Use word splitting for unquoted tokens that might contain expanded variables
+	if (add_tokens_with_splitting(tokens, is_quoted, joined) < 0)
 	{
 		free(joined);
 		return (free_tokens_input(tokens, NULL, 1));

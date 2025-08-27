@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/25 15:27:33 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 19:47:39 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ static int	get_var(char **word, int i, t_executor *executor)
 	var.value = NULL;
 	var.should_free = false;
 	var.executor = executor;
-	
 	// Check if $ is followed by valid variable character or special cases
 	if (!(*word)[i + 1] || ((*word)[i + 1] != '?' && (*word)[i + 1] != '{' 
 		&& !ft_isalpha((*word)[i + 1]) && (*word)[i + 1] != '_'))

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 19:00:47 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 19:42:51 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int							parse_input(char *input, t_token **tokens, t_executor *executor);
 int							free_tokens_input(t_token **tokens, char *input, int flag);
 int							add_token(t_token **tokens, bool is_quoted, char *content,
 								int len);
+int							add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content);
 int							is_special(char c);
 int							is_quote(char c);
 int							is_space(char c);
