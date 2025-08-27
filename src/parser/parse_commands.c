@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/26 21:21:33 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/27 12:04:59 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "minishell.h"
 #include "parser.h"
+#include "utils.h"
 
 static int	handle_special(t_token **tokens, t_command **current,
 		t_command **commands, int *heredoc_count)
@@ -29,8 +30,7 @@ static int	handle_special(t_token **tokens, t_command **current,
 		*tokens = (*tokens)->next;
 		if (!*tokens)
 		{
-			ft_dprintf(STDERR_FILENO,
-				"minishell: syntax error near unexpected token `newline'\n");
+			print_syntax_error("newline", NULL, 0);
 			return (free_tokens_commands(tokens, commands));
 		}
 		(*current)->has_heredoc = 1;
