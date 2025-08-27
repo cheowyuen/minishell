@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_list_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/24 20:41:21 by cheowyuenwo      ###   ########.fr       */
+/*   Created: 2025/08/27 18:41:58 by cyuen             #+#    #+#             */
+/*   Updated: 2025/08/27 18:42:01 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

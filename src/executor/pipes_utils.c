@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/26 20:39:58 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/27 19:22:07 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,15 @@ int	close_children_process(t_executor *executor)
 void	setup_redirection_child_process(t_executor *executor,
 		t_command *command)
 {
-	if (command->infiles || command->has_heredoc)
+	if (command->redirs)
+	{
+		if (setup_redirection(command, executor) == FAILURE)
+		{
+			close_all_pipes_children(executor);
+			exit(EXIT_FAILURE);
+		}
+	}
+	if (command->has_heredoc)
 	{
 		if (setup_input_redirection(command, executor) == FAILURE)
 		{
@@ -114,12 +122,12 @@ void	setup_redirection_child_process(t_executor *executor,
 			exit(EXIT_FAILURE);
 		}
 	}
-	if (command->outfiles)
-	{
-		if (setup_output_redirection(command) == FAILURE)
-		{
-			close_all_pipes_children(executor);
-			exit(EXIT_FAILURE);
-		}
-	}
+	// if (command->outfiles)
+	// {
+	// 	if (setup_output_redirection(command) == FAILURE)
+	// 	{
+	// 		close_all_pipes_children(executor);
+	// 		exit(EXIT_FAILURE);
+	// 	}
+	// }
 }

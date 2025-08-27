@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 11:56:26 by cwong            ###   ########.fr       */
+/*   Created: 2025/08/27 18:37:54 by cyuen             #+#    #+#             */
+/*   Updated: 2025/08/27 18:37:57 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-// typedef enum e_redir_type
-// {
-//     REDIR_IN,
-//     REDIR_OUT,
-//     REDIR_APPEND,
-//     HEREDOC
-// }							t_redir_type;
+typedef enum e_redir_type
+{
+    REDIR_IN,
+    REDIR_OUT,
+    REDIR_APPEND,
+    HEREDOC
+}							t_redir_type;
 
 typedef struct s_executor	t_executor;
 
@@ -46,12 +46,12 @@ typedef struct s_quote
 	t_executor				*executor;
 }							t_quote;
 
-// typedef struct s_redir
-// {
-// 	t_redir_type			type;
-//     char					*filename;
-//     struct s_redir			*next;
-// }							t_redir;
+typedef struct s_redir
+{
+	t_redir_type			type;
+    char					*filename;
+    struct s_redir			*next;
+}							t_redir;
 
 typedef struct s_infile
 {
@@ -78,7 +78,7 @@ typedef struct s_command
 	int						is_last;
 	int						pipe_out;
 	t_outfile				*outfiles;
-	// t_redir					*redirs;
+	t_redir					*redirs;
 	struct s_command		*next;
 }							t_command;
 
@@ -112,5 +112,6 @@ int							handle_unquoted_word(char **joined, t_quote *quote,
 int							get_word(char *input, int *i, t_quote *quote, char **word);
 int							validate_syntax(t_token *tokens, t_executor *executor);
 int							get_word_heredoc(char *input, int *i, t_quote *quote, char **word);
+int							set_redir(t_token **tokens, t_redir **files);
 
 #endif

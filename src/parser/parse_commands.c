@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 11:57:55 by cwong            ###   ########.fr       */
+/*   Created: 2025/08/27 18:41:40 by cyuen             #+#    #+#             */
+/*   Updated: 2025/08/27 19:31:41 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,24 @@ static int	handle_special(t_token **tokens, t_command **current,
 		if (!(*current)->heredoc_delim)
 			return (free_tokens_commands(tokens, commands));
 	}
-	else if (ft_strcmp((*tokens)->token, ">>") == 0)
+	// else if (ft_strcmp((*tokens)->token, ">>") == 0)
+	// {
+	// 	if (set_outfile(tokens, 1, &(*current)->outfiles) < 0)
+	// 		return (free_tokens_commands(tokens, commands));
+	// }
+	else if (ft_strcmp((*tokens)->token, ">>") == 0
+		|| (*tokens)->token[0] == '<'
+		|| (*tokens)->token[0] == '>')
 	{
-		if (set_outfile(tokens, 1, &(*current)->outfiles) < 0)
+		// if (set_infile(tokens, &(*current)->infiles) < 0)
+		if (set_redir(tokens, &(*current)->redirs) < 0)
 			return (free_tokens_commands(tokens, commands));
 	}
-	else if ((*tokens)->token[0] == '<')
-	{
-		if (set_infile(tokens, &(*current)->infiles) < 0)
-			return (free_tokens_commands(tokens, commands));
-	}
-	else if ((*tokens)->token[0] == '>')
-	{
-		if (set_outfile(tokens, 0, &(*current)->outfiles) < 0)
-			return (free_tokens_commands(tokens, commands));
-	}
+	// else if ((*tokens)->token[0] == '>')
+	// {
+	// 	if (set_outfile(tokens, 0, &(*current)->outfiles) < 0)
+	// 		return (free_tokens_commands(tokens, commands));
+	// }
 	*tokens = (*tokens)->next;
 	return (0);
 }

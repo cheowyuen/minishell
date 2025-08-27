@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_cleanup.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/09 16:30:25 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/26 21:07:14 by cheowyuenwo      ###   ########.fr       */
+/*   Created: 2025/08/27 18:41:50 by cyuen             #+#    #+#             */
+/*   Updated: 2025/08/27 18:41:52 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,11 @@ void	free_commands(t_command **commands)
 	int			i;
 	t_infile	*infiles;
 	t_outfile	*outfiles;
+	t_redir		*redirs;
 	t_outfile	*next;
 	t_infile	*next_infile;
-
+	t_redir		*next_redir;
+	
 	if (!commands || !*commands)
 		return ;
 	while (*commands)
@@ -44,6 +46,15 @@ void	free_commands(t_command **commands)
 				i++;
 			}
 			free(temp->argv);
+		}
+		redirs = temp->redirs;
+		while (redirs)
+		{
+			next_redir = redirs->next;
+			if (redirs->filename)
+				free(redirs->filename);
+			free(redirs);
+			redirs = next_redir;
 		}
 		infiles = temp->infiles;
 		while (infiles)
