@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/26 21:37:24 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/27 11:08:49 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,22 +75,34 @@ static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor)
 			free(line);
 			break ;
 		}
-		i = 0;
 		if (!executor->commands->is_quoted)
 		{
-			if (get_word(line, &i, &quote, &word) < 0)
-			{
+			i = 0;
+			while (i < (int)ft_strlen(line))
+    		{
+				if (get_word_heredoc(line, &i, &quote, &word) < 0)
+				{
+					perror("write");
+					free(line);
+					break ;
+				}
+				if (word && *word)
+				{
+					if (write(fd, word, ft_strlen(word)) == -1)
+					{
+						perror("write");
+						free(line);
+						break ;
+					}
+					free(word);
+				}
+			}
+   			if (write(fd, "\n", 1) == -1)
+        	{
 				perror("write");
 				free(line);
 				break ;
 			}
-			if (write(fd, word, ft_strlen(word)) == -1 || write(fd, "\n", 1) == -1)
-			{
-				perror("write");
-				free(line);
-				break ;
-			}
-			free(word);
 		}
 		else if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
 		{
