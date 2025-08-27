@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 20:33:54 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 20:35:09 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,13 +105,14 @@ static int	handle_commands(t_token **tokens, t_command *current,
 static int	process_tokens(t_token *tokens, t_command **commands)
 {
 	t_command	*current;
+	int 		result;
 
 	current = *commands;
 	while (tokens)
 	{
-		int result = handle_commands(&tokens, current, commands);
+		result = handle_commands(&tokens, current, commands);
 		if (result < 0)
-			return (result);  // Propagate special codes like HEREDOC_LIMIT_EXCEEDED
+			return (result);
 		if (tokens && !tokens->is_quoted && ft_strcmp(tokens->token, "|") == 0)
         {
             tokens = tokens->next;
@@ -128,11 +129,13 @@ static int	process_tokens(t_token *tokens, t_command **commands)
 
 int	parse_commands(t_token *tokens, t_command **commands)
 {
+	int result;
+
 	*commands = create_command();
 	if (!*commands)
 		return (free_tokens(&tokens));
-	int result = process_tokens(tokens, commands);
+	result = process_tokens(tokens, commands);
 	if (result < 0)
-		return (result);  // Propagate special codes like HEREDOC_LIMIT_EXCEEDED
+		return (result);
 	return (0);
 }
