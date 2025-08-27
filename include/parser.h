@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 19:42:51 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 22:18:20 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 //     REDIR_APPEND,
 //     HEREDOC
 // }							t_redir_type;
-
-#define HEREDOC_LIMIT_EXCEEDED -2
 
 typedef struct s_executor	t_executor;
 
@@ -48,12 +46,12 @@ typedef struct s_quote
 	t_executor				*executor;
 }							t_quote;
 
-// typedef struct s_redir
-// {
-// 	t_redir_type			type;
-//     char					*filename;
-//     struct s_redir			*next;
-// }							t_redir;
+typedef struct s_redir
+{
+	t_redir_type			type;
+    char					*filename;
+    struct s_redir			*next;
+}							t_redir;
 
 typedef struct s_infile
 {
@@ -80,7 +78,7 @@ typedef struct s_command
 	int						is_last;
 	int						pipe_out;
 	t_outfile				*outfiles;
-	// t_redir					*redirs;
+	t_redir					*redirs;
 	struct s_command		*next;
 }							t_command;
 
@@ -115,5 +113,6 @@ int							handle_unquoted_word(char **joined, t_quote *quote,
 int							get_word(char *input, int *i, t_quote *quote, char **word);
 int							validate_syntax(t_token *tokens, t_executor *executor);
 int							get_word_heredoc(char *input, int *i, t_quote *quote, char **word);
+int							set_redir(t_token **tokens, t_redir **files);
 
 #endif

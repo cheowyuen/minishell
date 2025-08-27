@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cheowyuenwong <cheowyuenwong@student.42    +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/26 21:38:25 by cheowyuenwo      ###   ########.fr       */
+/*   Updated: 2025/08/27 21:20:42 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

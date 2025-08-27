@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 08:47:32 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 20:32:02 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 22:17:49 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ t_command	*create_command(void)
 	new_command->is_last = 0;
 	new_command->pipe_out = 0;
 	new_command->outfiles = NULL;
-	// new_command->redirs = NULL;
+	new_command->redirs = NULL;
 	new_command->next = NULL;
 	return (new_command);
 }
@@ -119,24 +119,24 @@ static void	ft_lstadd_back_infile(t_infile **lst, t_infile *new)
 	new->next = NULL;
 }
 
-// static void	ft_lstadd_back_redir(t_infile **lst, t_redir *new)
-// {
-// 	t_redir	*end;
+static void	ft_lstadd_back_redir(t_redir **lst, t_redir *new)
+{
+	t_redir	*end;
 
-// 	if (!lst || !new)
-// 		return ;
-// 	if (!*lst)
-// 	{
-// 		*lst = new;
-// 		new->next = NULL;
-// 		return ;
-// 	}
-// 	end = *lst;
-// 	while (end->next)
-// 		end = end->next;
-// 	end->next = new;
-// 	new->next = NULL;
-// }
+	if (!lst || !new)
+		return ;
+	if (!*lst)
+	{
+		*lst = new;
+		new->next = NULL;
+		return ;
+	}
+	end = *lst;
+	while (end->next)
+		end = end->next;
+	end->next = new;
+	new->next = NULL;
+}
 
 int	set_outfile(t_token **tokens, int append, t_outfile **files)
 {
@@ -181,28 +181,33 @@ int	set_infile(t_token **tokens, t_infile **files)
 	return (0);
 }
 
-// int	set_redir(t_token **tokens, t_redir **files)
-// {
-// 	t_redir	*new_file;
+int	set_redir(t_token **tokens, t_redir **files)
+{
+	t_redir	*new_file;
 	
-// 	*tokens = (*tokens)->next;
-// 	if (!*tokens)
-// 	{
-// 		ft_dprintf(STDERR_FILENO,
-// 			"minishell: syntax error near unexpected token `newline'\n");
-// 		return (-1);
-// 	}
-// 	new_file = malloc(sizeof(t_redir));
-// 	if  (!new_file)
-// 		return (-1);
-// 	new_file->type = REDIR_IN;
-// 	new_file->filename = ft_strdup((*tokens)->token); 
-// 	if (!new_file->filename)
-// 	{
-// 		free(new_file);
-// 		return (-1);
-// 	}
-// 	new_file->next = NULL;
-// 	ft_lstadd_back_redir(files,  new_file);
-// 	return (0);
-// }
+	new_file = malloc(sizeof(t_redir));
+	if  (!new_file)
+		return (-1);
+	if (ft_strcmp((*tokens)->token, ">>") == 0)
+		new_file->type = REDIR_APPEND;
+	else if ((*tokens)->token[0] == '<')
+		new_file->type = REDIR_IN;
+	else if ((*tokens)->token[0] == '>')
+		new_file->type = REDIR_OUT;
+	*tokens = (*tokens)->next;
+	if (!*tokens)
+	{
+		ft_dprintf(STDERR_FILENO,
+			"minishell: syntax error near unexpected token `newline'\n");
+		return (-1);
+	}
+	new_file->filename = ft_strdup((*tokens)->token); 
+	if (!new_file->filename)
+	{
+		free(new_file);
+		return (-1);
+	}
+	new_file->next = NULL;
+	ft_lstadd_back_redir(files,  new_file);
+	return (0);
+}

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 20:35:09 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 22:18:01 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,24 @@ static int	handle_special(t_token **tokens, t_command **current,
 		if (!(*current)->heredoc_delim)
 			return (free_tokens_commands(tokens, commands));
 	}
-	else if (ft_strcmp((*tokens)->token, ">>") == 0)
+	// else if (ft_strcmp((*tokens)->token, ">>") == 0)
+	// {
+	// 	if (set_outfile(tokens, 1, &(*current)->outfiles) < 0)
+	// 		return (free_tokens_commands(tokens, commands));
+	// }
+	else if (ft_strcmp((*tokens)->token, ">>") == 0
+		|| (*tokens)->token[0] == '<'
+		|| (*tokens)->token[0] == '>')
 	{
-		if (set_outfile(tokens, 1, &(*current)->outfiles) < 0)
+		// if (set_infile(tokens, &(*current)->infiles) < 0)
+		if (set_redir(tokens, &(*current)->redirs) < 0)
 			return (free_tokens_commands(tokens, commands));
 	}
-	else if ((*tokens)->token[0] == '<')
-	{
-		if (set_infile(tokens, &(*current)->infiles) < 0)
-			return (free_tokens_commands(tokens, commands));
-	}
-	else if ((*tokens)->token[0] == '>')
-	{
-		if (set_outfile(tokens, 0, &(*current)->outfiles) < 0)
-			return (free_tokens_commands(tokens, commands));
-	}
+	// else if ((*tokens)->token[0] == '>')
+	// {
+	// 	if (set_outfile(tokens, 0, &(*current)->outfiles) < 0)
+	// 		return (free_tokens_commands(tokens, commands));
+	// }
 	*tokens = (*tokens)->next;
 	return (0);
 }

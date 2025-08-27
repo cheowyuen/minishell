@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 11:55:19 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/27 19:20:24 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ int	exec_cmd(t_executor *executor, t_command *command)
 		return (FAILURE);
 	if (!command->argv || !command->argv[0] || !command->argv[0][0])
 	{
-		if (!command->next && !command->pipe_out && !command->infiles && 
-			!command->outfiles && !command->has_heredoc)
+		if (!command->next && !command->pipe_out && !command->redirs && !command->has_heredoc)
 			return (SUCCESS);
 	}
 	executor->commands = command;
@@ -43,16 +42,21 @@ int	exec_single_command(t_executor *executor, t_command *command)
 
 int	setup_single_redirection(t_command *command, t_executor *executor)
 {
-	if (command->infiles || command->has_heredoc)
+	if (command->redirs)
+	{
+		if (setup_redirection(command, executor) == FAILURE)
+			return (FAILURE);
+	}
+	if (command->has_heredoc)
 	{
 		if (setup_input_redirection(command, executor) == FAILURE)
 			return (FAILURE);
 	}
-	if (command->outfiles)
-	{
-		if (setup_output_redirection(command) == FAILURE)
-			return (FAILURE);
-	}
+	// if (command->outfiles)
+	// {
+	// 	if (setup_output_redirection(command) == FAILURE)
+	// 		return (FAILURE);
+	// }
 	return (SUCCESS);
 }
 
