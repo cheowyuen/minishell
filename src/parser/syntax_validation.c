@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:45:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 20:02:40 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/27 20:23:07 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,11 @@ static int	check_pipe_syntax(t_token *current, t_token *next,
 	return (0);
 }
 
-int	validate_syntax(t_token *tokens, t_executor *executor)
+static int	validate_token_sequence(t_token *tokens, t_executor *executor)
 {
 	t_token	*current;
 
-	if (!tokens)
-		return (0);
 	current = tokens;
-	if (!current->is_quoted && current->token[0] == '|')
-		return (print_syntax_error("|", executor, 0));
 	while (current)
 	{
 		if (!current->is_quoted && is_special(current->token[0]))
@@ -64,4 +60,13 @@ int	validate_syntax(t_token *tokens, t_executor *executor)
 		current = current->next;
 	}
 	return (0);
+}
+
+int	validate_syntax(t_token *tokens, t_executor *executor)
+{
+	if (!tokens)
+		return (0);
+	if (!tokens->is_quoted && tokens->token[0] == '|')
+		return (print_syntax_error("|", executor, 0));
+	return (validate_token_sequence(tokens, executor));
 }
