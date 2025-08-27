@@ -29,3 +29,5 @@ valgrind $VALGRIND_OPTS ./minishell "$@"
 
 # Test command to check for memory leaks in bash
 # echo 'echo "test1" | echo "test2"; exit' | valgrind --leak-check=full --suppressions=valgrind.supp bash 2>&1 | grep -A5 "LEAK SUMMARY"
+# Check for leaks in bash when command not found
+#valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes bash -c 'nonexistentcommand' 2>&1 | grep "LEAK SUMMARY" -A 5
