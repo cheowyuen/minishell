@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:41:29 by cyuen             #+#    #+#             */
-/*   Updated: 2025/08/27 20:11:37 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/28 00:20:11 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,11 +144,7 @@ int	set_outfile(t_token **tokens, int append, t_outfile **files)
 	
 	*tokens = (*tokens)->next;
 	if (!*tokens)
-	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: syntax error near unexpected token `newline'\n");
-		return (-1);
-	}
+		return (print_syntax_error("newline", NULL, 0));
 	new_file = malloc(sizeof(t_outfile));
 	if  (!new_file)
 		return (-1);
@@ -170,11 +166,7 @@ int	set_infile(t_token **tokens, t_infile **files)
 	
 	*tokens = (*tokens)->next;
 	if (!*tokens)
-	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: syntax error near unexpected token `newline'\n");
-		return (-1);
-	}
+		return (print_syntax_error("newline", NULL, 0));
 	new_file = malloc(sizeof(t_infile));
 	if  (!new_file)
 		return (-1);
@@ -204,11 +196,7 @@ int	set_redir(t_token **tokens, t_redir **files)
 		new_file->type = REDIR_OUT;
 	*tokens = (*tokens)->next;
 	if (!*tokens)
-	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: syntax error near unexpected token `newline'\n");
-		return (-1);
-	}
+		return (print_syntax_error("newline", NULL, 0));
 	new_file->filename = ft_strdup((*tokens)->token); 
 	if (!new_file->filename)
 	{
