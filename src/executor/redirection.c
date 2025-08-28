@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 20:12:32 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/28 11:45:02 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+
+static int	has_next(t_redir *redir, t_redir_type type)
+{
+    t_redir	*tmp;
+
+	tmp = redir->next;
+    while (tmp)
+	{
+        if (tmp->type == type)
+            return (1);
+        tmp = tmp->next;
+    }
+    return (0);
+}
 
 static int open_redir_file(t_redir *redirs)
 {
@@ -18,9 +32,9 @@ static int open_redir_file(t_redir *redirs)
 	int		flags;
 	
 	if (redirs->type == REDIR_APPEND)
-			flags = O_WRONLY | O_CREAT | O_APPEND;
-		else
-			flags = O_WRONLY | O_CREAT | O_TRUNC;
+		flags = O_WRONLY | O_CREAT | O_APPEND;
+	else
+		flags = O_WRONLY | O_CREAT | O_TRUNC;
     fd = open(redirs->filename, flags, 0644);
     if (fd < 0)
     {
@@ -32,7 +46,7 @@ static int open_redir_file(t_redir *redirs)
 
 static int redirect_stdout(int fd, t_redir *redirs)
 {
-    if (!redirs->next)
+	if (!has_next(redirs, REDIR_OUT) && !has_next(redirs, REDIR_APPEND))
     {
         if (dup2(fd, STDOUT_FILENO) < 0)
         {
@@ -124,7 +138,7 @@ int	setup_redirection(t_command *command, t_executor *executor)
 				perror(redirs->filename);
 				return (FAILURE);
 			}
-			if (!redirs->next)
+			if (!has_next(redirs, REDIR_IN))
 			{
 				if (dup2(fd, STDIN_FILENO) < 0)
 				{
