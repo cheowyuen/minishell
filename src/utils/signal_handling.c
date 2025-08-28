@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 21:20:42 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/28 20:01:37 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,13 @@ int	wait_all_children(t_executor *executor, int *last_status)
 			perror("waitpid");
 			return (FAILURE);
 		}
-		// Check if this child was interrupted by SIGINT
 		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-			write(STDOUT_FILENO, "\n", 1); // Print newline immediately
+			write(STDOUT_FILENO, "\n", 1);
 		*last_status = set_last_status(executor, pid, status);
 		children_left--;
 	}
 	return (SUCCESS);
-}   
+}
 
 void	sigint_handler(int sig)
 {
