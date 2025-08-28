@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 18:38:46 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/28 19:16:14 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/28 19:26:36 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	parse_prefix(const char *str, int *i, int *sign, int base)
 		(*i)++;
 	}
 	if (base == 16 && str[*i] == '0' && (str[*i + 1] == 'x' || str[*i
-			+ 1] == 'X'))
+				+ 1] == 'X'))
 	{
 		*i += 2;
 		return (1);
