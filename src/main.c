@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 22:18:46 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/28 11:40:47 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,13 @@ static int	run_shell_loop(t_executor *executor)
 			rl_on_new_line();
 			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
+		// else
+		// {
+		// 	char *line;
+		// 	line = get_next_line(fileno(stdin));
+		// 	input = ft_strtrim(line, "\n");
+		// 	free(line);
+		// }
 		else
 			input = readline(PROMPT);
 		result = handle_input_processing(input, tokens, executor);
