@@ -71,5 +71,6 @@ int			ft_putchar_i_fd(char c, int fd);
 int			ft_putstr_i_fd(char *s, int fd);
 int			ft_dprintf(int fd, const char *format, ...);
 int			ft_strcmp(const char *s1, const char *s2);
+long long	ft_strtoll(const char *str, char **endptr, int base);
 
 #endif

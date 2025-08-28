@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:49:22 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 18:37:38 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/28 18:47:08 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "executor.h"
 # include "minishell.h"
 # include "utils.h"
+# include <errno.h>
 
 # define EXPORTED 1
 # define NOT_EXPORTED 0

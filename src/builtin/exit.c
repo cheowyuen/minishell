@@ -6,14 +6,13 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/28 18:21:00 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/28 19:13:35 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "parser.h"
 
-static int	is_valid_number(const char *str);
 static int	validate_exit_args(char **argv, int *exit_code);
 static void	cleanup_and_exit(t_executor *executor, int exit_code);
 
@@ -45,7 +44,7 @@ void	builtin_exit(t_executor *executor)
 	cleanup_and_exit(executor, exit_code);
 }
 
-static int	is_valid_number(const char *str)
+static int	is_valid_number_format(const char *str)
 {
 	int	i;
 
@@ -58,7 +57,7 @@ static int	is_valid_number(const char *str)
 		return (0);
 	while (str[i])
 	{
-		if (str[i] < '0' || str[i] > '9')
+		if (!ft_isdigit(str[i]))
 			return (0);
 		i++;
 	}
@@ -67,11 +66,26 @@ static int	is_valid_number(const char *str)
 
 static int	validate_exit_args(char **argv, int *exit_code)
 {
-	if (!is_valid_number(argv[1]) || ft_strlen(argv[1]) > 19)
+	long long	result;
+	char		*endptr;
+	int			i;
+
+	i = 0;
+	if (argv[1][i] == '+' || argv[1][i] == '-')
+		i++;
+	if (!is_valid_number_format(argv[1]) || ft_strlen(&argv[1][i]) > 19)
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: exit: %s: numeric argument required\n", argv[1]);
 		*exit_code = 2;
+		return (SUCCESS);
+	}
+	result = ft_strtoll(argv[1], &endptr, 10);
+	if ((argv[1][0] == '-' && result > 0) || (argv[1][0] != '-' && result < 0))
+	{
+		ft_dprintf(STDERR_FILENO,
+			"minishell: exit: %s: numeric argument required\n", argv[1]);
+		*exit_code = 3;
 		return (SUCCESS);
 	}
 	if (argv[2])
@@ -80,7 +94,7 @@ static int	validate_exit_args(char **argv, int *exit_code)
 		*exit_code = 1;
 		return (FAILURE);
 	}
-	*exit_code = ft_atoi(argv[1]);
+	*exit_code = (int)result;
 	return (SUCCESS);
 }
 
