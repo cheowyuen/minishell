@@ -19,7 +19,7 @@ void	builtin_echo(t_executor *executor)
 	char	**args;
 	int		newline;
 	int		i;
-	
+
 	args = executor->commands->argv;
 	i = parse_echo_flags(args, &newline);
 	while (args[i])

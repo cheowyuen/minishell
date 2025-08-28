@@ -38,7 +38,7 @@ void	builtin_export(t_executor *executor)
 		else if (handle_export_argument(executor, executor->commands->argv[i],
 				equal_sign) == FAILURE)
 			return ;
-		i++;	
+		i++;
 	}
 	if (err_code)
 		executor->last_exit_code = FAILURE;
