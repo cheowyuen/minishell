@@ -13,7 +13,7 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-#define HEREDOC_LIMIT_EXCEEDED -2
+# define HEREDOC_LIMIT_EXCEEDED -2
 
 typedef enum e_redir_type
 {
@@ -51,22 +51,22 @@ typedef struct s_quote
 typedef struct s_redir
 {
 	t_redir_type			type;
-    char					*filename;
-    struct s_redir			*next;
+	char					*filename;
+	struct s_redir			*next;
 }							t_redir;
 
 typedef struct s_infile
 {
-    char					*filename;
-    struct s_infile			*next;
+	char					*filename;
+	struct s_infile			*next;
 }							t_infile;
 
 typedef struct s_outfile
 {
-	char    				*filename;
-    bool    				append;
-    struct s_outfile		*next;
-}   						t_outfile;
+	char					*filename;
+	bool					append;
+	struct s_outfile		*next;
+}							t_outfile;
 
 typedef struct s_command
 {
@@ -84,11 +84,14 @@ typedef struct s_command
 	struct s_command		*next;
 }							t_command;
 
-int							parse_input(char *input, t_token **tokens, t_executor *executor);
-int							free_tokens_input(t_token **tokens, char *input, int flag);
-int							add_token(t_token **tokens, bool is_quoted, char *content,
-								int len);
-int							add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content);
+int							parse_input(char *input, t_token **tokens,
+								t_executor *executor);
+int							free_tokens_input(t_token **tokens, char *input,
+								int flag);
+int							add_token(t_token **tokens, bool is_quoted,
+								char *content, int len);
+int							add_tokens_with_splitting(t_token **tokens,
+								bool is_quoted, char *content);
 int							is_special(char c);
 int							is_quote(char c);
 int							is_space(char c);
@@ -112,9 +115,12 @@ int							handle_quoted_word(char **joined, t_quote *quote,
 								char *input, int *i);
 int							handle_unquoted_word(char **joined, t_quote *quote,
 								char *input, int *i);
-int							get_word(char *input, int *i, t_quote *quote, char **word);
-int							validate_syntax(t_token *tokens, t_executor *executor);
-int							get_word_heredoc(char *input, int *i, t_quote *quote, char **word);
+int							get_word(char *input, int *i, t_quote *quote,
+								char **word);
+int							validate_syntax(t_token *tokens,
+								t_executor *executor);
+int							get_word_heredoc(char *input, int *i,
+								t_quote *quote, char **word);
 int							set_redir(t_token **tokens, t_redir **files);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 19:32:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/28 19:47:44 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/28 19:57:00 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,29 @@ void	cleanup_and_set_failure(t_executor *executor, int need_free,
 	if (need_free)
 		free(target_copy);
 	executor->last_exit_code = FAILURE;
+}
+
+char	*resolve_logical_path(char *current_logical_pwd, char *target)
+{
+	char	**components;
+	char	*result;
+	int		num_components;
+
+	if (!current_logical_pwd || !target)
+		return (NULL);
+	if (target[0] == '/')
+		return (ft_strdup(target));
+	if (ft_strcmp(target, ".") == 0)
+		return (ft_strdup(current_logical_pwd));
+	result = prepare_path_for_resolution(current_logical_pwd, target);
+	if (!result)
+		return (NULL);
+	components = ft_split(result, '/');
+	free(result);
+	if (!components)
+		return (NULL);
+	num_components = 0;
+	while (components[num_components])
+		num_components++;
+	return (resolve_path_components(components, num_components));
 }

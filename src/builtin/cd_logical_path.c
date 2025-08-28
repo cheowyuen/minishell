@@ -6,49 +6,65 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 10:58:28 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/28 19:47:41 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/28 19:58:43 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "environment.h"
 
-static char	*resolve_path_components(char **components, int num_components);
-
-char	*resolve_logical_path(char *current_logical_pwd, char *target)
+char	*prepare_path_for_resolution(char *current_logical_pwd,
+		char *target)
 {
-	char	**components;
 	char	*temp;
 	char	*result;
-	int		num_components;
 
-	if (!current_logical_pwd || !target)
-		return (NULL);
-	if (target[0] == '/')
-		return (ft_strdup(target));
-	if (ft_strcmp(target, ".") == 0)
-		return (ft_strdup(current_logical_pwd));
 	temp = ft_strjoin(current_logical_pwd, "/");
 	if (!temp)
 		return (NULL);
 	result = ft_strjoin(temp, target);
 	free(temp);
-	if (!result)
-		return (NULL);
-	components = ft_split(result, '/');
-	free(result);
-	if (!components)
-		return (NULL);
-	num_components = 0;
-	while (components[num_components])
-		num_components++;
-	return (resolve_path_components(components, num_components));
+	return (result);
 }
 
-static char	*resolve_path_components(char **components, int num_components)
+static int	process_path_component(char *component, char **resolved_parts,
+		int *j)
+{
+	if (ft_strcmp(component, ".") == 0)
+		return (0);
+	if (ft_strcmp(component, "..") == 0 && *j > 0)
+	{
+		free(resolved_parts[*j - 1]);
+		(*j)--;
+		return (0);
+	}
+	if (ft_strcmp(component, "..") != 0)
+	{
+		resolved_parts[*j] = ft_strdup(component);
+		if (!resolved_parts[*j])
+			return (-1);
+		(*j)++;
+	}
+	return (0);
+}
+
+static char	*finalize_path_resolution(char **resolved_parts, int j,
+		char **components)
+{
+	char	*result;
+
+	resolved_parts[j] = NULL;
+	result = join_path_components(resolved_parts, j);
+	while (j > 0)
+		free(resolved_parts[--j]);
+	free(resolved_parts);
+	free_str_array(components);
+	return (result);
+}
+
+char	*resolve_path_components(char **components, int num_components)
 {
 	char	**resolved_parts;
-	char	*result;
 	int		i;
 	int		j;
 
@@ -62,37 +78,18 @@ static char	*resolve_path_components(char **components, int num_components)
 	i = 0;
 	while (i < num_components)
 	{
-		if (ft_strcmp(components[i], ".") == 0)
-			;
-		else if (ft_strcmp(components[i], "..") == 0 && j > 0)
+		if (process_path_component(components[i], resolved_parts, &j) == -1)
 		{
-			free(resolved_parts[j - 1]);
-			j--;
-		}
-		else if (ft_strcmp(components[i], "..") != 0)
-		{
-			resolved_parts[j] = ft_strdup(components[i]);
-			if (!resolved_parts[j])
-			{
-				while (j > 0)
-					free(resolved_parts[--j]);
-				free(resolved_parts);
-				free_str_array(components);
-				return (NULL);
-			}
-			j++;
+			while (j > 0)
+				free(resolved_parts[--j]);
+			free(resolved_parts);
+			free_str_array(components);
+			return (NULL);
 		}
 		i++;
 	}
-	resolved_parts[j] = NULL;
-	result = join_path_components(resolved_parts, j);
-	while (j > 0)
-		free(resolved_parts[--j]);
-	free(resolved_parts);
-	free_str_array(components);
-	return (result);
+	return (finalize_path_resolution(resolved_parts, j, components));
 }
-
 
 char	*join_path_components(char **resolved_parts, int count)
 {

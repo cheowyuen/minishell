@@ -71,13 +71,15 @@ void				exec_external_command(t_executor *executor,
 int					exec_single_command(t_executor *executor,
 						t_command *command);
 void				restore_fds(int saved_stdin, int saved_stdout);
-int					setup_single_redirection(t_command *command, t_executor *executor);
+int					setup_single_redirection(t_command *command,
+						t_executor *executor);
 int					exec_single_external(t_executor *executor,
 						t_command *command);
 
 // Heredoc management
 int					setup_heredoc(t_command *command, t_executor *executor);
-int					setup_input_redirection(t_command *command, t_executor *executor);
+int					setup_input_redirection(t_command *command,
+						t_executor *executor);
 // int					setup_output_redirection(t_command *command);
 int					setup_redirection(t_command *command, t_executor *executor);
 
