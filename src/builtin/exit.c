@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/28 19:22:02 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/28 23:20:14 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,25 +69,14 @@ static int	validate_numeric_argument(const char *arg, int *exit_code)
 {
 	long long	result;
 	char		*endptr;
-	int			i;
-
-	i = 0;
-	if (arg[i] == '+' || arg[i] == '-')
-		i++;
-	if (!is_valid_number_format(arg) || ft_strlen(&arg[i]) > 19)
-	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: exit: %s: numeric argument required\n", arg);
-		*exit_code = 2;
-		return (FAILURE);
-	}
+	
 	result = ft_strtoll(arg, &endptr, 10);
-	if ((arg[0] == '-' && result > 0) || (arg[0] != '-' && result < 0))
+	if (arg[0] == '-' && result < 0)
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: exit: %s: numeric argument required\n", arg);
 		*exit_code = 3;
-		return (FAILURE);
+		return (SUCCESS);
 	}
 	*exit_code = (int)result;
 	return (SUCCESS);
@@ -95,6 +84,23 @@ static int	validate_numeric_argument(const char *arg, int *exit_code)
 
 static int	validate_exit_args(char **argv, int *exit_code)
 {
+	int			i;
+
+	i = 0;
+	if (is_valid_number_format(argv[1]) && ft_atoi(argv[1]) < 0)
+	{
+		if (argv[1][i] == '+' || argv[1][i] == '-')
+			i++;
+		if (!is_valid_number_format(argv[1]) || ft_strlen(&argv[1][i]) > 19)
+		{
+			ft_dprintf(STDERR_FILENO,
+				"minishell: exit: %s: numeric argument required\n", argv[1]);
+			*exit_code = 2;
+			return (SUCCESS);
+		}
+		*exit_code = ft_atoi(argv[1]);
+		return (SUCCESS);
+	}
 	if (argv[2])
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: exit: too many arguments\n");
