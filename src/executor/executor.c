@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 19:20:24 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/28 18:22:23 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	exec_cmd(t_executor *executor, t_command *command)
 
 int	exec_single_command(t_executor *executor, t_command *command)
 {
+	// Set command count to 1 for single commands
+	executor->command_count = 1;
 	if (command->is_builtin)
 		return (exec_builtin_with_redirection(executor, command));
 	// Handle empty commands (like when all tokens expand to empty)
