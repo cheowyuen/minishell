@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:02 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/14 11:35:01 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/28 20:38:51 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,16 +68,52 @@ static int	remove_env_variable(t_executor *executor, const char *key)
 	return (FAILURE);
 }
 
+static int	is_valid_first_char(char c)
+{
+	const char	valid_first[] = "=?$#!%&*()";
+	int			i;
+
+	if (ft_isalpha(c) || c == '_')
+		return (1);
+	i = 0;
+	while (valid_first[i])
+	{
+		if (c == valid_first[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static int	is_valid_other_char(char c)
+{
+	const char	valid_chars[] = ";.+=}{-*#@!^~\\";
+	int			i;
+
+	if (ft_isalnum(c) || c == '_')
+		return (1);
+	i = 0;
+	while (valid_chars[i])
+	{
+		if (c == valid_chars[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 static int	is_valid_unset_identifier(const char *str)
 {
 	int	i;
 
-	if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
+	if (!str || !*str)
+		return (0);
+	if (!is_valid_first_char(str[0]))
 		return (0);
 	i = 1;
 	while (str[i])
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
+		if (!is_valid_other_char(str[i]))
 			return (0);
 		i++;
 	}
