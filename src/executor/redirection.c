@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 10:39:07 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 20:29:00 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,10 @@ int	setup_redirection(t_command *command, t_executor *executor)
 	int		fd;
 	t_redir	*redirs;
 
+	(void)executor; // Not used in this function
 	if (!command)
 		return (FAILURE);
-	if (command->has_heredoc)
-		return (setup_heredoc(command, executor));
+	// No need to handle heredoc here - that's handled by setup_input_redirection
 	if (!command->redirs)
 		return (SUCCESS);
 	redirs = command->redirs;
