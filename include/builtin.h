@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:49:22 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 09:08:17 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:53:21 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,11 @@ int			add_var_to_list(t_executor *executor, const char *key,
 int			is_valid_identifier(const char *str);
 int			is_env_key_set(t_executor *executor, const char *key);
 char		*get_env_var(t_executor *executor, const char *key);
+
+// Exit utility functions
+int			is_valid_number_format(const char *str);
+int			is_overflow(const char *str);
+void		cleanup_and_exit(t_executor *executor, int exit_code);
 
 // Cd functions
 char		*handle_cd_dash(t_executor *executor);

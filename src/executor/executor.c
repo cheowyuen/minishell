@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 15:39:07 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:31:28 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,30 @@ int	exec_single_command(t_executor *executor, t_command *command)
 	executor->command_count = 1;
 	if (command->is_builtin)
 		return (exec_builtin_with_redirection(executor, command));
-	// Handle empty commands (like when no tokens exist)
-	if (!command->argv)
+	// Handle empty commands (like when no tokens exist or only redirections)
+	if (!command->argv || !command->argv[0])
+	{
+		// If there are redirections or heredocs, handle them
+		if (command->redirs || command->has_heredoc)
+		{
+			int saved_stdin = -1;
+			int saved_stdout = -1;
+			
+			// Save original file descriptors
+			saved_stdin = dup(STDIN_FILENO);
+			saved_stdout = dup(STDOUT_FILENO);
+			
+			// Setup redirections
+			if (setup_single_redirection(command, executor) == FAILURE)
+			{
+				restore_fds(saved_stdin, saved_stdout);
+				return (FAILURE);
+			}
+			// Restore file descriptors
+			restore_fds(saved_stdin, saved_stdout);
+		}
 		return (SUCCESS);
+	}
 	return (exec_single_external(executor, command));
 }
 

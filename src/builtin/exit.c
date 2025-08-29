@@ -6,17 +6,14 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 14:29:50 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:54:14 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "parser.h"
 
-static int	validate_single_argument(const char *arg, int *exit_code,
-				long long result);
 static int	validate_exit_args(char **argv, int *exit_code);
-static void	cleanup_and_exit(t_executor *executor, int exit_code);
 
 void	builtin_exit(t_executor *executor)
 {
@@ -46,26 +43,6 @@ void	builtin_exit(t_executor *executor)
 	cleanup_and_exit(executor, exit_code);
 }
 
-static int	is_valid_number_format(const char *str)
-{
-	int	i;
-
-	if (!str || !*str)
-		return (0);
-	i = 0;
-	if (str[i] == '+' || str[i] == '-')
-		i++;
-	if (!str[i])
-		return (0);
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 static int	validate_single_argument(const char *arg, int *exit_code,
 		long long result)
 {
@@ -93,14 +70,14 @@ static int	validate_exit_args(char **argv, int *exit_code)
 	long long	result;
 	char		*endptr;
 
-	result = ft_strtoll(argv[1], &endptr, 10);
-	if (!is_valid_number_format(argv[1]) || result > LLONG_MAX)
+	if (!is_valid_number_format(argv[1]) || is_overflow(argv[1]))
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: exit: %s: numeric argument required\n", argv[1]);
 		*exit_code = 2;
 		return (SUCCESS);
 	}
+	result = ft_strtoll(argv[1], &endptr, 10);
 	if (validate_single_argument(argv[1], exit_code, result) != SUCCESS)
 		return (SUCCESS);
 	if (argv[2])
@@ -110,19 +87,4 @@ static int	validate_exit_args(char **argv, int *exit_code)
 		return (FAILURE);
 	}
 	return (SUCCESS);
-}
-
-static void	cleanup_and_exit(t_executor *executor, int exit_code)
-{
-	rl_clear_history();
-	if (executor->commands)
-	{
-		free_commands(&executor->commands);
-		executor->commands = NULL;
-	}
-	if (executor->env_list)
-		free_environment(executor);
-	if (executor)
-		free_executor(executor);
-	exit(exit_code);
 }
