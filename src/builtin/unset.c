@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:02 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/28 20:38:51 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 11:17:53 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	builtin_unset(t_executor *executor)
 		i++;
 	}
 	if (had_invalid)
-		executor->last_exit_code = FAILURE;
+		executor->last_exit_code = 2;
 	else
 		executor->last_exit_code = SUCCESS;
 }
@@ -70,7 +70,7 @@ static int	remove_env_variable(t_executor *executor, const char *key)
 
 static int	is_valid_first_char(char c)
 {
-	const char	valid_first[] = "=?$#!%&*()";
+	const char	valid_first[] = "+=?$#!%&*()";
 	int			i;
 
 	if (ft_isalpha(c) || c == '_')
