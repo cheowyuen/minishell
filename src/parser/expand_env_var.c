@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 22:17:17 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 23:18:52 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static int	assign_new_token(char **word, char	*tmp, char	*right)
 	free(right);
 	if (!new_token)
 		return (-1);
+	free(*word); // Free the old word missing before 
 	*word = new_token;
 	return (0);
 }
