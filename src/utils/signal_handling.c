@@ -6,31 +6,29 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/28 20:01:37 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 19:14:16 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "signals.h"
 
-static int	set_last_status(t_executor *executor, int pid, int status)
+static int	set_last_status(t_executor *executor, pid_t pid, int status)
 {
 	int	i;
-	int	last_status;
 
 	i = 0;
-	last_status = 0;
 	while (i < executor->command_count)
 	{
 		if (executor->pids[i] == pid)
 		{
 			if (i == executor->command_count - 1)
-				last_status = status;
+				return (status);
 			break ;
 		}
 		i++;
 	}
-	return (last_status);
+	return (-1);
 }
 
 int	wait_all_children(t_executor *executor, int *last_status)
@@ -38,6 +36,7 @@ int	wait_all_children(t_executor *executor, int *last_status)
 	int		status;
 	int		children_left;
 	pid_t	pid;
+	int		new_status;
 
 	children_left = executor->command_count;
 	while (children_left > 0)
@@ -52,7 +51,9 @@ int	wait_all_children(t_executor *executor, int *last_status)
 		}
 		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 			write(STDOUT_FILENO, "\n", 1);
-		*last_status = set_last_status(executor, pid, status);
+		new_status = set_last_status(executor, pid, status);
+		if (new_status != -1)
+			*last_status = new_status;
 		children_left--;
 	}
 	return (SUCCESS);
