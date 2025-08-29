@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 09:00:02 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/15 18:11:39 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 01:07:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*find_command_path(t_executor *executor, char *command)
 		return (ft_strdup(command));
 	path_env = get_env_var(executor, "PATH");
 	if (!path_env || !*path_env)
-		return (NULL);
+		path_env = "/bin:/usr/bin"; // Added fallback in case PATH in unset or empty
 	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);
