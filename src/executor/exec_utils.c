@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 15:53:32 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 20:05:02 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ static void	execve_execution(t_executor *executor, t_command *command,
 {
 	char	**envp;
 
+	add_var_to_list(executor, "_", cmd_path);
 	envp = build_env_array(executor);
 	if (!envp)
 	{
