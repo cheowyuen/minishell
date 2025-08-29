@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 22:17:06 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 21:04:54 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,11 @@ int	parse_quote(char *input, int *i, t_quote *quote)
 	if (input[*i] == '\"' && has_dollar_sign)
 		if (ft_strncmp(&input[*i], "\"$\"", 3) != 0)
 			if (expand_env_var(&quote->quoted_word, quote->executor) < 0)
+			{
+				free(quote->quoted_word);
+				quote->quoted_word = NULL;
 				return (-1);
+			}
 	*i += len + 1;
 	return (0);
 }
