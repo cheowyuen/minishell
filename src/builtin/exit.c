@@ -6,14 +6,14 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 09:16:55 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:04:19 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "parser.h"
 
-static int	validate_numeric_argument(const char *arg, int *exit_code);
+static int	validate_single_argument(const char *arg, int *exit_code);
 static int	validate_exit_args(char **argv, int *exit_code);
 static void	cleanup_and_exit(t_executor *executor, int exit_code);
 
@@ -65,18 +65,33 @@ static int	is_valid_number_format(const char *str)
 	return (1);
 }
 
-static int	validate_numeric_argument(const char *arg, int *exit_code)
+static int	validate_single_argument(const char *arg, int *exit_code)
 {
 	long long	result;
 	char		*endptr;
-	
+
 	result = ft_strtoll(arg, &endptr, 10);
+	if (!is_valid_number_format(arg) || result > LLONG_MAX)
+	{
+		ft_dprintf(STDERR_FILENO,
+			"minishell: exit: %s: numeric argument required\n", arg);
+		*exit_code = 2;
+		return (FAILURE);
+	}
+	if (is_valid_number_format(arg) && ft_atoi(arg) < 0)
+	{
+		if (ft_atoi(arg) < INT_MAX && ft_atoi(arg) > INT_MIN)
+		{
+			*exit_code = ft_atoi(arg);
+			return (FAILURE);
+		}
+	}
 	if (arg[0] == '-' && result < 0)
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: exit: %s: numeric argument required\n", arg);
 		*exit_code = 3;
-		return (SUCCESS);
+		return (FAILURE);
 	}
 	*exit_code = (int)result;
 	return (SUCCESS);
@@ -84,28 +99,15 @@ static int	validate_numeric_argument(const char *arg, int *exit_code)
 
 static int	validate_exit_args(char **argv, int *exit_code)
 {
-	if (!is_valid_number_format(argv[1]) || ft_strlen(argv[1]) > 19)
-	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: exit: %s: numeric argument required\n", argv[1]);
-		*exit_code = 2;
+	if (validate_single_argument(argv[1], exit_code) != SUCCESS)
 		return (SUCCESS);
-	}
-	if (is_valid_number_format(argv[1]) && ft_atoi(argv[1]) < 0)
-	{
-		if (ft_atoi(argv[1]) < INT_MAX && ft_atoi(argv[1]) > INT_MIN)
-		{
-			*exit_code = ft_atoi(argv[1]);
-			return (SUCCESS);
-		}
-	}
 	if (argv[2])
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: exit: too many arguments\n");
 		*exit_code = 1;
 		return (FAILURE);
 	}
-	return (validate_numeric_argument(argv[1], exit_code));
+	return (SUCCESS);
 }
 
 static void	cleanup_and_exit(t_executor *executor, int exit_code)
