@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 22:18:01 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 15:39:07 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static int	handle_commands(t_token **tokens, t_command *current,
 				return (result);  // Propagate special codes like HEREDOC_LIMIT_EXCEEDED
             continue ; 
         }
-		if (tmp->token && tmp->token[0]) // Skip empty tokens (from environment variables that expand to empty)
+		if (tmp->token && (tmp->token[0] || tmp->is_quoted)) // Skip empty tokens only if unquoted (from environment variables that expand to empty)
 		{
 			current->argv[argv_index] = ft_strdup(tmp->token);
 			if (!current->argv[argv_index])
