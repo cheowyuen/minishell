@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:49:22 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/28 19:58:15 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:08:17 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "minishell.h"
 # include "utils.h"
 # include <errno.h>
+# include <limits.h>
 
 # define EXPORTED 1
 # define NOT_EXPORTED 0
