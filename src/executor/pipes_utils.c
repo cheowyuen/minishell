@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 19:22:07 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/29 10:44:17 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,8 @@ int	close_children_process(t_executor *executor)
 	last_status = 0;
 	if (wait_all_children(executor, &last_status) < 0)
 		return (FAILURE);
-	// Handle SIGQUIT (core dump message)
 	if (WIFSIGNALED(last_status) && WTERMSIG(last_status) == SIGQUIT)
 		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
-	// Set exit code based on the rightmost command
 	if (WIFSIGNALED(last_status))
 		executor->last_exit_code = EXIT_SIGNAL_BASE + WTERMSIG(last_status);
 	else if (WIFEXITED(last_status))
@@ -122,12 +120,4 @@ void	setup_redirection_child_process(t_executor *executor,
 			exit(EXIT_FAILURE);
 		}
 	}
-	// if (command->outfiles)
-	// {
-	// 	if (setup_output_redirection(command) == FAILURE)
-	// 	{
-	// 		close_all_pipes_children(executor);
-	// 		exit(EXIT_FAILURE);
-	// 	}
-	// }
 }

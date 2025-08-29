@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:00:21 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 18:40:28 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/29 10:45:12 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 
-static int	exec_builtin_and_restore(t_executor *executor,
-		int saved_stdin, int saved_stdout, int is_exit_command);
+static int	exec_builtin_and_restore(t_executor *executor, int saved_stdin,
+				int saved_stdout, int is_exit_command);
 
 int	exec_builtin(t_executor *executor)
 {
@@ -46,7 +46,7 @@ int	exec_builtin_with_redirection(t_executor *executor, t_command *command)
 	int	saved_stdin;
 	int	saved_stdout;
 	int	is_exit_command;
-	
+
 	is_exit_command = (ft_strcmp(command->argv[0], "exit") == 0);
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
@@ -64,12 +64,12 @@ int	exec_builtin_with_redirection(t_executor *executor, t_command *command)
 		restore_fds(saved_stdin, saved_stdout);
 		return (FAILURE);
 	}
-	return (exec_builtin_and_restore(executor, saved_stdin,
-			saved_stdout, is_exit_command));
+	return (exec_builtin_and_restore(executor, saved_stdin, saved_stdout,
+			is_exit_command));
 }
 
-static int	exec_builtin_and_restore(t_executor *executor,
-		int saved_stdin, int saved_stdout, int is_exit_command)
+static int	exec_builtin_and_restore(t_executor *executor, int saved_stdin,
+		int saved_stdout, int is_exit_command)
 {
 	if (is_exit_command)
 	{

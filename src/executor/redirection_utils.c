@@ -3,27 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 18:40:56 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/29 10:46:27 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "signals.h"
-#include "utils.h"
 #include "minishell.h"
 #include "parser.h"
+#include "signals.h"
+#include "utils.h"
 
 static int	create_heredoc_pipe(int pipefd[2]);
 static int	setup_heredoc_input(int pipefd[2]);
-static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor);
+static void	write_heredoc_content(int fd, char *delimiter,
+				t_executor *executor);
 
 int	setup_heredoc(t_command *command, t_executor *executor)
 {
 	int	pipefd[2];
-	
+
 	if (!command || !command->has_heredoc || !command->heredoc_delim)
 		return (FAILURE);
 	if (create_heredoc_pipe(pipefd) == FAILURE)
@@ -69,7 +70,7 @@ static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor)
 	{
 		line = readline("> ");
 		if (!line)
-			break ;	
+			break ;
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
@@ -79,7 +80,7 @@ static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor)
 		{
 			i = 0;
 			while (i < (int)ft_strlen(line))
-    		{
+			{
 				if (get_word_heredoc(line, &i, &quote, &word) < 0)
 				{
 					perror("write");
@@ -97,14 +98,15 @@ static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor)
 					free(word);
 				}
 			}
-   			if (write(fd, "\n", 1) == -1)
-        	{
+			if (write(fd, "\n", 1) == -1)
+			{
 				perror("write");
 				free(line);
 				break ;
 			}
 		}
-		else if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
+		else if (write(fd, line,
+				ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
 		{
 			perror("write");
 			free(line);

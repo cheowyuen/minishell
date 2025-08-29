@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 17:47:14 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 10:43:24 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <sys/stat.h>
 
 static void	execve_execution(t_executor *executor, t_command *command,
-			char *cmd_path);
+				char *cmd_path);
 
 void	count_commands(t_command *command, t_executor *executor)
 {

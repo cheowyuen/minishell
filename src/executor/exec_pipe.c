@@ -6,13 +6,13 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/25 17:47:14 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 10:41:15 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "utils.h"
 #include "signals.h"
+#include "utils.h"
 
 static int	create_pipes(t_executor *executor, int count);
 static int	fork_processes(t_executor *executor, t_command *command);
@@ -81,7 +81,7 @@ static int	fork_processes(t_executor *executor, t_command *command)
 {
 	pid_t	pid;
 	int		i;
-	
+
 	i = 0;
 	while (command)
 	{
@@ -126,7 +126,6 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 	}
 	else if (!command->argv || !command->argv[0] || !command->argv[0][0])
 	{
-		// Handle empty commands (like $EMPTY that expands to nothing)
 		free_inherited_state_for_child(executor, command);
 		exit(SUCCESS);
 	}

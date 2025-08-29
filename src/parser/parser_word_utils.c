@@ -6,13 +6,13 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/27 22:19:03 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 10:40:05 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "executor.h"
 #include "minishell.h"
 #include "parser.h"
-#include "executor.h"
 
 int	get_word_heredoc(char *input, int *i, t_quote *quote, char **word)
 {
@@ -49,7 +49,7 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 	len = 0;
 	has_dollar_sign = false;
 	while (input[*i + len] && !is_quote(input[*i + len]) && !is_space(input[*i
-			+ len]) && !is_special(input[*i + len]))
+				+ len]) && !is_special(input[*i + len]))
 	{
 		if (input[*i + len] == '$')
 		{
