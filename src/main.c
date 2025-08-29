@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 00:29:03 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 00:57:59 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,15 @@ static int	handle_input_processing(char *input, t_token *tokens,
 			return (-1);
 		}
 		else if (result < 0)
+		{
+			// In non-interactive mode, exit on syntax errors
+			if (!isatty(STDIN_FILENO))
+			{
+				free(input);
+				return (-1);
+			}
 			return (free_input_failure(input));
+		}
 	}
 	free(input);
 	return (0);
