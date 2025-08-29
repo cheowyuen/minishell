@@ -6,14 +6,15 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 14:04:19 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:29:50 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "parser.h"
 
-static int	validate_single_argument(const char *arg, int *exit_code);
+static int	validate_single_argument(const char *arg, int *exit_code,
+				long long result);
 static int	validate_exit_args(char **argv, int *exit_code);
 static void	cleanup_and_exit(t_executor *executor, int exit_code);
 
@@ -65,19 +66,9 @@ static int	is_valid_number_format(const char *str)
 	return (1);
 }
 
-static int	validate_single_argument(const char *arg, int *exit_code)
+static int	validate_single_argument(const char *arg, int *exit_code,
+		long long result)
 {
-	long long	result;
-	char		*endptr;
-
-	result = ft_strtoll(arg, &endptr, 10);
-	if (!is_valid_number_format(arg) || result > LLONG_MAX)
-	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: exit: %s: numeric argument required\n", arg);
-		*exit_code = 2;
-		return (FAILURE);
-	}
 	if (is_valid_number_format(arg) && ft_atoi(arg) < 0)
 	{
 		if (ft_atoi(arg) < INT_MAX && ft_atoi(arg) > INT_MIN)
@@ -99,7 +90,18 @@ static int	validate_single_argument(const char *arg, int *exit_code)
 
 static int	validate_exit_args(char **argv, int *exit_code)
 {
-	if (validate_single_argument(argv[1], exit_code) != SUCCESS)
+	long long	result;
+	char		*endptr;
+
+	result = ft_strtoll(argv[1], &endptr, 10);
+	if (!is_valid_number_format(argv[1]) || result > LLONG_MAX)
+	{
+		ft_dprintf(STDERR_FILENO,
+			"minishell: exit: %s: numeric argument required\n", argv[1]);
+		*exit_code = 2;
+		return (SUCCESS);
+	}
+	if (validate_single_argument(argv[1], exit_code, result) != SUCCESS)
 		return (SUCCESS);
 	if (argv[2])
 	{
