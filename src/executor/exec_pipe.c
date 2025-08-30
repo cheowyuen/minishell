@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:24:36 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:32:34 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	exec_pipe(t_executor *executor, t_command *command)
 		return (FAILURE);
 	return (setup_and_run_pipeline(executor, command));
 }
+
 static int	setup_and_run_pipeline(t_executor *executor, t_command *command)
 {
 	if (create_pipes(executor, executor->command_count) == FAILURE)

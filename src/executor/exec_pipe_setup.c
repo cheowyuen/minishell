@@ -15,9 +15,9 @@
 #include "utils.h"
 
 static void	handle_child_process(t_executor *executor, t_command *command,
-		int i);
+				int i);
 static int	create_child_process(t_executor *executor, t_command *current_cmd,
-		int i);
+				int i);
 
 int	setup_children_pipes(t_executor *executor, int i)
 {
@@ -113,4 +113,3 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 	else
 		exec_external_command(executor, command);
 }
-
