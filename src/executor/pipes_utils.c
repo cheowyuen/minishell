@@ -6,13 +6,28 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 20:20:23 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:36:26 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "utils.h"
 #include "signals.h"
+#include "utils.h"
+
+static void	close_and_free_single_pipe(int *pipe_fds)
+{
+	if (pipe_fds[0] >= 0)
+	{
+		close(pipe_fds[0]);
+		pipe_fds[0] = FD_CLOSED;
+	}
+	if (pipe_fds[1] >= 0)
+	{
+		close(pipe_fds[1]);
+		pipe_fds[1] = FD_CLOSED;
+	}
+	free(pipe_fds);
+}
 
 void	close_and_free_pipes(t_executor *executor)
 {
@@ -25,17 +40,7 @@ void	close_and_free_pipes(t_executor *executor)
 	{
 		if (executor->pipes[i])
 		{
-			if (executor->pipes[i][0] >= 0)
-			{
-				close(executor->pipes[i][0]);
-				executor->pipes[i][0] = FD_CLOSED;
-			}
-			if (executor->pipes[i][1] >= 0)
-			{
-				close(executor->pipes[i][1]);
-				executor->pipes[i][1] = FD_CLOSED;
-			}
-			free(executor->pipes[i]);
+			close_and_free_single_pipe(executor->pipes[i]);
 			executor->pipes[i] = NULL;
 		}
 		i++;
@@ -89,7 +94,7 @@ int	clean_everything_error(t_executor *executor)
 
 int	close_children_process(t_executor *executor)
 {
-	int		last_status;
+	int	last_status;
 
 	last_status = 0;
 	if (wait_all_children(executor, &last_status) < 0)
@@ -100,29 +105,5 @@ int	close_children_process(t_executor *executor)
 		executor->last_exit_code = EXIT_SIGNAL_BASE + WTERMSIG(last_status);
 	else if (WIFEXITED(last_status))
 		executor->last_exit_code = WEXITSTATUS(last_status);
-		
 	return (SUCCESS);
-}
-
-void	setup_redirection_child_process(t_executor *executor,
-		t_command *command)
-{
-	if (command->has_heredoc && command->heredoc_fd >= 0)
-	{
-		if (dup2(command->heredoc_fd, STDIN_FILENO) == -1)
-		{
-			perror("dup2 heredoc");
-			close_all_pipes_children(executor);
-			exit(EXIT_FAILURE);
-		}
-		close(command->heredoc_fd);
-	}
-	else if (command->redirs)
-	{
-		if (setup_redirection(command, executor) == FAILURE)
-		{
-			close_all_pipes_children(executor);
-			exit(EXIT_FAILURE);
-		}
-	}
 }

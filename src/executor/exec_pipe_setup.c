@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:29:56 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:36:31 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,27 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 	}
 	else
 		exec_external_command(executor, command);
+}
+
+void	setup_redirection_child_process(t_executor *executor,
+		t_command *command)
+{
+	if (command->has_heredoc && command->heredoc_fd >= 0)
+	{
+		if (dup2(command->heredoc_fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2 heredoc");
+			close_all_pipes_children(executor);
+			exit(EXIT_FAILURE);
+		}
+		close(command->heredoc_fd);
+	}
+	else if (command->redirs)
+	{
+		if (setup_redirection(command, executor) == FAILURE)
+		{
+			close_all_pipes_children(executor);
+			exit(EXIT_FAILURE);
+		}
+	}
 }
