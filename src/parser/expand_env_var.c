@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/29 23:18:52 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 15:02:35 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ static int	get_value(char **word, int i, int len, t_var var)
 		if (!var.value)
 		{
 			var.value = ft_strdup("");
+			if (!var.value)
+				return (-1);
 			var.should_free = true;
 		}
 		else
