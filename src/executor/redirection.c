@@ -72,7 +72,8 @@ int	setup_redirection(t_command *command, t_executor *executor)
 	{
 		if (redirs->type == REDIR_IN)
 		{
-			if (process_redir_input(redirs, !has_next(redirs, REDIR_IN)) == FAILURE)
+			if (process_redir_input(redirs, !has_next(redirs,
+						REDIR_IN)) == FAILURE)
 				return (FAILURE);
 		}
 		else if (redirs->type == REDIR_OUT || redirs->type == REDIR_APPEND)

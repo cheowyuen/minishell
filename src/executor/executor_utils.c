@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:00:22 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:03:06 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,4 +124,3 @@ int	handle_parent_process(pid_t pid)
 	}
 	return (FAILURE);
 }
-

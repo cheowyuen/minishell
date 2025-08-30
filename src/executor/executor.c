@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "utils.h"
 #include "signals.h"
+#include "utils.h"
 
 int	exec_cmd(t_executor *executor, t_command *command)
 {
@@ -20,7 +20,8 @@ int	exec_cmd(t_executor *executor, t_command *command)
 		return (FAILURE);
 	if (!command->argv)
 	{
-		if (!command->next && !command->pipe_out && !command->redirs && !command->has_heredoc)
+		if (!command->next && !command->pipe_out && !command->redirs
+			&& !command->has_heredoc)
 			return (SUCCESS);
 	}
 	executor->commands = command;
@@ -32,8 +33,8 @@ int	exec_cmd(t_executor *executor, t_command *command)
 
 int	exec_single_command(t_executor *executor, t_command *command)
 {
-	int saved_stdin;
-	int saved_stdout;
+	int	saved_stdin;
+	int	saved_stdout;
 
 	executor->command_count = 1;
 	if (command->is_builtin)
