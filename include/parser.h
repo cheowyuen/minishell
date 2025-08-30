@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 20:30:02 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:51:07 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,6 @@ typedef struct s_redir
 	struct s_redir			*next;
 }							t_redir;
 
-typedef struct s_infile
-{
-	char					*filename;
-	struct s_infile			*next;
-}							t_infile;
-
 typedef struct s_outfile
 {
 	char					*filename;
@@ -71,7 +65,6 @@ typedef struct s_outfile
 typedef struct s_command
 {
 	char					**argv;
-	t_infile				*infiles;
 	int						append;
 	int						has_heredoc;
 	char					*heredoc_delim;
@@ -106,7 +99,6 @@ int							free_tokens_commands(t_token **tokens,
 								t_command **commands);
 int							set_outfile(t_token **tokens, int append,
 								t_outfile **files);
-int							set_infile(t_token **tokens, t_infile **files);
 int							is_builtin(char *cmd);
 t_command					*create_command(void);
 int							count_tokens(t_token *tokens);

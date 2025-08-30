@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:41:50 by cyuen             #+#    #+#             */
-/*   Updated: 2025/08/30 16:23:00 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:51:07 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,9 @@ void	free_commands(t_command **commands)
 {
 	t_command	*temp;
 	int			i;
-	t_infile	*infiles;
 	t_outfile	*outfiles;
 	t_redir		*redirs;
 	t_outfile	*next;
-	t_infile	*next_infile;
 	t_redir		*next_redir;
 
 	if (!commands || !*commands)
@@ -55,15 +53,6 @@ void	free_commands(t_command **commands)
 				free(redirs->filename);
 			free(redirs);
 			redirs = next_redir;
-		}
-		infiles = temp->infiles;
-		while (infiles)
-		{
-			next_infile = infiles->next;
-			if (infiles->filename)
-				free(infiles->filename);
-			free(infiles);
-			infiles = next_infile;
 		}
 		outfiles = temp->outfiles;
 		while (outfiles)

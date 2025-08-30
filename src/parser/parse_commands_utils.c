@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:41:29 by cyuen             #+#    #+#             */
-/*   Updated: 2025/08/30 16:22:52 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:51:07 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ t_command	*create_command(void)
 	if (!new_command)
 		return (NULL);
 	new_command->argv = NULL;
-	new_command->infiles = NULL;
 	new_command->append = 0;
 	new_command->has_heredoc = 0;
 	new_command->heredoc_delim = NULL;
@@ -87,25 +86,6 @@ t_command	*create_command(void)
 static void	ft_lstadd_back_outfile(t_outfile **lst, t_outfile *new)
 {
 	t_outfile	*end;
-
-	if (!lst || !new)
-		return ;
-	if (!*lst)
-	{
-		*lst = new;
-		new->next = NULL;
-		return ;
-	}
-	end = *lst;
-	while (end->next)
-		end = end->next;
-	end->next = new;
-	new->next = NULL;
-}
-
-static void	ft_lstadd_back_infile(t_infile **lst, t_infile *new)
-{
-	t_infile	*end;
 
 	if (!lst || !new)
 		return ;
@@ -160,27 +140,6 @@ int	set_outfile(t_token **tokens, int append, t_outfile **files)
 	new_file->append = append;
 	new_file->next = NULL;
 	ft_lstadd_back_outfile(files, new_file);
-	return (0);
-}
-
-int	set_infile(t_token **tokens, t_infile **files)
-{
-	t_infile	*new_file;
-
-	*tokens = (*tokens)->next;
-	if (!*tokens)
-		return (print_syntax_error("newline", NULL, 0));
-	new_file = malloc(sizeof(t_infile));
-	if (!new_file)
-		return (-1);
-	new_file->filename = ft_strdup((*tokens)->token);
-	if (!new_file->filename)
-	{
-		free(new_file);
-		return (-1);
-	}
-	new_file->next = NULL;
-	ft_lstadd_back_infile(files, new_file);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 15:56:26 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:51:56 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,30 +32,22 @@ int	exec_cmd(t_executor *executor, t_command *command)
 
 int	exec_single_command(t_executor *executor, t_command *command)
 {
-	// Set command count to 1 for single commands
 	executor->command_count = 1;
 	if (command->is_builtin)
 		return (exec_builtin_with_redirection(executor, command));
-	// Handle empty commands (like when no tokens exist or only redirections)
 	if (!command->argv || !command->argv[0])
 	{
-		// If there are redirections or heredocs, handle them
 		if (command->redirs || command->has_heredoc)
 		{
 			int saved_stdin = -1;
 			int saved_stdout = -1;
-			
-			// Save original file descriptors
 			saved_stdin = dup(STDIN_FILENO);
 			saved_stdout = dup(STDOUT_FILENO);
-			
-			// Setup redirections
 			if (setup_single_redirection(command, executor) == FAILURE)
 			{
 				restore_fds(saved_stdin, saved_stdout);
 				return (FAILURE);
 			}
-			// Restore file descriptors
 			restore_fds(saved_stdin, saved_stdout);
 		}
 		return (SUCCESS);
@@ -65,17 +57,7 @@ int	exec_single_command(t_executor *executor, t_command *command)
 
 int	setup_single_redirection(t_command *command, t_executor *executor)
 {
-	if (command->redirs)
-	{
-		if (setup_redirection(command, executor) == FAILURE)
-			return (FAILURE);
-	}
-	if (command->has_heredoc)
-	{
-		if (setup_input_redirection(command, executor) == FAILURE)
-			return (FAILURE);
-	}
-	return (SUCCESS);
+	return (setup_redirection(command, executor));
 }
 
 int	exec_single_external(t_executor *executor, t_command *command)
@@ -97,14 +79,14 @@ int	exec_single_external(t_executor *executor, t_command *command)
 	}
 	else if (pid > 0)
 	{
-		setup_signals_ignore();  // Parent ignores signals while waiting
+		setup_signals_ignore();
 		if (waitpid(pid, &status, 0) < 0)
 		{
 			perror("waitpid");
-			setup_signals_prompt();  // Restore parent signals
+			setup_signals_prompt();
 			return (FAILURE);
 		}
-		setup_signals_prompt();  // Restore parent signals
+		setup_signals_prompt();
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
 		if (WIFSIGNALED(status))
