@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:42:07 by cyuen             #+#    #+#             */
-/*   Updated: 2025/08/27 18:42:09 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/30 22:00:45 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,27 @@ char	*ft_strndup(const char *src, int n)
 
 int	is_special(char c)
 {
-	return (c == '|' || c == '<' || c == '>');
+	if (!c)
+		return (0);
+	if (c == '|' || c == '<' || c == '>')
+		return (1);
+	return (0);
 }
 
 int	is_quote(char c)
 {
-	return (c == '\'' || c == '\"');
+	if (!c)
+		return (0);
+	if (c == '\'' || c == '\"')
+		return (1);
+	return (0);
 }
 
 int	is_space(char c)
 {
-	return (c == ' ' || c == '\t');
+	if (!c)
+		return (0);
+	if (c == ' ' || c == '\t')
+		return (1);
+	return (0);
 }
