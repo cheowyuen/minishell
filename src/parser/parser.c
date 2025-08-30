@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/29 21:04:54 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 18:25:48 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,13 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 {
 	char	*joined;
 	bool	is_quoted;
+	bool	has_unquoted_vars;
 
 	joined = ft_strdup("");
 	if (!joined)
 		return (free_tokens_input(tokens, NULL, 1));
 	is_quoted = false;
+	has_unquoted_vars = false;
 	while (input[*i] && !is_space(input[*i]) && !is_special(input[*i]))
 	{
 		if (is_quote(input[*i]))
@@ -65,15 +67,28 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 		}
 		else
 		{
+			// Check if this unquoted part contains variables
+			int start = *i;
 			if (handle_unquoted_word(&joined, quote, input, i) < 0)
 			{
 				free(joined);
 				return (free_tokens_input(tokens, NULL, 1));
 			}
+			// Check if we had a variable in the unquoted part
+			int j = start;
+			while (j < *i)
+			{
+				if (input[j] == '$')
+				{
+					has_unquoted_vars = true;
+					break;
+				}
+				j++;
+			}
 		}
 	}
-	// Use word splitting for unquoted tokens that might contain expanded variables
-	if (add_tokens_with_splitting(tokens, is_quoted, joined) < 0)
+	// Use word splitting if we have unquoted variables, even in mixed tokens
+	if (add_tokens_with_splitting(tokens, is_quoted && !has_unquoted_vars, joined) < 0)
 	{
 		free(joined);
 		return (free_tokens_input(tokens, NULL, 1));
