@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:00:05 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:24:18 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,9 @@ void				setup_redirection_child_process(t_executor *executor,
 						t_command *command);
 void				close_all_pipes_children(t_executor *executor);
 int					close_children_process(t_executor *executor);
+int					setup_children_pipes(t_executor *executor, int i);
+int					create_pipes(t_executor *executor, int count);
+int					fork_processes(t_executor *executor, t_command *command);
 
 // Executor memory management
 void				free_environment(t_executor *executor);

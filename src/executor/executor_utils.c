@@ -6,12 +6,13 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:03:06 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:12:21 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "environment.h"
+#include "signals.h"
 #include <sys/stat.h>
 
 static void	execve_execution(t_executor *executor, t_command *command,
