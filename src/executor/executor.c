@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 20:51:56 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:55:47 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	exec_single_command(t_executor *executor, t_command *command)
 			int saved_stdout = -1;
 			saved_stdin = dup(STDIN_FILENO);
 			saved_stdout = dup(STDOUT_FILENO);
-			if (setup_single_redirection(command, executor) == FAILURE)
+			if (setup_redirection(command, executor) == FAILURE)
 			{
 				restore_fds(saved_stdin, saved_stdout);
 				return (FAILURE);
@@ -55,11 +55,6 @@ int	exec_single_command(t_executor *executor, t_command *command)
 	return (exec_single_external(executor, command));
 }
 
-int	setup_single_redirection(t_command *command, t_executor *executor)
-{
-	return (setup_redirection(command, executor));
-}
-
 int	exec_single_external(t_executor *executor, t_command *command)
 {
 	pid_t	pid;
@@ -69,7 +64,7 @@ int	exec_single_external(t_executor *executor, t_command *command)
 	if (pid == 0)
 	{
 		setup_signals_child();
-		if (setup_single_redirection(command, executor) == FAILURE)
+		if (setup_redirection(command, executor) == FAILURE)
 		{
 			free_inherited_state_for_child(executor, command);
 			exit(EXIT_FAILURE);

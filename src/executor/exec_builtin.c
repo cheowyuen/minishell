@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:00:21 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 10:45:12 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:55:46 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	exec_builtin_with_redirection(t_executor *executor, t_command *command)
 			close(saved_stdout);
 		return (FAILURE);
 	}
-	if (setup_single_redirection(command, executor) == FAILURE)
+	if (setup_redirection(command, executor) == FAILURE)
 	{
 		restore_fds(saved_stdin, saved_stdout);
 		return (FAILURE);
