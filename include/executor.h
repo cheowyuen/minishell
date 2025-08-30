@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 19:34:47 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/30 15:51:33 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ int					exec_single_external(t_executor *executor,
 int					setup_heredoc(t_command *command, t_executor *executor);
 int					setup_input_redirection(t_command *command,
 						t_executor *executor);
-// int					setup_output_redirection(t_command *command);
 int					setup_redirection(t_command *command, t_executor *executor);
 
 // Execution utilities

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:46 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 18:38:04 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/30 15:52:07 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,15 @@
 # include <signal.h>
 # include <unistd.h>
 
+// Global variable to track signal status
 extern volatile sig_atomic_t	g_signal_status;
 
+// Macro definitions for signal statuses
 # define SIGNAL_NONE 0
 # define SIGNAL_INT 1
 # define SIGNAL_QUIT 2
 
+// Signal handling functions
 void							sigint_handler(int sig);
 void							setup_signals_prompt(void);
 void							setup_signals_child(void);
