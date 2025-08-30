@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 16:22:51 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 19:42:51 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,10 @@ int					close_children_process(t_executor *executor);
 // Executor memory management
 void				free_environment(t_executor *executor);
 void				free_executor(t_executor *executor);
+
+// Redirection utils
+int					has_next(t_redir *redir, t_redir_type type);
+int					open_redir_file(t_redir *redirs);
+int					redirect_stdout(int fd, t_redir *redirs);
 
 #endif

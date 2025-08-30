@@ -6,58 +6,11 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 20:29:00 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 19:43:01 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-
-static int	has_next(t_redir *redir, t_redir_type type)
-{
-	t_redir	*tmp;
-
-	tmp = redir->next;
-	while (tmp)
-	{
-		if (tmp->type == type)
-			return (1);
-		tmp = tmp->next;
-	}
-	return (0);
-}
-
-static int	open_redir_file(t_redir *redirs)
-{
-	int	fd;
-	int	flags;
-
-	if (redirs->type == REDIR_APPEND)
-		flags = O_WRONLY | O_CREAT | O_APPEND;
-	else
-		flags = O_WRONLY | O_CREAT | O_TRUNC;
-	fd = open(redirs->filename, flags, 0644);
-	if (fd < 0)
-	{
-		perror(redirs->filename);
-		return (-1);
-	}
-	return (fd);
-}
-
-static int	redirect_stdout(int fd, t_redir *redirs)
-{
-	if (!has_next(redirs, REDIR_OUT) && !has_next(redirs, REDIR_APPEND))
-	{
-		if (dup2(fd, STDOUT_FILENO) < 0)
-		{
-			perror("dup2");
-			close(fd);
-			return (-1);
-		}
-	}
-	close(fd);
-	return (SUCCESS);
-}
 
 int	setup_input_redirection(t_command *command, t_executor *executor)
 {
