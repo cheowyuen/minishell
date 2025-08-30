@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 09:26:27 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 15:50:11 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	builtin_exit(t_executor *executor)
 		return ;
 	}
 	exit_code = executor->last_exit_code;
-	if (executor->command_count <= 1 && isatty(STDIN_FILENO)) // Added check to not print exit when is not interactive
+	if (executor->command_count <= 1 && isatty(STDIN_FILENO))
 		ft_dprintf(STDOUT_FILENO, "exit\n");
 	if (executor->commands->argv[1])
 	{
