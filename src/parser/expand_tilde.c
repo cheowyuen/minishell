@@ -6,14 +6,13 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 15:20:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 15:26:47 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 15:48:26 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "executor.h"
 #include "minishell.h"
-#include "parser.h"
 
 static int	expand_tilde_word(char **word, char *home_path)
 {
