@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:30:56 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:38:35 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,28 @@ static int	parse_and_execute(char *input, t_token **tokens,
 	commands = NULL;
 	if (parse_input(input, tokens, executor) < 0)
 	{
-		ft_lstclear(tokens); // missing freeing of tokens
+		ft_lstclear(tokens);
 		return (print_syntax_error(NULL, executor, 2));
 	}
 	if (validate_syntax(*tokens, executor) < 0)
 	{
-		ft_lstclear(tokens); // missing freeing of tokens
-		executor->last_exit_code = 2; //exit code 2 for syntax errors
+		ft_lstclear(tokens);
+		executor->last_exit_code = 2;
 		return (-1);
 	}
 	parse_result = parse_commands(*tokens, &commands, executor);
 	if (parse_result == HEREDOC_LIMIT_EXCEEDED)
 	{
-		ft_lstclear(tokens); // Free the tokens since they weren't freed in parse_commands
-		executor->last_exit_code = 2; // Exit code 2 for heredoc limit exceeded
+		ft_lstclear(tokens);
+		executor->last_exit_code = 2;
 		return (HEREDOC_LIMIT_EXCEEDED);
 	}
 	if (parse_result < 0)
 	{
-		ft_lstclear(tokens); // Free the tokens since they weren't freed in parse_commands
+		ft_lstclear(tokens);
 		return (print_syntax_error(NULL, executor, 2));
 	}
-	if (*tokens) // Only free if tokens wasn't already freed during parsing
+	if (*tokens)
 		ft_lstclear(tokens);
 	if (commands)
 	{
@@ -113,7 +113,6 @@ static int	handle_input_processing(char *input, t_token *tokens,
 		}
 		else if (result < 0)
 		{
-			// In non-interactive mode, exit on syntax errors
 			if (!isatty(STDIN_FILENO))
 			{
 				free(input);
