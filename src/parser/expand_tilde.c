@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 15:20:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 15:22:30 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 15:24:13 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 #include "minishell.h"
 #include "parser.h"
 
-static int	expand_tilde_word(char **word)
+static int	expand_tilde_word(char **word, char *home_path)
 {
-	char	*home_path;
 	char	*new_word;
 	char	*rest_of_path;
 
@@ -52,7 +51,7 @@ int	expand_tilde(char **word, t_executor *executor)
 	home_path = get_env_var(executor, "HOME");
 	if (!home_path)
 		return (0);
-	if (expand_tilde_word(word) < 0)
+	if (expand_tilde_word(word, home_path) < 0)
 		return (0);
 	return (0);
 }
