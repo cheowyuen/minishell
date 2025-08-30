@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 18:18:58 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 19:07:20 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ static int	run_shell_loop(t_executor *executor)
 			}
 		}
 		// else
-		// 	input = readline("");
+		// 	input = readline(PROMPT);
 		result = handle_input_processing(input, tokens, executor);
 		if (result == -1)
 			break ;
