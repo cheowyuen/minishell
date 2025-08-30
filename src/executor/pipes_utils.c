@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 09:10:06 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 12:40:28 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	close_and_free_pipes(t_executor *executor)
 {
 	int	i;
 
+	if (!executor || !executor->pipes)
+		return ;
 	i = 0;
 	while (i < executor->command_count - 1)
 	{
@@ -67,6 +69,8 @@ int	clean_everything_error(t_executor *executor)
 	int	i;
 	int	status;
 
+	if (!executor)
+		return (FAILURE);
 	close_and_free_pipes(executor);
 	if (executor->pids)
 	{

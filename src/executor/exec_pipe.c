@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 10:41:15 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 12:36:27 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,34 +56,48 @@ static int	create_pipes(t_executor *executor, int count)
 	executor->pipes = malloc(sizeof(int *) * (count - 1));
 	if (!executor->pipes)
 		return (FAILURE);
+	// Initialize all pointers to NULL for safe cleanup
+	while (i < count - 1)
+	{
+		executor->pipes[i] = NULL;
+		i++;
+	}
+	i = 0;
 	while (i < count - 1)
 	{
 		executor->pipes[i] = malloc(sizeof(int) * 2);
 		if (!executor->pipes[i])
 		{
-			close_and_free_pipes(executor);
-			return (FAILURE);
+			// If malloc fails, we can't create more pipes but can continue with what we have
+			executor->command_count = i + 1;  // Adjust command count to match available pipes
+			break ;
 		}
 		executor->pipes[i][0] = FD_CLOSED;
 		executor->pipes[i][1] = FD_CLOSED;
 		if (pipe(executor->pipes[i]) == PIPE_ERROR)
 		{
+			// If pipe() fails, print error but continue with reduced pipeline
 			perror("pipe");
-			close_and_free_pipes(executor);
-			return (FAILURE);
+			free(executor->pipes[i]);
+			executor->pipes[i] = NULL;
+			executor->command_count = i + 1;  // Adjust command count to match available pipes
+			break ;
 		}
 		i++;
 	}
+	// Even if we couldn't create all pipes, we can still execute some commands
 	return (SUCCESS);
 }
 
 static int	fork_processes(t_executor *executor, t_command *command)
 {
-	pid_t	pid;
-	int		i;
+	pid_t		pid;
+	int			i;
+	t_command	*current_cmd;
 
 	i = 0;
-	while (command)
+	current_cmd = command;
+	while (current_cmd && i < executor->command_count)
 	{
 		pid = fork();
 		if (pid < 0)
@@ -94,13 +108,13 @@ static int	fork_processes(t_executor *executor, t_command *command)
 		if (pid == 0)
 		{
 			setup_signals_child();
-			handle_child_process(executor, command, i);
+			handle_child_process(executor, current_cmd, i);
 		}
 		else
 		{
 			executor->pids[i] = pid;
 			i++;
-			command = command->next;
+			current_cmd = current_cmd->next;
 		}
 	}
 	return (SUCCESS);
