@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/28 00:41:45 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:14:29 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,11 @@ int	add_token(t_token **tokens, bool is_quoted, char *content, int len)
 	return (0);
 }
 
-static int	add_split_token(t_token **tokens, char *word)
+static int	add_split_token(t_token **tokens, char *word, bool from_expansion)
 {
 	t_token	*new_token;
 
-	new_token = ft_lstnew(false, word, ft_strlen(word));
+	new_token = ft_lstnew(from_expansion, word, ft_strlen(word));
 	if (!new_token)
 		return (-1);
 	ft_lstadd_back(tokens, new_token);
@@ -93,19 +93,19 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content)
 {
 	char	**words;
 	int		i;
+	bool	from_expansion;
 
-	// If quoted, don't split - treat as single token
 	if (is_quoted)
 		return (add_token(tokens, is_quoted, content, ft_strlen(content)));
-	// Split on spaces for unquoted content
+	from_expansion = (ft_strchr(content, '<') != NULL || ft_strchr(content,
+				'>') != NULL || ft_strchr(content, '|') != NULL);
 	words = ft_split(content, ' ');
 	if (!words)
 		return (-1);
-	// Add each word as a separate token
 	i = 0;
 	while (words[i])
 	{
-		if (add_split_token(tokens, words[i]) < 0)
+		if (add_split_token(tokens, words[i], from_expansion) < 0)
 		{
 			free_str_array(words);
 			return (-1);
