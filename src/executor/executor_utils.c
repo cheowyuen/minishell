@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 20:05:02 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:00:22 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,3 +99,29 @@ void	add_envp_to_executor(t_executor *executor, char **envp)
 		i++;
 	}
 }
+
+int	handle_parent_process(pid_t pid)
+{
+	int	status;
+
+	setup_signals_ignore();
+	if (waitpid(pid, &status, 0) < 0)
+	{
+		perror("waitpid");
+		setup_signals_prompt();
+		return (FAILURE);
+	}
+	setup_signals_prompt();
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+			write(STDERR_FILENO, "\n", 1);
+		else if (WTERMSIG(status) == SIGQUIT)
+			write(STDERR_FILENO, "Quit (core dumped)\n", 19);
+		return (EXIT_SIGNAL_BASE + WTERMSIG(status));
+	}
+	return (FAILURE);
+}
+

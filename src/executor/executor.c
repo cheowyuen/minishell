@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 20:55:47 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 21:01:12 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ int	exec_cmd(t_executor *executor, t_command *command)
 
 int	exec_single_command(t_executor *executor, t_command *command)
 {
+	int saved_stdin;
+	int saved_stdout;
+
 	executor->command_count = 1;
 	if (command->is_builtin)
 		return (exec_builtin_with_redirection(executor, command));
@@ -39,8 +42,8 @@ int	exec_single_command(t_executor *executor, t_command *command)
 	{
 		if (command->redirs || command->has_heredoc)
 		{
-			int saved_stdin = -1;
-			int saved_stdout = -1;
+			saved_stdin = -1;
+			saved_stdout = -1;
 			saved_stdin = dup(STDIN_FILENO);
 			saved_stdout = dup(STDOUT_FILENO);
 			if (setup_redirection(command, executor) == FAILURE)
@@ -58,8 +61,7 @@ int	exec_single_command(t_executor *executor, t_command *command)
 int	exec_single_external(t_executor *executor, t_command *command)
 {
 	pid_t	pid;
-	int		status;
-	
+
 	pid = fork();
 	if (pid == 0)
 	{
@@ -74,24 +76,7 @@ int	exec_single_external(t_executor *executor, t_command *command)
 	}
 	else if (pid > 0)
 	{
-		setup_signals_ignore();
-		if (waitpid(pid, &status, 0) < 0)
-		{
-			perror("waitpid");
-			setup_signals_prompt();
-			return (FAILURE);
-		}
-		setup_signals_prompt();
-		if (WIFEXITED(status))
-			return (WEXITSTATUS(status));
-		if (WIFSIGNALED(status))
-		{
-			if (WTERMSIG(status) == SIGINT)
-				write(STDERR_FILENO, "\n", 1);
-			else if (WTERMSIG(status) == SIGQUIT)
-				write(STDERR_FILENO, "Quit (core dumped)\n", 19);
-			return (EXIT_SIGNAL_BASE + WTERMSIG(status));
-		}
+		return (handle_parent_process(pid));
 	}
 	perror("fork");
 	return (FAILURE);
