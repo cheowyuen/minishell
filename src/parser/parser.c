@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 18:25:48 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:38:11 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "parser.h"
 
 int	parse_quote(char *input, int *i, t_quote *quote)
-{	
+{
 	int		len;
 	bool	has_dollar_sign;
 
@@ -48,6 +48,8 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	char	*joined;
 	bool	is_quoted;
 	bool	has_unquoted_vars;
+	int		start;
+	int		j;
 
 	joined = ft_strdup("");
 	if (!joined)
@@ -67,28 +69,26 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 		}
 		else
 		{
-			// Check if this unquoted part contains variables
-			int start = *i;
+			start = *i;
 			if (handle_unquoted_word(&joined, quote, input, i) < 0)
 			{
 				free(joined);
 				return (free_tokens_input(tokens, NULL, 1));
 			}
-			// Check if we had a variable in the unquoted part
-			int j = start;
+			j = start;
 			while (j < *i)
 			{
 				if (input[j] == '$')
 				{
 					has_unquoted_vars = true;
-					break;
+					break ;
 				}
 				j++;
 			}
 		}
 	}
-	// Use word splitting if we have unquoted variables, even in mixed tokens
-	if (add_tokens_with_splitting(tokens, is_quoted && !has_unquoted_vars, joined) < 0)
+	if (add_tokens_with_splitting(tokens, is_quoted && !has_unquoted_vars,
+			joined) < 0)
 	{
 		free(joined);
 		return (free_tokens_input(tokens, NULL, 1));

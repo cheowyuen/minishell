@@ -19,9 +19,11 @@ int	count_tokens(t_token *tokens)
 	int	count;
 
 	count = 0;
-	while (tokens && ((ft_strcmp(tokens->token, "|") != 0) || tokens->is_quoted))
+	while (tokens && ((ft_strcmp(tokens->token, "|") != 0)
+			|| tokens->is_quoted))
 	{
-		if (!tokens->is_quoted && (tokens->token[0] == '<' || tokens->token[0] == '>'))
+		if (!tokens->is_quoted && (tokens->token[0] == '<'
+				|| tokens->token[0] == '>'))
 		{
 			tokens = tokens->next;
 			if (tokens)
@@ -142,14 +144,14 @@ static void	ft_lstadd_back_redir(t_redir **lst, t_redir *new)
 int	set_outfile(t_token **tokens, int append, t_outfile **files)
 {
 	t_outfile	*new_file;
-	
+
 	*tokens = (*tokens)->next;
 	if (!*tokens)
 		return (print_syntax_error("newline", NULL, 0));
 	new_file = malloc(sizeof(t_outfile));
-	if  (!new_file)
+	if (!new_file)
 		return (-1);
-	new_file->filename = ft_strdup((*tokens)->token); 
+	new_file->filename = ft_strdup((*tokens)->token);
 	if (!new_file->filename)
 	{
 		free(new_file);
@@ -157,37 +159,37 @@ int	set_outfile(t_token **tokens, int append, t_outfile **files)
 	}
 	new_file->append = append;
 	new_file->next = NULL;
-	ft_lstadd_back_outfile(files,  new_file);
+	ft_lstadd_back_outfile(files, new_file);
 	return (0);
 }
 
 int	set_infile(t_token **tokens, t_infile **files)
 {
 	t_infile	*new_file;
-	
+
 	*tokens = (*tokens)->next;
 	if (!*tokens)
 		return (print_syntax_error("newline", NULL, 0));
 	new_file = malloc(sizeof(t_infile));
-	if  (!new_file)
+	if (!new_file)
 		return (-1);
-	new_file->filename = ft_strdup((*tokens)->token); 
+	new_file->filename = ft_strdup((*tokens)->token);
 	if (!new_file->filename)
 	{
 		free(new_file);
 		return (-1);
 	}
 	new_file->next = NULL;
-	ft_lstadd_back_infile(files,  new_file);
+	ft_lstadd_back_infile(files, new_file);
 	return (0);
 }
 
 int	set_redir(t_token **tokens, t_redir **files)
 {
 	t_redir	*new_file;
-	
+
 	new_file = malloc(sizeof(t_redir));
-	if  (!new_file)
+	if (!new_file)
 		return (-1);
 	if (ft_strcmp((*tokens)->token, ">>") == 0)
 		new_file->type = REDIR_APPEND;
@@ -198,13 +200,13 @@ int	set_redir(t_token **tokens, t_redir **files)
 	*tokens = (*tokens)->next;
 	if (!*tokens)
 		return (print_syntax_error("newline", NULL, 0));
-	new_file->filename = ft_strdup((*tokens)->token); 
+	new_file->filename = ft_strdup((*tokens)->token);
 	if (!new_file->filename)
 	{
 		free(new_file);
 		return (-1);
 	}
 	new_file->next = NULL;
-	ft_lstadd_back_redir(files,  new_file);
+	ft_lstadd_back_redir(files, new_file);
 	return (0);
 }

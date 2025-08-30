@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 15:02:35 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:37:16 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "minishell.h"
 #include "parser.h"
 
-static int	assign_new_token(char **word, char	*tmp, char	*right)
+static int	assign_new_token(char **word, char *tmp, char *right)
 {
 	char	*new_token;
 
@@ -24,7 +24,7 @@ static int	assign_new_token(char **word, char	*tmp, char	*right)
 	free(right);
 	if (!new_token)
 		return (-1);
-	free(*word); // Free the old word missing before 
+	free(*word);
 	*word = new_token;
 	return (0);
 }
@@ -44,8 +44,8 @@ static int	join_token(char **word, int i, int len, t_var var)
 		free(var.value);
 	if (!tmp)
 		return (-1);
-	right = ft_substr(*word, i + len + var.has_braces,
-			ft_strlen(*word) - i - len);
+	right = ft_substr(*word, i + len + var.has_braces, ft_strlen(*word) - i
+			- len);
 	if (!right)
 		return (-1);
 	return (assign_new_token(word, tmp, right));
@@ -54,10 +54,11 @@ static int	join_token(char **word, int i, int len, t_var var)
 static int	get_value(char **word, int i, int len, t_var var)
 {
 	char	*variable;
+
 	if ((*word)[i + 1] != '?')
 	{
-		while ((*word)[i + len] && (ft_isalnum((*word)[i + len])
-				|| (*word)[i + len] == '_'))
+		while ((*word)[i + len] && (ft_isalnum((*word)[i + len]) || (*word)[i
+				+ len] == '_'))
 			len++;
 		variable = ft_strndup(&(*word)[i + 1], len - 1);
 		if (!variable)
@@ -88,18 +89,16 @@ static int	get_var(char **word, int i, t_executor *executor)
 	var.value = NULL;
 	var.should_free = false;
 	var.executor = executor;
-	// Check if $ is followed by valid variable character or special cases
-	if (!(*word)[i + 1] || ((*word)[i + 1] != '?' && (*word)[i + 1] != '{' 
-		&& !ft_isalpha((*word)[i + 1]) && (*word)[i + 1] != '_'))
-		return (0); // Skip expansion, leave $ as literal
-	
+
+	if (!(*word)[i + 1] || ((*word)[i + 1] != '?' && (*word)[i + 1] != '{'
+			&& !ft_isalpha((*word)[i + 1]) && (*word)[i + 1] != '_'))
+		return (0);
 	if ((*word)[i + 1] == '{')
 	{
 		var.has_braces = true;
 		i++;
-		// Check for empty braces ${} 
 		if ((*word)[i + 1] == '}')
-			return (-1); // Error: bad substitution
+			return (-1);
 	}
 	if ((*word)[i + 1] == '?')
 	{
@@ -115,14 +114,14 @@ static int	get_var(char **word, int i, t_executor *executor)
 		len = 1;
 	if (get_value(word, i, len, var) < 0)
 		return (-1);
-	return (1); // Successful expansion
+	return (1);
 }
 
 int	expand_env_var(char **word, t_executor *executor)
 {
-	int		i;
-	int		result;
-	
+	int	i;
+	int	result;
+
 	i = 0;
 	while ((*word)[i])
 	{
@@ -132,9 +131,9 @@ int	expand_env_var(char **word, t_executor *executor)
 			if (result < 0)
 				return (-1);
 			if (result == 0)
-				i++; // No expansion, move past this $
+				i++;
 			else
-				i = 0; // Expansion happened, restart from beginning
+				i = 0;
 		}
 		else
 			i++;

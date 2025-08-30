@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/30 15:11:35 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:37:58 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,23 +48,21 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 
 	len = 0;
 	has_dollar_sign = false;
-	// Check for ANSI-C quoting pattern $'...'
 	if (input[*i] == '$' && input[*i + 1] == '\'')
 	{
-		// Skip the $' and find the closing quote
 		len = 2;
 		while (input[*i + len] && input[*i + len] != '\'')
 			len++;
 		if (input[*i + len] == '\'')
-			len++; // Include closing quote
-		*word = ft_strndup(&input[*i + 2], len - 3); // Extract content without $' and '
+			len++;
+		*word = ft_strndup(&input[*i + 2], len - 3);
 		if (!*word)
 			return (-1);
 		*i += len;
 		return (0);
 	}
 	while (input[*i + len] && !is_quote(input[*i + len]) && !is_space(input[*i
-				+ len]) && !is_special(input[*i + len]))
+			+ len]) && !is_special(input[*i + len]))
 	{
 		if (input[*i + len] == '$')
 		{
@@ -75,7 +73,6 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 	*word = ft_strndup(&input[*i], len);
 	if (!*word)
 		return (-1);
-	// Expand tilde first (before variable expansion)
 	if (expand_tilde(word, quote->executor) < 0)
 		return (-1);
 	if (has_dollar_sign)

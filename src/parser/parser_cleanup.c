@@ -30,7 +30,7 @@ void	free_commands(t_command **commands)
 	t_outfile	*next;
 	t_infile	*next_infile;
 	t_redir		*next_redir;
-	
+
 	if (!commands || !*commands)
 		return ;
 	while (*commands)

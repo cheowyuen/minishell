@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 19:51:58 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:37:34 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,13 @@ static int	handle_special(t_token **tokens, t_command **current,
 		(*current)->is_quoted = (*tokens)->is_quoted;
 		if ((*current)->heredoc_delim)
 			free((*current)->heredoc_delim);
-		
-		// Process the heredoc delimiter (expand variables if unquoted, strip quotes)
-		(*current)->heredoc_delim = process_heredoc_delimiter((*tokens)->token, 
-			(*tokens)->is_quoted, executor);
+		(*current)->heredoc_delim = process_heredoc_delimiter((*tokens)->token,
+				(*tokens)->is_quoted, executor);
 		if (!(*current)->heredoc_delim)
 			return (free_tokens_commands(tokens, commands));
 	}
 	else if (ft_strcmp((*tokens)->token, ">>") == 0
-		|| (*tokens)->token[0] == '<'
-		|| (*tokens)->token[0] == '>')
+		|| (*tokens)->token[0] == '<' || (*tokens)->token[0] == '>')
 	{
 		if (set_redir(tokens, &(*current)->redirs) < 0)
 			return (free_tokens_commands(tokens, commands));
@@ -75,13 +72,14 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	while (tmp && (tmp->is_quoted || ft_strcmp(tmp->token, "|") != 0))
 	{
 		if (!tmp->is_quoted && (tmp->token[0] == '<' || tmp->token[0] == '>'))
-        {
-			result = handle_special(&tmp, &current, commands, &heredoc_count, executor);
+		{
+			result = handle_special(&tmp, &current, commands, &heredoc_count,
+					executor);
 			if (result < 0)
-				return (result);  // Propagate special codes like HEREDOC_LIMIT_EXCEEDED
-            continue ; 
-        }
-		if (tmp->token && (tmp->token[0] || tmp->is_quoted)) // Skip empty tokens only if unquoted (from environment variables that expand to empty)
+				return (result);
+			continue ;
+		}
+		if (tmp->token && (tmp->token[0] || tmp->is_quoted))
 		{
 			current->argv[argv_index] = ft_strdup(tmp->token);
 			if (!current->argv[argv_index])
@@ -97,10 +95,11 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	return (0);
 }
 
-static int	process_tokens(t_token *tokens, t_command **commands, t_executor *executor)
+static int	process_tokens(t_token *tokens, t_command **commands,
+		t_executor *executor)
 {
 	t_command	*current;
-	int 		result;
+	int			result;
 
 	current = *commands;
 	while (tokens)
@@ -109,14 +108,14 @@ static int	process_tokens(t_token *tokens, t_command **commands, t_executor *exe
 		if (result < 0)
 			return (result);
 		if (tokens && !tokens->is_quoted && ft_strcmp(tokens->token, "|") == 0)
-        {
-            tokens = tokens->next;
+		{
+			tokens = tokens->next;
 			current->pipe_out = 1;
-            current->next = create_command();
+			current->next = create_command();
 			if (!current->next)
 				return (free_tokens_commands(&tokens, commands));
-            current = current->next;
-        }
+			current = current->next;
+		}
 	}
 	current->is_last = 1;
 	return (0);
@@ -124,7 +123,7 @@ static int	process_tokens(t_token *tokens, t_command **commands, t_executor *exe
 
 int	parse_commands(t_token *tokens, t_command **commands, t_executor *executor)
 {
-	int result;
+	int	result;
 
 	*commands = create_command();
 	if (!*commands)

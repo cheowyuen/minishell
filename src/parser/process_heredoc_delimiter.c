@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
 #include "environment.h"
+#include "executor.h"
 #include "minishell.h"
 #include "parser.h"
 #include "utils.h"
@@ -19,8 +19,8 @@
 static char	*strip_quotes(const char *str);
 static char	*expand_delimiter(char *str, t_executor *executor);
 
-char	*process_heredoc_delimiter(const char *delimiter, bool is_quoted, 
-	t_executor *executor)
+char	*process_heredoc_delimiter(const char *delimiter, bool is_quoted,
+		t_executor *executor)
 {
 	char	*processed_delimiter;
 	char	*temp;
@@ -38,7 +38,6 @@ char	*process_heredoc_delimiter(const char *delimiter, bool is_quoted,
 			return (NULL);
 		processed_delimiter = temp;
 	}
-	
 	return (processed_delimiter);
 }
 
@@ -64,7 +63,7 @@ static char	*strip_quotes(const char *str)
 static char	*expand_delimiter(char *str, t_executor *executor)
 {
 	char	*expanded;
-	
+
 	if (!str)
 		return (NULL);
 	expanded = ft_strdup(str);
@@ -75,6 +74,5 @@ static char	*expand_delimiter(char *str, t_executor *executor)
 		free(expanded);
 		return (NULL);
 	}
-	
 	return (expanded);
 }
