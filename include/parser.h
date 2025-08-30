@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/27 22:21:45 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 15:11:35 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ int							is_builtin(char *cmd);
 t_command					*create_command(void);
 int							count_tokens(t_token *tokens);
 int							expand_env_var(char **word, t_executor *executor);
+int							expand_tilde(char **word, t_executor *executor);
 int							parse_quote(char *input, int *i, t_quote *quote);
 int							handle_quoted_word(char **joined, t_quote *quote,
 								char *input, int *i);

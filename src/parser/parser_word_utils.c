@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/30 00:27:33 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 15:11:35 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,9 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 	}
 	*word = ft_strndup(&input[*i], len);
 	if (!*word)
+		return (-1);
+	// Expand tilde first (before variable expansion)
+	if (expand_tilde(word, quote->executor) < 0)
 		return (-1);
 	if (has_dollar_sign)
 	{
