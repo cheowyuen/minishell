@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 15:04:19 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 19:51:58 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "utils.h"
 
 static int	handle_special(t_token **tokens, t_command **current,
-		t_command **commands, int *heredoc_count)
+		t_command **commands, int *heredoc_count, t_executor *executor)
 {
 	if (ft_strcmp((*tokens)->token, "<<") == 0)
 	{
@@ -38,7 +38,10 @@ static int	handle_special(t_token **tokens, t_command **current,
 		(*current)->is_quoted = (*tokens)->is_quoted;
 		if ((*current)->heredoc_delim)
 			free((*current)->heredoc_delim);
-		(*current)->heredoc_delim = ft_strdup((*tokens)->token);
+		
+		// Process the heredoc delimiter (expand variables if unquoted, strip quotes)
+		(*current)->heredoc_delim = process_heredoc_delimiter((*tokens)->token, 
+			(*tokens)->is_quoted, executor);
 		if (!(*current)->heredoc_delim)
 			return (free_tokens_commands(tokens, commands));
 	}
@@ -54,7 +57,7 @@ static int	handle_special(t_token **tokens, t_command **current,
 }
 
 static int	handle_commands(t_token **tokens, t_command *current,
-		t_command **commands)
+		t_command **commands, t_executor *executor)
 {
 	int		count;
 	int		argv_index;
@@ -73,7 +76,7 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	{
 		if (!tmp->is_quoted && (tmp->token[0] == '<' || tmp->token[0] == '>'))
         {
-			result = handle_special(&tmp, &current, commands, &heredoc_count);
+			result = handle_special(&tmp, &current, commands, &heredoc_count, executor);
 			if (result < 0)
 				return (result);  // Propagate special codes like HEREDOC_LIMIT_EXCEEDED
             continue ; 
@@ -94,7 +97,7 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	return (0);
 }
 
-static int	process_tokens(t_token *tokens, t_command **commands)
+static int	process_tokens(t_token *tokens, t_command **commands, t_executor *executor)
 {
 	t_command	*current;
 	int 		result;
@@ -102,7 +105,7 @@ static int	process_tokens(t_token *tokens, t_command **commands)
 	current = *commands;
 	while (tokens)
 	{
-		result = handle_commands(&tokens, current, commands);
+		result = handle_commands(&tokens, current, commands, executor);
 		if (result < 0)
 			return (result);
 		if (tokens && !tokens->is_quoted && ft_strcmp(tokens->token, "|") == 0)
@@ -119,14 +122,14 @@ static int	process_tokens(t_token *tokens, t_command **commands)
 	return (0);
 }
 
-int	parse_commands(t_token *tokens, t_command **commands)
+int	parse_commands(t_token *tokens, t_command **commands, t_executor *executor)
 {
 	int result;
 
 	*commands = create_command();
 	if (!*commands)
 		return (free_tokens(&tokens));
-	result = process_tokens(tokens, commands);
+	result = process_tokens(tokens, commands, executor);
 	if (result < 0)
 		return (result);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 16:22:53 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 19:51:58 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ char						*ft_strndup(const char *src, int n);
 int							free_tokens(t_token **tokens);
 void						free_commands(t_command **commands);
 int							parse_commands(t_token *tokens,
-								t_command **commands);
+								t_command **commands, t_executor *executor);
 int							free_tokens_commands(t_token **tokens,
 								t_command **commands);
 int							set_outfile(t_token **tokens, int append,
@@ -112,6 +112,8 @@ t_command					*create_command(void);
 int							count_tokens(t_token *tokens);
 int							expand_env_var(char **word, t_executor *executor);
 int							expand_tilde(char **word, t_executor *executor);
+char						*process_heredoc_delimiter(const char *raw_delimiter,
+								bool is_quoted, t_executor *executor);
 int							parse_quote(char *input, int *i, t_quote *quote);
 int							handle_quoted_word(char **joined, t_quote *quote,
 								char *input, int *i);
