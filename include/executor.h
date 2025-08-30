@@ -78,7 +78,8 @@ int					exec_single_external(t_executor *executor,
 
 // Heredoc management
 int					setup_heredoc(t_command *command, t_executor *executor);
-int					setup_heredoc_for_pipeline(t_command *command, t_executor *executor);
+int					setup_heredoc_for_pipeline(t_command *command,
+						t_executor *executor);
 int					setup_input_redirection(t_command *command,
 						t_executor *executor);
 int					setup_redirection(t_command *command, t_executor *executor);
@@ -105,7 +106,7 @@ int					has_next(t_redir *redir, t_redir_type type);
 int					open_redir_file(t_redir *redirs);
 int					redirect_stdout(int fd, t_redir *redirs);
 
-//Heredoc utils
+// Heredoc utils
 int					create_heredoc_pipe(int pipefd[2]);
 int					setup_heredoc_input(int pipefd[2]);
 void				write_heredoc_content(int fd, char *delimiter,
