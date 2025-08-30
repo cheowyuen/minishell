@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:00:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 20:02:29 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:31:51 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@
 static char	*strip_quotes(const char *str);
 static char	*expand_delimiter(char *str, t_executor *executor);
 
-char	*process_heredoc_delimiter(const char *raw_delimiter, bool is_quoted, 
+char	*process_heredoc_delimiter(const char *delimiter, bool is_quoted, 
 	t_executor *executor)
 {
 	char	*processed_delimiter;
 	char	*temp;
 
-	if (!raw_delimiter)
+	if (!delimiter)
 		return (NULL);
-	processed_delimiter = strip_quotes(raw_delimiter);
+	processed_delimiter = strip_quotes(delimiter);
 	if (!processed_delimiter)
 		return (NULL);
 	if (!is_quoted)
