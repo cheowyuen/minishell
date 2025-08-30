@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 18:31:28 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 15:38:43 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,9 +115,9 @@ int	exec_single_external(t_executor *executor, t_command *command)
 		if (WIFSIGNALED(status))
 		{
 			if (WTERMSIG(status) == SIGINT)
-				write(STDOUT_FILENO, "\n", 1);
+				write(STDERR_FILENO, "\n", 1);
 			else if (WTERMSIG(status) == SIGQUIT)
-				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+				write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 			return (EXIT_SIGNAL_BASE + WTERMSIG(status));
 		}
 	}
