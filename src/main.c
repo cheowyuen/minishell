@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 16:31:55 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 17:44:50 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,13 +143,18 @@ static int	run_shell_loop(t_executor *executor)
 		}
 		// else
 		// {
-		// 	char *line;
-		// 	line = get_next_line(fileno(stdin));
-		// 	input = ft_strtrim(line, "\n");
-		// 	free(line);
+		// 	int dev_null_fd = open("/dev/null", O_WRONLY);
+		// 	FILE *dev_null_stream = fdopen(dev_null_fd, "w");
+		// 	rl_outstream = dev_null_stream;
+		// 	input = readline("");
+		// 	if (rl_outstream != stdout)
+		// 	{
+		// 		fclose(rl_outstream);
+		// 		rl_outstream = stdout;
+		// 	}
 		// }
 		else
-			input = readline(PROMPT);
+			input = readline("");
 		result = handle_input_processing(input, tokens, executor);
 		if (result == -1)
 			break ;
