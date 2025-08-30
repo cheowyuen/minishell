@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 15:20:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 15:24:13 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 15:26:47 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	expand_tilde_word(char **word, char *home_path)
 		free(*word);
 		*word = new_word;
 	}
-	return (0);	
+	return (0);
 }
 
 int	expand_tilde(char **word, t_executor *executor)
@@ -55,4 +55,3 @@ int	expand_tilde(char **word, t_executor *executor)
 		return (0);
 	return (0);
 }
-
