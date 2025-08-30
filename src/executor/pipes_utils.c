@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 20:28:37 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 09:10:06 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ void	setup_redirection_child_process(t_executor *executor,
 	// but in pipelines, stdin is connected to the previous command's output
 	if (command->has_heredoc)
 	{
-		// Only process heredoc if we're not in a pipeline (command_count == 1)
 		if (executor->command_count == 1)
 		{
 			if (setup_input_redirection(command, executor) == FAILURE)
@@ -126,7 +125,5 @@ void	setup_redirection_child_process(t_executor *executor,
 				exit(EXIT_FAILURE);
 			}
 		}
-		// In pipeline context, heredoc is skipped to avoid deadlock
-		// TODO: Implement proper parse-time heredoc processing
 	}
 }
