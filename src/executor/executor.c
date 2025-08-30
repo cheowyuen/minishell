@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:01:12 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 00:30:03 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ int	exec_single_command(t_executor *executor, t_command *command)
 	{
 		if (command->redirs || command->has_heredoc)
 		{
-			saved_stdin = -1;
-			saved_stdout = -1;
 			saved_stdin = dup(STDIN_FILENO);
 			saved_stdout = dup(STDOUT_FILENO);
 			if (setup_redirection(command, executor) == FAILURE)
