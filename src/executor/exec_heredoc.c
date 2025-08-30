@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 19:28:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 19:33:06 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:25:06 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 #include "parser.h"
 #include "signals.h"
 #include "utils.h"
-
-static int	create_heredoc_pipe(int pipefd[2]);
-static int	setup_heredoc_input(int pipefd[2]);
-static void	write_heredoc_content(int fd, char *delimiter,
-				t_executor *executor);
 
 int	setup_heredoc_for_pipeline(t_command *command, t_executor *executor)
 {
@@ -50,7 +45,7 @@ int	setup_heredoc(t_command *command, t_executor *executor)
 	return (setup_heredoc_input(pipefd));
 }
 
-static int	create_heredoc_pipe(int pipefd[2])
+int	create_heredoc_pipe(int pipefd[2])
 {
 	if (pipe(pipefd) < 0)
 	{
@@ -60,7 +55,7 @@ static int	create_heredoc_pipe(int pipefd[2])
 	return (SUCCESS);
 }
 
-static int	setup_heredoc_input(int pipefd[2])
+int	setup_heredoc_input(int pipefd[2])
 {
 	if (dup2(pipefd[0], STDIN_FILENO) < 0)
 	{
@@ -71,67 +66,3 @@ static int	setup_heredoc_input(int pipefd[2])
 	close(pipefd[0]);
 	return (SUCCESS);
 }
-
-static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor)
-{
-	char	*line;
-	t_quote	quote;
-	char	*word;
-	int		i;
-
-	quote.executor = executor;
-	quote.is_heredoc = true;
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-			break ;
-		if (ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break ;
-		}
-		if (!executor->commands->is_quoted)
-		{
-			i = 0;
-			while (i < (int)ft_strlen(line))
-			{
-				if (get_word_heredoc(line, &i, &quote, &word) < 0)
-				{
-					perror("write");
-					free(line);
-					break ;
-				}
-				if (word && *word)
-				{
-					if (write(fd, word, ft_strlen(word)) == -1)
-					{
-						perror("write");
-						free(line);
-						break ;
-					}
-					free(word);
-				}
-			}
-			if (write(fd, "\n", 1) == -1)
-			{
-				perror("write");
-				free(line);
-				break ;
-			}
-		}
-		else if (write(fd, line,
-				ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
-		{
-			perror("write");
-			free(line);
-			break ;
-		}
-		free(line);
-	}
-}
-
-
-
-
-

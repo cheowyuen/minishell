@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 16:24:35 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:26:52 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	exec_pipe(t_executor *executor, t_command *command)
 	count_commands(command, executor);
 	if (executor->command_count == 0)
 		return (FAILURE);
-	// Process all heredocs BEFORE starting the pipeline
 	if (process_pipeline_heredocs(command, executor) == FAILURE)
 		return (FAILURE);
 	executor->current_command_index = 0;
@@ -60,7 +59,6 @@ static int	create_pipes(t_executor *executor, int count)
 	executor->pipes = malloc(sizeof(int *) * (count - 1));
 	if (!executor->pipes)
 		return (FAILURE);
-	// Initialize all pointers to NULL for safe cleanup
 	while (i < count - 1)
 	{
 		executor->pipes[i] = NULL;
@@ -72,23 +70,20 @@ static int	create_pipes(t_executor *executor, int count)
 		executor->pipes[i] = malloc(sizeof(int) * 2);
 		if (!executor->pipes[i])
 		{
-			// If malloc fails, we can't create more pipes but can continue with what we have
-			executor->command_count = i + 1;  // Adjust command count to match available pipes
+			executor->command_count = i + 1;
 			break ;
 		}
 		executor->pipes[i][0] = FD_CLOSED;
 		executor->pipes[i][1] = FD_CLOSED;
 		if (pipe(executor->pipes[i]) == PIPE_ERROR)
 		{
-			// If pipe() fails, silently continue with reduced pipeline like bash
 			free(executor->pipes[i]);
 			executor->pipes[i] = NULL;
-			executor->command_count = i + 1;  // Adjust command count to match available pipes
+			executor->command_count = i + 1;
 			break ;
 		}
 		i++;
 	}
-	// Even if we couldn't create all pipes, we can still execute some commands
 	return (SUCCESS);
 }
 

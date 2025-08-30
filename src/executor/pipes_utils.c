@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 16:24:10 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 20:20:23 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,9 @@ int	close_children_process(t_executor *executor)
 	return (SUCCESS);
 }
 
-
 void	setup_redirection_child_process(t_executor *executor,
 		t_command *command)
 {
-	// Handle pre-processed pipeline heredocs first
 	if (command->has_heredoc && command->heredoc_fd >= 0)
 	{
 		if (dup2(command->heredoc_fd, STDIN_FILENO) == -1)
@@ -119,7 +117,6 @@ void	setup_redirection_child_process(t_executor *executor,
 		}
 		close(command->heredoc_fd);
 	}
-	// Then handle other redirections (but skip heredocs since they're already handled above)
 	else if (command->redirs)
 	{
 		if (setup_redirection(command, executor) == FAILURE)
