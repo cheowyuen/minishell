@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_cleanup.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:41:50 by cyuen             #+#    #+#             */
-/*   Updated: 2025/08/27 18:41:52 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/30 16:23:00 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ void	free_commands(t_command **commands)
 		}
 		if (temp->heredoc_delim)
 			free(temp->heredoc_delim);
+		if (temp->heredoc_fd >= 0)
+			close(temp->heredoc_fd);
 		free(temp);
 	}
 	*commands = NULL;

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 20:12:33 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 16:24:21 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,21 @@ static int	create_heredoc_pipe(int pipefd[2]);
 static int	setup_heredoc_input(int pipefd[2]);
 static void	write_heredoc_content(int fd, char *delimiter,
 				t_executor *executor);
+
+int	setup_heredoc_for_pipeline(t_command *command, t_executor *executor)
+{
+	int	pipefd[2];
+
+	if (!command || !command->has_heredoc || !command->heredoc_delim)
+		return (FAILURE);
+	if (create_heredoc_pipe(pipefd) == FAILURE)
+		return (FAILURE);
+	setup_signals_heredoc();
+	write_heredoc_content(pipefd[1], command->heredoc_delim, executor);
+	close(pipefd[1]);
+	command->heredoc_fd = pipefd[0];
+	return (SUCCESS);
+}
 
 int	setup_heredoc(t_command *command, t_executor *executor)
 {

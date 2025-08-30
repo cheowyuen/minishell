@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 15:11:35 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 16:22:53 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ typedef struct s_command
 	int						append;
 	int						has_heredoc;
 	char					*heredoc_delim;
+	int						heredoc_fd;
 	bool					is_quoted;
 	int						is_builtin;
 	int						is_last;

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 18:04:18 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 12:40:28 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 16:24:10 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	close_children_process(t_executor *executor)
 	if (wait_all_children(executor, &last_status) < 0)
 		return (FAILURE);
 	if (WIFSIGNALED(last_status) && WTERMSIG(last_status) == SIGQUIT)
-		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+		write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 	if (WIFSIGNALED(last_status))
 		executor->last_exit_code = EXIT_SIGNAL_BASE + WTERMSIG(last_status);
 	else if (WIFEXITED(last_status))
@@ -108,26 +108,24 @@ int	close_children_process(t_executor *executor)
 void	setup_redirection_child_process(t_executor *executor,
 		t_command *command)
 {
-	if (command->redirs)
+	// Handle pre-processed pipeline heredocs first
+	if (command->has_heredoc && command->heredoc_fd >= 0)
+	{
+		if (dup2(command->heredoc_fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2 heredoc");
+			close_all_pipes_children(executor);
+			exit(EXIT_FAILURE);
+		}
+		close(command->heredoc_fd);
+	}
+	// Then handle other redirections (but skip heredocs since they're already handled above)
+	else if (command->redirs)
 	{
 		if (setup_redirection(command, executor) == FAILURE)
 		{
 			close_all_pipes_children(executor);
 			exit(EXIT_FAILURE);
-		}
-	}
-	// Skip heredoc in pipeline child processes to prevent deadlock
-	// This is because heredoc processing expects terminal input,
-	// but in pipelines, stdin is connected to the previous command's output
-	if (command->has_heredoc)
-	{
-		if (executor->command_count == 1)
-		{
-			if (setup_input_redirection(command, executor) == FAILURE)
-			{
-				close_all_pipes_children(executor);
-				exit(EXIT_FAILURE);
-			}
 		}
 	}
 }

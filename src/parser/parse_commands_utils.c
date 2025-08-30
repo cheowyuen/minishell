@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:41:29 by cyuen             #+#    #+#             */
-/*   Updated: 2025/08/29 15:14:20 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 16:22:52 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ t_command	*create_command(void)
 	new_command->append = 0;
 	new_command->has_heredoc = 0;
 	new_command->heredoc_delim = NULL;
+	new_command->heredoc_fd = -1;
 	new_command->is_quoted = false;
 	new_command->is_builtin = 0;
 	new_command->is_last = 0;
