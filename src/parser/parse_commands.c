@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/31 11:37:04 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/31 15:36:44 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "utils.h"
 
 static int	handle_special(t_token **tokens, t_command **current,
-		t_command **commands, int *heredoc_count)
+		int *heredoc_count, t_executor *executor)
 {
 	if (ft_strcmp((*tokens)->token, "<<") == 0)
 	{
@@ -25,47 +25,36 @@ static int	handle_special(t_token **tokens, t_command **current,
 		{
 			ft_dprintf(STDERR_FILENO,
 				"minishell: maximum here-document count exceeded\n");
-			free_commands(commands);
+			free_commands(&executor->commands);
 			return (HEREDOC_LIMIT_EXCEEDED);
 		}
 		*tokens = (*tokens)->next;
 		if (!*tokens)
 		{
 			print_syntax_error("newline", NULL, 0);
-			return (free_tokens_commands(tokens, commands));
+			return (free_tokens_commands(tokens, &executor->commands));
 		}
 		(*current)->has_heredoc = 1;
 		(*current)->is_quoted = (*tokens)->is_quoted;
 		if ((*current)->heredoc_delim)
 			free((*current)->heredoc_delim);
-		(*current)->heredoc_delim = ft_strdup((*tokens)->token);
+		(*current)->heredoc_delim = process_heredoc_delimiter((*tokens)->token,
+				(*tokens)->is_quoted, executor);
 		if (!(*current)->heredoc_delim)
-			return (free_tokens_commands(tokens, commands));
+			return (free_tokens_commands(tokens, &executor->commands));
 	}
-	// else if (ft_strcmp((*tokens)->token, ">>") == 0)
-	// {
-	// 	if (set_outfile(tokens, 1, &(*current)->outfiles) < 0)
-	// 		return (free_tokens_commands(tokens, commands));
-	// }
 	else if (ft_strcmp((*tokens)->token, ">>") == 0
-		|| (*tokens)->token[0] == '<'
-		|| (*tokens)->token[0] == '>')
+		|| (*tokens)->token[0] == '<' || (*tokens)->token[0] == '>')
 	{
-		// if (set_infile(tokens, &(*current)->infiles) < 0)
 		if (set_redir(tokens, &(*current)->redirs) < 0)
-			return (free_tokens_commands(tokens, commands));
+			return (free_tokens_commands(tokens, &executor->commands));
 	}
-	// else if ((*tokens)->token[0] == '>')
-	// {
-	// 	if (set_outfile(tokens, 0, &(*current)->outfiles) < 0)
-	// 		return (free_tokens_commands(tokens, commands));
-	// }
 	*tokens = (*tokens)->next;
 	return (0);
 }
 
 static int	handle_commands(t_token **tokens, t_command *current,
-		t_command **commands)
+		t_command **commands, t_executor *executor)
 {
 	int		count;
 	int		argv_index;
@@ -83,13 +72,13 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	while (tmp && (tmp->is_quoted || ft_strcmp(tmp->token, "|") != 0))
 	{
 		if (!tmp->is_quoted && (tmp->token[0] == '<' || tmp->token[0] == '>'))
-        {
-			result = handle_special(&tmp, &current, commands, &heredoc_count);
+		{
+			result = handle_special(&tmp, &current, &heredoc_count, executor);
 			if (result < 0)
-				return (result);  // Propagate special codes like HEREDOC_LIMIT_EXCEEDED
-            continue ; 
-        }
-		if (tmp->token && (tmp->token[0] || tmp->is_quoted)) // Skip empty tokens only if unquoted (from environment variables that expand to empty)
+				return (result);
+			continue ;
+		}
+		if (tmp->token && (tmp->token[0] || tmp->is_quoted))
 		{
 			current->argv[argv_index] = ft_strdup(tmp->token);
 			if (!current->argv[argv_index])
@@ -105,39 +94,41 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	return (0);
 }
 
-static int	process_tokens(t_token *tokens, t_command **commands)
+static int	process_tokens(t_token *tokens, t_command **commands,
+		t_executor *executor)
 {
 	t_command	*current;
-	int 		result;
+	int			result;
 
 	current = *commands;
 	while (tokens)
 	{
-		result = handle_commands(&tokens, current, commands);
+		result = handle_commands(&tokens, current, commands, executor);
 		if (result < 0)
 			return (result);
 		if (tokens && !tokens->is_quoted && ft_strcmp(tokens->token, "|") == 0)
-        {
-            tokens = tokens->next;
+		{
+			tokens = tokens->next;
 			current->pipe_out = 1;
-            current->next = create_command();
+			current->next = create_command();
 			if (!current->next)
 				return (free_tokens_commands(&tokens, commands));
-            current = current->next;
-        }
+			current = current->next;
+		}
 	}
 	current->is_last = 1;
 	return (0);
 }
 
-int	parse_commands(t_token *tokens, t_command **commands)
+int	parse_commands(t_token *tokens, t_command **commands, t_executor *executor)
 {
-	int result;
+	int	result;
 
 	*commands = create_command();
 	if (!*commands)
 		return (free_tokens(&tokens));
-	result = process_tokens(tokens, commands);
+	executor->commands = *commands;
+	result = process_tokens(tokens, commands, executor);
 	if (result < 0)
 		return (result);
 	return (0);

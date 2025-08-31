@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_word_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/31 08:42:20 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/31 15:40:39 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,23 +48,21 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 
 	len = 0;
 	has_dollar_sign = false;
-	// Check for ANSI-C quoting pattern $'...'
 	if (input[*i] == '$' && input[*i + 1] == '\'')
 	{
-		// Skip the $' and find the closing quote
 		len = 2;
 		while (input[*i + len] && input[*i + len] != '\'')
 			len++;
 		if (input[*i + len] == '\'')
-			len++; // Include closing quote
-		*word = ft_strndup(&input[*i + 2], len - 3); // Extract content without $' and '
+			len++;
+		*word = ft_strndup(&input[*i + 2], len - 3);
 		if (!*word)
 			return (-1);
 		*i += len;
 		return (0);
 	}
 	while (input[*i + len] && !is_quote(input[*i + len]) && !is_space(input[*i
-				+ len]) && !is_special(input[*i + len]))
+			+ len]) && !is_special(input[*i + len]))
 	{
 		if (input[*i + len] == '$')
 		{
@@ -81,6 +79,8 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 		if (!quote->raw_value)
 			return (-1);
 	}
+	if (expand_tilde(word, quote->executor) < 0)
+		return (-1);
 	if (has_dollar_sign)
 	{
 		if (expand_env_var(word, quote->executor) < 0)

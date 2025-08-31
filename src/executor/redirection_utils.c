@@ -6,112 +6,55 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 19:04:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 20:12:33 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 19:42:31 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "minishell.h"
-#include "parser.h"
-#include "signals.h"
-#include "utils.h"
 
-static int	create_heredoc_pipe(int pipefd[2]);
-static int	setup_heredoc_input(int pipefd[2]);
-static void	write_heredoc_content(int fd, char *delimiter,
-				t_executor *executor);
-
-int	setup_heredoc(t_command *command, t_executor *executor)
+int	has_next(t_redir *redir, t_redir_type type)
 {
-	int	pipefd[2];
+	t_redir	*tmp;
 
-	if (!command || !command->has_heredoc || !command->heredoc_delim)
-		return (FAILURE);
-	if (create_heredoc_pipe(pipefd) == FAILURE)
-		return (FAILURE);
-	setup_signals_heredoc();
-	write_heredoc_content(pipefd[1], command->heredoc_delim, executor);
-	close(pipefd[1]);
-	return (setup_heredoc_input(pipefd));
+	tmp = redir->next;
+	while (tmp)
+	{
+		if (tmp->type == type)
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
 }
 
-static int	create_heredoc_pipe(int pipefd[2])
+int	open_redir_file(t_redir *redirs)
 {
-	if (pipe(pipefd) < 0)
+	int	fd;
+	int	flags;
+
+	if (redirs->type == REDIR_APPEND)
+		flags = O_WRONLY | O_CREAT | O_APPEND;
+	else
+		flags = O_WRONLY | O_CREAT | O_TRUNC;
+	fd = open(redirs->filename, flags, 0644);
+	if (fd < 0)
 	{
-		perror("pipe");
-		return (FAILURE);
+		perror(redirs->filename);
+		return (-1);
 	}
+	return (fd);
+}
+
+int	redirect_stdout(int fd, t_redir *redirs)
+{
+	if (!has_next(redirs, REDIR_OUT) && !has_next(redirs, REDIR_APPEND))
+	{
+		if (dup2(fd, STDOUT_FILENO) < 0)
+		{
+			perror("dup2");
+			close(fd);
+			return (-1);
+		}
+	}
+	close(fd);
 	return (SUCCESS);
-}
-
-static int	setup_heredoc_input(int pipefd[2])
-{
-	if (dup2(pipefd[0], STDIN_FILENO) < 0)
-	{
-		perror("dup2");
-		close(pipefd[0]);
-		return (FAILURE);
-	}
-	close(pipefd[0]);
-	return (SUCCESS);
-}
-
-static void	write_heredoc_content(int fd, char *delimiter, t_executor *executor)
-{
-	char	*line;
-	t_quote	quote;
-	char	*word;
-	int		i;
-
-	quote.executor = executor;
-	quote.is_heredoc = true;
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-			break ;
-		if (ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break ;
-		}
-		if (!executor->commands->is_quoted)
-		{
-			i = 0;
-			while (i < (int)ft_strlen(line))
-			{
-				if (get_word_heredoc(line, &i, &quote, &word) < 0)
-				{
-					perror("write");
-					free(line);
-					break ;
-				}
-				if (word && *word)
-				{
-					if (write(fd, word, ft_strlen(word)) == -1)
-					{
-						perror("write");
-						free(line);
-						break ;
-					}
-					free(word);
-				}
-			}
-			if (write(fd, "\n", 1) == -1)
-			{
-				perror("write");
-				free(line);
-				break ;
-			}
-		}
-		else if (write(fd, line,
-				ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
-		{
-			perror("write");
-			free(line);
-			break ;
-		}
-		free(line);
-	}
 }

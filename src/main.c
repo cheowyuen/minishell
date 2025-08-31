@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 15:20:31 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/31 16:06:10 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,28 @@ static int	parse_and_execute(char *input, t_token **tokens,
 	commands = NULL;
 	if (parse_input(input, tokens, executor) < 0)
 	{
-		ft_lstclear(tokens); // missing freeing of tokens
+		ft_lstclear(tokens);
 		return (print_syntax_error(NULL, executor, 2));
 	}
 	if (validate_syntax(*tokens, executor) < 0)
 	{
-		ft_lstclear(tokens); // missing freeing of tokens
-		executor->last_exit_code = 2; //exit code 2 for syntax errors
+		ft_lstclear(tokens);
+		executor->last_exit_code = 2;
 		return (-1);
 	}
-	parse_result = parse_commands(*tokens, &commands);
+	parse_result = parse_commands(*tokens, &commands, executor);
 	if (parse_result == HEREDOC_LIMIT_EXCEEDED)
 	{
-		ft_lstclear(tokens); // Free the tokens since they weren't freed in parse_commands
-		executor->last_exit_code = 2; // Exit code 2 for heredoc limit exceeded
+		ft_lstclear(tokens);
+		executor->last_exit_code = 2;
 		return (HEREDOC_LIMIT_EXCEEDED);
 	}
 	if (parse_result < 0)
 	{
-		ft_lstclear(tokens); // Free the tokens since they weren't freed in parse_commands
+		ft_lstclear(tokens);
 		return (print_syntax_error(NULL, executor, 2));
 	}
-	if (*tokens) // Only free if tokens wasn't already freed during parsing
+	if (*tokens)
 		ft_lstclear(tokens);
 	if (commands)
 	{
@@ -113,7 +113,6 @@ static int	handle_input_processing(char *input, t_token *tokens,
 		}
 		else if (result < 0)
 		{
-			// In non-interactive mode, exit on syntax errors
 			if (!isatty(STDIN_FILENO))
 			{
 				free(input);
@@ -141,15 +140,20 @@ static int	run_shell_loop(t_executor *executor)
 			rl_on_new_line();
 			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
-		// else
-		// {
-		// 	char *line;
-		// 	line = get_next_line(fileno(stdin));
-		// 	input = ft_strtrim(line, "\n");
-		// 	free(line);
-		// }
 		else
-			input = readline(PROMPT);
+		{
+			int dev_null_fd = open("/dev/null", O_WRONLY);
+			FILE *dev_null_stream = fdopen(dev_null_fd, "w");
+			rl_outstream = dev_null_stream;
+			input = readline("");
+			if (rl_outstream != stdout)
+			{
+				fclose(rl_outstream);
+				rl_outstream = stdout;
+			}
+		}
+		// else
+		// 	input = readline(PROMPT);
 		result = handle_input_processing(input, tokens, executor);
 		if (result == -1)
 			break ;

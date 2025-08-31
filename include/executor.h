@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 19:34:47 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/31 09:59:09 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,22 +71,21 @@ void				exec_external_command(t_executor *executor,
 int					exec_single_command(t_executor *executor,
 						t_command *command);
 void				restore_fds(int saved_stdin, int saved_stdout);
-int					setup_single_redirection(t_command *command,
-						t_executor *executor);
 int					exec_single_external(t_executor *executor,
 						t_command *command);
 
 // Heredoc management
 int					setup_heredoc(t_command *command, t_executor *executor);
-int					setup_input_redirection(t_command *command,
+int					setup_heredoc_for_pipeline(t_command *command,
 						t_executor *executor);
-// int					setup_output_redirection(t_command *command);
 int					setup_redirection(t_command *command, t_executor *executor);
 
 // Execution utilities
 char				**build_env_array(t_executor *executor);
 void				count_commands(t_command *command, t_executor *executor);
 void				add_envp_to_executor(t_executor *executor, char **envp);
+int					handle_parent_process(pid_t pid);
+int					dup_failure(int saved_stdin, int saved_stdout);
 
 // Pipe utils
 int					clean_everything_error(t_executor *executor);
@@ -95,9 +94,23 @@ void				setup_redirection_child_process(t_executor *executor,
 						t_command *command);
 void				close_all_pipes_children(t_executor *executor);
 int					close_children_process(t_executor *executor);
+int					setup_children_pipes(t_executor *executor, int i);
+int					create_pipes(t_executor *executor, int count);
+int					fork_processes(t_executor *executor, t_command *command);
 
 // Executor memory management
 void				free_environment(t_executor *executor);
 void				free_executor(t_executor *executor);
+
+// Redirection utils
+int					has_next(t_redir *redir, t_redir_type type);
+int					open_redir_file(t_redir *redirs);
+int					redirect_stdout(int fd, t_redir *redirs);
+
+// Heredoc utils
+int					create_heredoc_pipe(int pipefd[2]);
+int					setup_heredoc_input(int pipefd[2]);
+void				write_heredoc_content(int fd, char *delimiter,
+						t_executor *executor);
 
 #endif

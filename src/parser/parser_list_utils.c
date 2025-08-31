@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_list_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/31 12:05:00 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/31 16:04:57 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,14 @@ int	add_token(t_token **tokens, bool is_quoted, char *content, t_token_data *dat
 	return (0);
 }
 
-static int	add_split_token(t_token **tokens, char *word, char *raw_value)
+static int	add_split_token(t_token **tokens, char *word, char *raw_value, bool from_expansion)
 {
 	t_token			*new_token;
 	t_token_data	data;
 
 	data.len = ft_strlen(word);
 	data.raw_value = raw_value;
-	new_token = ft_lstnew(false, word, &data);
+	new_token = ft_lstnew(from_expansion, word, &data);
 	if (!new_token)
 		return (-1);
 	ft_lstadd_back(tokens, new_token);
@@ -99,12 +99,15 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, c
 	char			**words;
 	int				i;
 	t_token_data	data;
+	bool			from_expansion;
 
 	data.len = ft_strlen(content);
 	data.raw_value = raw_value;
 	// If quoted, don't split - treat as single token
 	if (is_quoted)
 		return (add_token(tokens, is_quoted, content, &data));
+	from_expansion = (ft_strchr(content, '<') != NULL || ft_strchr(content,
+				'>') != NULL || ft_strchr(content, '|') != NULL);
 	if (content[0] == '\0')
 	{
 		data.len = 0;
@@ -120,7 +123,7 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, c
 		i = 0;
 		while (words[i])
 		{
-			if (add_split_token(tokens, words[i], data.raw_value) < 0)
+			if (add_split_token(tokens, words[i], data.raw_value, from_expansion) < 0)
 			{
 				free_str_array(words);
 				return (-1);

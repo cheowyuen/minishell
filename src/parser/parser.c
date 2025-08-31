@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/31 10:25:56 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/31 15:39:15 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "parser.h"
 
 int	parse_quote(char *input, int *i, t_quote *quote)
-{	
+{
 	int		len;
 	bool	has_dollar_sign;
 
@@ -47,12 +47,16 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 {
 	char	*joined;
 	bool	is_quoted;
+	bool	has_unquoted_vars;
+	int		start;
+	int		j;
 
 	quote->raw_value = NULL;
 	joined = ft_strdup("");
 	if (!joined)
 		return (free_tokens_input(tokens, NULL, 1));
 	is_quoted = false;
+	has_unquoted_vars = false;
 	while (input[*i] && !is_space(input[*i]) && !is_special(input[*i]))
 	{
 		if (is_quote(input[*i]))
@@ -66,15 +70,26 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 		}
 		else
 		{
+			start = *i;
 			if (handle_unquoted_word(&joined, quote, input, i) < 0)
 			{
 				free(joined);
 				return (free_tokens_input(tokens, NULL, 1));
 			}
+			j = start;
+			while (j < *i)
+			{
+				if (input[j] == '$')
+				{
+					has_unquoted_vars = true;
+					break ;
+				}
+				j++;
+			}
 		}
 	}
 	// Use word splitting for unquoted tokens that might contain expanded variables
-	if (add_tokens_with_splitting(tokens, is_quoted, joined, quote->raw_value) < 0)
+	if (add_tokens_with_splitting(tokens, is_quoted && !has_unquoted_vars, joined, quote->raw_value) < 0)
 	{
 		free(joined);
 		return (free_tokens_input(tokens, NULL, 1));

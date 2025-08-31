@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:35:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 18:38:19 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/30 15:52:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,5 @@ void	free_inherited_state_for_child(t_executor *executor,
 
 // Sort linked list of environment variables alphabetically by key
 void	sort_env_list_alpha(t_env **env_list);
-
-char	*get_next_line(int fd);
 
 #endif
