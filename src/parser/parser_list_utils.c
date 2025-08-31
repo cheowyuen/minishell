@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/31 16:04:57 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/31 17:39:52 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,7 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, c
 	// If quoted, don't split - treat as single token
 	if (is_quoted)
 		return (add_token(tokens, is_quoted, content, &data));
-	from_expansion = (ft_strchr(content, '<') != NULL || ft_strchr(content,
-				'>') != NULL || ft_strchr(content, '|') != NULL);
+	from_expansion = (!raw_value && (ft_strchr(content, '<') || ft_strchr(content, '>') || ft_strchr(content, '|')));
 	if (content[0] == '\0')
 	{
 		data.len = 0;
