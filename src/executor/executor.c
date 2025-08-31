@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 19:09:35 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 21:06:55 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int	exec_single_command(t_executor *executor, t_command *command)
 				restore_fds(saved_stdin, saved_stdout);
 				return (FAILURE);
 			}
-			restore_fds(saved_stdin, saved_stdout);
+			if (restore_fds(saved_stdin, saved_stdout) == FAILURE)
+				return (FAILURE);
 		}
 		return (SUCCESS);
 	}
@@ -83,15 +84,17 @@ int	exec_single_external(t_executor *executor, t_command *command)
 	return (FAILURE);
 }
 
-void	restore_fds(int saved_stdin, int saved_stdout)
+int	restore_fds(int saved_stdin, int saved_stdout)
 {
+	int	status;
+
+	status = SUCCESS;
 	if (saved_stdin >= 0)
 	{
 		if (dup2(saved_stdin, STDIN_FILENO) < 0)
 		{
-			perror("dup2");
-			close(saved_stdin);
-			return;
+			perror("dup2 stdin restore");
+			status = FAILURE;
 		}
 		close(saved_stdin);
 	}
@@ -99,12 +102,12 @@ void	restore_fds(int saved_stdin, int saved_stdout)
 	{
 		if (dup2(saved_stdout, STDOUT_FILENO) < 0)
 		{
-			perror("dup2");
-			close(saved_stdout);
-			return;
+			perror("dup2 stdout restore");
+			status = FAILURE;
 		}
 		close(saved_stdout);
 	}
+	return (status);
 }
 
 int	dup_failure(int saved_stdin, int saved_stdout)

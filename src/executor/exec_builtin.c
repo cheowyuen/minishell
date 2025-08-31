@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:00:21 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 10:10:33 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 21:08:45 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ static int	exec_builtin_and_restore(t_executor *executor, int saved_stdin,
 		return (executor->last_exit_code);
 	}
 	exec_builtin(executor);
-	restore_fds(saved_stdin, saved_stdout);
+	if (restore_fds(saved_stdin, saved_stdout) == FAILURE)
+		return (FAILURE);
 	return (executor->last_exit_code);
 }
