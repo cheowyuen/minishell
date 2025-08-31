@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 10:08:21 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 10:29:17 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,10 @@ void	restore_fds(int saved_stdin, int saved_stdout)
 
 int	dup_failure(int saved_stdin, int saved_stdout)
 {
-		perror("dup");
-		if (saved_stdin >= 0)
-			close(saved_stdin);
-		if (saved_stdout >= 0)
-			close(saved_stdout);
-		return (FAILURE);
+	perror("dup");
+	if (saved_stdin >= 0)
+		close(saved_stdin);
+	if (saved_stdout >= 0)
+		close(saved_stdout);
+	return (FAILURE);
 }
