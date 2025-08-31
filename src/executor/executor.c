@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 10:29:17 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 19:09:35 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,22 @@ void	restore_fds(int saved_stdin, int saved_stdout)
 {
 	if (saved_stdin >= 0)
 	{
-		dup2(saved_stdin, STDIN_FILENO);
+		if (dup2(saved_stdin, STDIN_FILENO) < 0)
+		{
+			perror("dup2");
+			close(saved_stdin);
+			return;
+		}
 		close(saved_stdin);
 	}
 	if (saved_stdout >= 0)
 	{
-		dup2(saved_stdout, STDOUT_FILENO);
+		if (dup2(saved_stdout, STDOUT_FILENO) < 0)
+		{
+			perror("dup2");
+			close(saved_stdout);
+			return;
+		}
 		close(saved_stdout);
 	}
 }
