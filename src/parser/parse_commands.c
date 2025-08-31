@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/31 15:36:44 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/31 18:22:45 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,17 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	{
 		if (!tmp->is_quoted && (tmp->token[0] == '<' || tmp->token[0] == '>'))
 		{
+			printf("is quoted: %d\ntoken: %c\n", tmp->is_quoted, tmp->token[0]);
 			result = handle_special(&tmp, &current, &heredoc_count, executor);
 			if (result < 0)
 				return (result);
 			continue ;
 		}
+		printf("quoted: %d\n", tmp->is_quoted);
 		if (tmp->token && (tmp->token[0] || tmp->is_quoted))
 		{
 			current->argv[argv_index] = ft_strdup(tmp->token);
+			printf("argv: %s\n", current->argv[argv_index]);
 			if (!current->argv[argv_index])
 				return (free_tokens_commands(tokens, commands));
 			if (argv_index == 0 && is_builtin(tmp->token))
