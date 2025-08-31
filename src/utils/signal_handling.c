@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 19:14:16 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 08:15:00 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	sigint_handler(int sig)
 	(void)sig;
 	g_signal_status = SIGNAL_INT;
 	write(STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
+	// rl_replace_line("", 0);
+	// rl_on_new_line();
+	// rl_redisplay();
 }

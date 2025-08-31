@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_list_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/28 00:41:45 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 08:13:56 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,54 +49,66 @@ static void	ft_lstadd_back(t_token **lst, t_token *new)
 	new->next = NULL;
 }
 
-static t_token	*ft_lstnew(bool is_quoted, char *content, int len)
+static t_token	*ft_lstnew(bool is_quoted, char *content, t_token_data *data)
 {
 	t_token	*new_node;
 
 	new_node = malloc(sizeof(t_token));
 	if (!new_node)
 		return (NULL);
-	new_node->token = ft_strndup(content, len);
+	new_node->token = ft_strndup(content, data->len);
 	if (!new_node->token)
 	{
 		free(new_node);
 		return (NULL);
 	}
 	new_node->is_quoted = is_quoted;
+	new_node->raw_value = data->raw_value;
 	new_node->next = NULL;
 	return (new_node);
 }
 
-int	add_token(t_token **tokens, bool is_quoted, char *content, int len)
+int	add_token(t_token **tokens, bool is_quoted, char *content, t_token_data *data)
 {
-	t_token	*new_token;
+	t_token			*new_token;
 
-	new_token = ft_lstnew(is_quoted, content, len);
+	new_token = ft_lstnew(is_quoted, content, data);
 	if (!new_token)
 		return (-1);
 	ft_lstadd_back(tokens, new_token);
 	return (0);
 }
 
-static int	add_split_token(t_token **tokens, char *word)
+static int	add_split_token(t_token **tokens, char *word, char *raw_value)
 {
-	t_token	*new_token;
+	t_token			*new_token;
+	t_token_data	data;
 
-	new_token = ft_lstnew(false, word, ft_strlen(word));
+	data.len = ft_strlen(word);
+	data.raw_value = raw_value;
+	new_token = ft_lstnew(false, word, &data);
 	if (!new_token)
 		return (-1);
 	ft_lstadd_back(tokens, new_token);
 	return (0);
 }
 
-int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content)
+int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, char *raw_value)
 {
-	char	**words;
-	int		i;
+	char			**words;
+	int				i;
+	t_token_data	data;
 
+	data.len = ft_strlen(content);
+	data.raw_value = raw_value;
 	// If quoted, don't split - treat as single token
 	if (is_quoted)
-		return (add_token(tokens, is_quoted, content, ft_strlen(content)));
+		return (add_token(tokens, is_quoted, content, &data));
+	if (content[0] == '\0')
+	{
+		data.len = 0;
+		return (add_token(tokens, is_quoted, "", &data));
+	}
 	// Split on spaces for unquoted content
 	words = ft_split(content, ' ');
 	if (!words)
@@ -105,7 +117,7 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content)
 	i = 0;
 	while (words[i])
 	{
-		if (add_split_token(tokens, words[i]) < 0)
+		if (add_split_token(tokens, words[i], data.raw_value) < 0)
 		{
 			free_str_array(words);
 			return (-1);

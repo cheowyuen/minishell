@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:49:27 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/29 18:53:51 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/30 08:16:03 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	is_overflow(const char *str)
 
 void	cleanup_and_exit(t_executor *executor, int exit_code)
 {
-	rl_clear_history();
+	// rl_clear_history();
 	if (executor->commands)
 	{
 		free_commands(&executor->commands);

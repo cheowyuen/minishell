@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_validation.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:45:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 22:19:20 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 09:59:27 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,30 @@
 static int	check_redirection_syntax(t_token *current, t_token *next,
 		t_executor *executor)
 {
+	char	**words;
+	int		count;
+	
 	(void)current;
 	if (!next)
 		return (print_syntax_error("newline", executor, 0));
 	if (!next->is_quoted && is_special(next->token[0]))
 		return (print_syntax_error(next->token, executor, 0));
+	if (next->raw_value)
+	{
+		words = ft_split(next->token, ' ');
+		if (!words)
+			return (-1);
+		count = 0;
+		while (words[count])
+			count++;
+		free_str_array(words);
+		if (next->token[0] == '\0' || count > 1)
+		{
+			ft_dprintf(STDERR_FILENO,
+				"minishell: %s: ambiguous redirect\n", next->raw_value);
+			return (-1);
+		}
+	}
 	return (0);
 }
 
