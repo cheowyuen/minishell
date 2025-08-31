@@ -6,7 +6,7 @@
 /*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/31 08:13:56 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/08/31 12:05:00 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	ft_lstclear(t_token **lst)
 		temp = *lst;
 		*lst = (*lst)->next;
 		free(temp->token);
+		free(temp->raw_value);
 		free(temp);
 	}
 	*lst = NULL;
@@ -109,21 +110,25 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, c
 		data.len = 0;
 		return (add_token(tokens, is_quoted, "", &data));
 	}
-	// Split on spaces for unquoted content
-	words = ft_split(content, ' ');
-	if (!words)
-		return (-1);
-	// Add each word as a separate token
-	i = 0;
-	while (words[i])
+	if (!data.raw_value)
 	{
-		if (add_split_token(tokens, words[i], data.raw_value) < 0)
-		{
-			free_str_array(words);
+		// Split on spaces for unquoted content
+		words = ft_split(content, ' ');
+		if (!words)
 			return (-1);
+		// Add each word as a separate token
+		i = 0;
+		while (words[i])
+		{
+			if (add_split_token(tokens, words[i], data.raw_value) < 0)
+			{
+				free_str_array(words);
+				return (-1);
+			}
+			i++;
 		}
-		i++;
+		free_str_array(words);
+		return (0);
 	}
-	free_str_array(words);
-	return (0);
+	return (add_token(tokens, is_quoted, content, &data));
 }
