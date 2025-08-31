@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 10:29:17 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 17:52:26 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	exec_single_command(t_executor *executor, t_command *command)
 {
 	int	saved_stdin;
 	int	saved_stdout;
-
+	printf("here\n");
 	executor->command_count = 1;
 	if (command->is_builtin)
 		return (exec_builtin_with_redirection(executor, command));
