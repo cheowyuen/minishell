@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 10:25:25 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 11:03:34 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,20 +140,20 @@ static int	run_shell_loop(t_executor *executor)
 			rl_on_new_line();
 			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
-		else
-		{
-			int dev_null_fd = open("/dev/null", O_WRONLY);
-			FILE *dev_null_stream = fdopen(dev_null_fd, "w");
-			rl_outstream = dev_null_stream;
-			input = readline("");
-			if (rl_outstream != stdout)
-			{
-				fclose(rl_outstream);
-				rl_outstream = stdout;
-			}
-		}
 		// else
-		// 	input = readline(PROMPT);
+		// {
+		// 	int dev_null_fd = open("/dev/null", O_WRONLY);
+		// 	FILE *dev_null_stream = fdopen(dev_null_fd, "w");
+		// 	rl_outstream = dev_null_stream;
+		// 	input = readline("");
+		// 	if (rl_outstream != stdout)
+		// 	{
+		// 		fclose(rl_outstream);
+		// 		rl_outstream = stdout;
+		// 	}
+		// }
+		else
+			input = readline(PROMPT);
 		result = handle_input_processing(input, tokens, executor);
 		if (result == -1)
 			break ;
