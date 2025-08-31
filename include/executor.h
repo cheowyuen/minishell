@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:24:18 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 09:59:09 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ char				**build_env_array(t_executor *executor);
 void				count_commands(t_command *command, t_executor *executor);
 void				add_envp_to_executor(t_executor *executor, char **envp);
 int					handle_parent_process(pid_t pid);
+int					dup_failure(int saved_stdin, int saved_stdout);
 
 // Pipe utils
 int					clean_everything_error(t_executor *executor);
