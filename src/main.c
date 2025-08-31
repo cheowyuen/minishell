@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 18:13:48 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/31 18:44:49 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ static int	parse_and_execute(char *input, t_token **tokens,
 		return (-1);
 	}
 	parse_result = parse_commands(*tokens, &commands, executor);
-	print_commands(commands);
+	//print_commands(commands);
 	if (parse_result == HEREDOC_LIMIT_EXCEEDED)
 	{
 		ft_lstclear(tokens);

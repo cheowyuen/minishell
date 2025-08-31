@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/31 17:39:52 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/31 18:45:29 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,13 +106,14 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, c
 	// If quoted, don't split - treat as single token
 	if (is_quoted)
 		return (add_token(tokens, is_quoted, content, &data));
-	from_expansion = (!raw_value && (ft_strchr(content, '<') || ft_strchr(content, '>') || ft_strchr(content, '|')));
+	from_expansion = (ft_strchr(content, '<') || ft_strchr(content, '>') || ft_strchr(content, '|'));
+	//printf("from exp: %d\n", from_expansion);
 	if (content[0] == '\0')
 	{
 		data.len = 0;
 		return (add_token(tokens, is_quoted, "", &data));
 	}
-	if (!data.raw_value)
+	if (!data.raw_value || ft_strchr(content, '<') || ft_strchr(content, '>') || ft_strchr(content, '|'))
 	{
 		// Split on spaces for unquoted content
 		words = ft_split(content, ' ');
@@ -122,6 +123,7 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, c
 		i = 0;
 		while (words[i])
 		{
+			//printf("loop from exp: %d\nword: %s\n", from_expansion, words[i]);
 			if (add_split_token(tokens, words[i], data.raw_value, from_expansion) < 0)
 			{
 				free_str_array(words);
