@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:42:48 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/22 16:40:45 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 18:04:36 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,11 @@ void	free_inherited_state_for_child(t_executor *executor,
 		free_environment(executor);
 		if (executor->pids)
 			free(executor->pids);
+		if (executor->logical_pwd)
+			free(executor->logical_pwd);
 		close_and_free_pipes(executor);
 		executor->pids = NULL;
 		executor->pipes = NULL;
+		executor->logical_pwd = NULL;
 	}
 }

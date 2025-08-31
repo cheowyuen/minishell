@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:02:01 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:12:21 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 18:02:15 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	exec_external_command(t_executor *executor, t_command *command)
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n",
 			command->argv[0]);
+		free_inherited_state_for_child(executor, NULL);
 		exit(EXIT_CMD_NOT_FOUND);
 	}
 	if (stat(cmd_path, &st) == 0 && S_ISDIR(st.st_mode))
@@ -56,6 +57,7 @@ void	exec_external_command(t_executor *executor, t_command *command)
 		ft_dprintf(STDERR_FILENO, "minishell: %s: Is a directory\n",
 			command->argv[0]);
 		free(cmd_path);
+		free_inherited_state_for_child(executor, NULL);
 		exit(EXIT_CMD_NOT_EXECUTABLE);
 	}
 	execve_execution(executor, command, cmd_path);
