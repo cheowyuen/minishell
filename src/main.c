@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 16:58:35 by cwong            ###   ########.fr       */
+/*   Updated: 2025/08/31 18:13:48 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,52 @@ int	main(int argc, char **argv, char **envp)
 	return (exit_code);
 }
 
+void	print_redirs(t_redir *redir)
+{
+	while (redir)
+	{
+		printf("  redir type: %d, filename: %s\n",
+			redir->type,
+			redir->filename ? redir->filename : "(null)");
+		redir = redir->next;
+	}
+}
+
+void	print_commands(t_command *cmd)
+{
+	int i;
+
+	while (cmd)
+	{
+		printf("=== Command ===\n");
+
+		// argv
+		if (cmd->argv)
+		{
+			printf("argv: ");
+			for (i = 0; cmd->argv[i]; i++)
+				printf("[%s] ", cmd->argv[i]);
+			printf("\n");
+		}
+
+		printf("append: %d\n", cmd->append);
+		printf("has_heredoc: %d\n", cmd->has_heredoc);
+		if (cmd->heredoc_delim)
+			printf("heredoc_delim: %s\n", cmd->heredoc_delim);
+		printf("is_quoted: %d\n", cmd->is_quoted);
+		printf("is_builtin: %d\n", cmd->is_builtin);
+		printf("is_last: %d\n", cmd->is_last);
+		printf("pipe_out: %d\n", cmd->pipe_out);
+
+		// redirs
+		if (cmd->redirs)
+			print_redirs(cmd->redirs);
+
+		printf("=============\n\n");
+		cmd = cmd->next;
+	}
+}
+
 static int	parse_and_execute(char *input, t_token **tokens,
 		t_executor *executor)
 {
@@ -62,6 +108,7 @@ static int	parse_and_execute(char *input, t_token **tokens,
 		return (-1);
 	}
 	parse_result = parse_commands(*tokens, &commands, executor);
+	print_commands(commands);
 	if (parse_result == HEREDOC_LIMIT_EXCEEDED)
 	{
 		ft_lstclear(tokens);
