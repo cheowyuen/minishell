@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/31 15:40:39 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/01 14:57:50 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 		return (-1);
 	if ((*word)[0] == '$')
     {
+		if (quote->raw_value)
+			free(quote->raw_value);
 		quote->raw_value = ft_strndup(&input[*i], len);
 		if (!quote->raw_value)
 			return (-1);
