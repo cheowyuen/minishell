@@ -4,8 +4,7 @@
 # This script runs Valgrind with the custom suppression file to hide
 # readline/libtinfo "still reachable" memory that are not actual leaks.
 
-VALGRIND_OPTS="--leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --trace-children-skip=/bin/*,/usr/bin/*,/usr/local/bin/*
- --suppressions=valgrind.supp ./minishell"
+VALGRIND_OPTS="--leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=valgrind.supp ./minishell"
 
 # Check if suppression file exists
 if [ ! -f "valgrind.supp" ]; then

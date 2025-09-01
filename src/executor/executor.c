@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 18:06:15 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/01 12:25:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int	exec_single_command(t_executor *executor, t_command *command)
 				restore_fds(saved_stdin, saved_stdout);
 				return (FAILURE);
 			}
-			restore_fds(saved_stdin, saved_stdout);
+			if (restore_fds(saved_stdin, saved_stdout) == FAILURE)
+				return (FAILURE);
 		}
 		return (SUCCESS);
 	}
@@ -83,18 +84,30 @@ int	exec_single_external(t_executor *executor, t_command *command)
 	return (FAILURE);
 }
 
-void	restore_fds(int saved_stdin, int saved_stdout)
+int	restore_fds(int saved_stdin, int saved_stdout)
 {
+	int	status;
+
+	status = SUCCESS;
 	if (saved_stdin >= 0)
 	{
-		dup2(saved_stdin, STDIN_FILENO);
+		if (dup2(saved_stdin, STDIN_FILENO) < 0)
+		{
+			perror("dup2 stdin restore");
+			status = FAILURE;
+		}
 		close(saved_stdin);
 	}
 	if (saved_stdout >= 0)
 	{
-		dup2(saved_stdout, STDOUT_FILENO);
+		if (dup2(saved_stdout, STDOUT_FILENO) < 0)
+		{
+			perror("dup2 stdout restore");
+			status = FAILURE;
+		}
 		close(saved_stdout);
 	}
+	return (status);
 }
 
 int	dup_failure(int saved_stdin, int saved_stdout)

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 09:59:09 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 21:03:46 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void				exec_external_command(t_executor *executor,
 // Execute single command
 int					exec_single_command(t_executor *executor,
 						t_command *command);
-void				restore_fds(int saved_stdin, int saved_stdout);
+int					restore_fds(int saved_stdin, int saved_stdout);
 int					exec_single_external(t_executor *executor,
 						t_command *command);
 

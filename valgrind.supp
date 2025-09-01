@@ -410,3 +410,25 @@
    fun:add_history
    ...
 }
+
+{
+   readline_history_alloc_entry
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:alloc_history_entry
+   fun:add_history
+   ...
+}
+
+{
+   readline_history_entry_content
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:alloc_history_entry
+   fun:add_history
+   ...
+}
