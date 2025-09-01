@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/01 21:43:46 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 23:35:23 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ int							validate_syntax(t_token *tokens,
 int							get_word_heredoc(char *input, int *i,
 								t_quote *quote, char **word);
 int							set_redir(t_token **tokens, t_redir **files);
-int							process_heredoc_during_parsing(t_command *command);
+int							process_heredoc_during_parsing(t_command *command,
+								t_executor *executor);
 
 #endif

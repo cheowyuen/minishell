@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 16:30:56 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 18:56:37 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 23:35:58 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ static char	*collect_heredoc_content(char *delimiter)
 	char	*new_content;
 	
 	content = NULL;
-	setup_signals_heredoc();
 	while (1)
 	{
 		// Check signal status before reading
@@ -53,7 +52,6 @@ static char	*collect_heredoc_content(char *delimiter)
 		{
 			if (content)
 				free(content);
-			setup_signals_prompt();
 			return (NULL);
 		}
 		// Read line directly here instead of helper function
@@ -74,7 +72,6 @@ static char	*collect_heredoc_content(char *delimiter)
 				free(line);
 			if (content)
 				free(content);
-			setup_signals_prompt();
 			return (NULL);
 		}
 		if (!line)
@@ -91,16 +88,16 @@ static char	*collect_heredoc_content(char *delimiter)
 		free(line);
 		if (!content)
 		{
-			setup_signals_prompt();
 			return (NULL);
 		}
 	}
-	setup_signals_prompt();
 	return (content);
 }
 
-int	process_heredoc_during_parsing(t_command *command)
+int	process_heredoc_during_parsing(t_command *command, t_executor *executor)
 {
+	char	*expanded_content;
+
 	if (!command || !command->has_heredoc || !command->heredoc_delim)
 		return (SUCCESS);
 	if (command->heredoc_content)
@@ -108,6 +105,25 @@ int	process_heredoc_during_parsing(t_command *command)
 	command->heredoc_content = collect_heredoc_content(command->heredoc_delim);
 	if (!command->heredoc_content)
 		return (FAILURE);
+	if (!command->is_quoted && command->heredoc_content)
+	{
+		expanded_content = ft_strdup(command->heredoc_content);
+		if (!expanded_content)
+		{
+			free(command->heredoc_content);
+			command->heredoc_content = NULL;
+			return (FAILURE);
+		}
+		if (expand_env_var(&expanded_content, executor) < 0)
+		{
+			free(expanded_content);
+			free(command->heredoc_content);
+			command->heredoc_content = NULL;
+			return (FAILURE);
+		}
+		free(command->heredoc_content);
+		command->heredoc_content = expanded_content;
+	}
 	return (SUCCESS);
 }
 
