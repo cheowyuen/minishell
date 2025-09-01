@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:32:34 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:05:55 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "utils.h"
 
 static int	setup_and_run_pipeline(t_executor *executor, t_command *command);
-static int	process_pipeline_heredocs(t_command *command, t_executor *executor);
+static int	process_pipeline_heredocs(t_command *command);
 
 int	exec_pipe(t_executor *executor, t_command *command)
 {
@@ -24,7 +24,7 @@ int	exec_pipe(t_executor *executor, t_command *command)
 	count_commands(command, executor);
 	if (executor->command_count == 0)
 		return (FAILURE);
-	if (process_pipeline_heredocs(command, executor) == FAILURE)
+	if (process_pipeline_heredocs(command) == FAILURE)
 		return (FAILURE);
 	executor->current_command_index = 0;
 	executor->pids = malloc(sizeof(pid_t) * executor->command_count);
@@ -52,7 +52,7 @@ static int	setup_and_run_pipeline(t_executor *executor, t_command *command)
 	return (executor->last_exit_code);
 }
 
-static int	process_pipeline_heredocs(t_command *command, t_executor *executor)
+static int	process_pipeline_heredocs(t_command *command)
 {
 	t_command	*current;
 
@@ -61,7 +61,7 @@ static int	process_pipeline_heredocs(t_command *command, t_executor *executor)
 	{
 		if (current->has_heredoc)
 		{
-			if (setup_heredoc_for_pipeline(current, executor) == FAILURE)
+			if (setup_heredoc_for_pipeline(current) == FAILURE)
 				return (FAILURE);
 		}
 		current = current->next;

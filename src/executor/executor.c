@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 15:32:00 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:05:51 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	exec_single_command(t_executor *executor, t_command *command)
 			saved_stdout = dup(STDOUT_FILENO);
 			if (saved_stdin < 0 || saved_stdout < 0)
 				return (dup_failure(saved_stdin, saved_stdout));
-			if (setup_redirection(command, executor) == FAILURE)
+			if (setup_redirection(command) == FAILURE)
 			{
 				restore_fds(saved_stdin, saved_stdout);
 				return (FAILURE);
@@ -68,7 +68,7 @@ int	exec_single_external(t_executor *executor, t_command *command)
 	if (pid == 0)
 	{
 		setup_signals_child();
-		if (setup_redirection(command, executor) == FAILURE)
+		if (setup_redirection(command) == FAILURE)
 		{
 			free_inherited_state_for_child(executor, executor->commands);
 			exit(EXIT_FAILURE);

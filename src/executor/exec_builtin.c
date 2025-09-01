@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:00:21 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 21:08:45 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:05:53 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	exec_builtin_with_redirection(t_executor *executor, t_command *command)
 	saved_stdout = dup(STDOUT_FILENO);
 	if (saved_stdin < 0 || saved_stdout < 0)
 		return (dup_failure(saved_stdin, saved_stdout));
-	if (setup_redirection(command, executor) == FAILURE)
+	if (setup_redirection(command) == FAILURE)
 	{
 		restore_fds(saved_stdin, saved_stdout);
 		return (FAILURE);

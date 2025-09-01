@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 20:51:07 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 17:05:57 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ static int	handle_output_redirection(t_redir *redir)
 	return (redirect_stdout(fd, redir));
 }
 
-int	setup_redirection(t_command *command, t_executor *executor)
+int	setup_redirection(t_command *command)
 {
 	t_redir	*redirs;
 
 	if (!command)
 		return (FAILURE);
 	if (command->has_heredoc)
-		return (setup_heredoc(command, executor));
+		return (setup_heredoc(command));
 	if (!command->redirs)
 		return (SUCCESS);
 	redirs = command->redirs;
