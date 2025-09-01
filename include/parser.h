@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/01 16:45:45 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 21:43:46 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdbool.h>
 # define HEREDOC_LIMIT_EXCEEDED -2
+# define HEREDOC_INTERRUPTED -3
 
 typedef enum e_redir_type
 {

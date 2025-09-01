@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 16:55:00 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 22:06:43 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,12 @@ static int	parse_and_execute(char *input, t_token **tokens,
 		executor->last_exit_code = 2;
 		return (HEREDOC_LIMIT_EXCEEDED);
 	}
+	if (parse_result == HEREDOC_INTERRUPTED)
+	{
+		ft_lstclear(tokens);
+		executor->last_exit_code = 130;
+		return (HEREDOC_INTERRUPTED);
+	}
 	if (parse_result < 0)
 	{
 		ft_lstclear(tokens);
@@ -157,6 +163,10 @@ static int	handle_input_processing(char *input, t_token *tokens,
 		{
 			free_input_failure(input);
 			return (-1);
+		}
+		else if (result == HEREDOC_INTERRUPTED)
+		{
+			return (free_input_failure(input));
 		}
 		else if (result < 0)
 		{
