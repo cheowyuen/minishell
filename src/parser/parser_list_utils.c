@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/01 10:24:20 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/01 11:21:17 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ft_lstclear(t_token **lst)
 		temp = *lst;
 		*lst = (*lst)->next;
 		free(temp->token);
-		// free(temp->raw_value);
+		free(temp->raw_value);
 		free(temp);
 	}
 	*lst = NULL;
@@ -65,6 +65,7 @@ static t_token	*ft_lstnew(bool is_quoted, char *content, t_token_data *data)
 	}
 	new_node->is_quoted = is_quoted;
 	new_node->raw_value = data->raw_value;
+	new_node->words_count = data->words_count;
 	new_node->next = NULL;
 	return (new_node);
 }
@@ -80,14 +81,12 @@ int	add_token(t_token **tokens, bool is_quoted, char *content, t_token_data *dat
 	return (0);
 }
 
-static int	add_split_token(t_token **tokens, char *word, char *raw_value, bool from_expansion)
+static int	add_split_token(t_token **tokens, char *word, t_token_data *data, bool from_expansion)
 {
 	t_token			*new_token;
-	t_token_data	data;
 
-	data.len = ft_strlen(word);
-	data.raw_value = raw_value;
-	new_token = ft_lstnew(from_expansion, word, &data);
+	data->len = ft_strlen(word);
+	new_token = ft_lstnew(from_expansion, word, data);
 	if (!new_token)
 		return (-1);
 	ft_lstadd_back(tokens, new_token);
@@ -107,32 +106,32 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, c
 	if (is_quoted)
 		return (add_token(tokens, is_quoted, content, &data));
 	from_expansion = (ft_strchr(content, '<') || ft_strchr(content, '>') || ft_strchr(content, '|'));
-	//printf("from exp: %d\n", from_expansion);
 	if (content[0] == '\0')
 	{
 		data.len = 0;
 		return (add_token(tokens, is_quoted, "", &data));
 	}
-	// if (!data.raw_value || ft_strchr(content, '<') || ft_strchr(content, '>') || ft_strchr(content, '|'))
-	// {
-		// Split on spaces for unquoted content
-		words = ft_split(content, ' ');
-		if (!words)
-			return (-1);
-		// Add each word as a separate token
-		i = 0;
-		while (words[i])
-		{
-			//printf("loop from exp: %d\nword: %s\n", from_expansion, words[i]);
-			if (add_split_token(tokens, words[i], data.raw_value, from_expansion) < 0)
+	// Split on spaces for unquoted content
+	words = ft_split(content, ' ');
+	if (!words)
+		return (-1);
+	// Add each word as a separate token
+	data.words_count = 0; 
+	while (words[data.words_count])
+		data.words_count++;
+	i = 0;
+	while (words[i])
+	{
+		if (i > 0)
+			data.raw_value = NULL;
+		if (add_split_token(tokens, words[i], &data, from_expansion) < 0)
 			{
 				free_str_array(words);
 				return (-1);
 			}
-			i++;
-		}
-		free_str_array(words);
-		return (0);
-	// }
-	// return (add_token(tokens, is_quoted, content, &data));
+		i++;
+	}
+	data.words_count = i;
+	free_str_array(words);
+	return (0);
 }

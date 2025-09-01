@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 17:45:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 10:22:00 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/01 11:17:34 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 static int	check_redirection_syntax(t_token *current, t_token *next,
 		t_executor *executor)
 {
-	// char	**words;
-	// int		count;
 	
 	(void)current;
 	if (!next)
@@ -27,15 +25,7 @@ static int	check_redirection_syntax(t_token *current, t_token *next,
 		return (print_syntax_error(next->token, executor, 0));
 	if (next->raw_value)
 	{
-		// words = ft_split(next->token, ' ');
-		// if (!words)
-		// 	return (-1);
-		// count = 0;
-		// while (words[count])
-		// 	count++;
-		// free_str_array(words);
-		// if (next->token[0] == '\0' || count > 1)
-		if (next->token[0] == '\0')
+		if (next->token[0] == '\0' || next->words_count > 1)
 		{
 			ft_dprintf(STDERR_FILENO,
 				"minishell: %s: ambiguous redirect\n", next->raw_value);

@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/31 15:35:36 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/01 11:12:06 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_token
 	bool					is_quoted;
 	bool					has_dollar_sign;
 	char					*raw_value;
+	int						words_count;
 	struct s_token			*next;
 }							t_token;
 
@@ -38,6 +39,7 @@ typedef struct s_token_data
 {
 	int						len;
 	char					*raw_value;
+	int						words_count;
 }							t_token_data;
 
 typedef struct s_var
