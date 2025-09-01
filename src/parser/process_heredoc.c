@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 16:30:56 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 23:35:58 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 23:47:48 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,12 @@ static char	*collect_heredoc_content(char *delimiter)
 			return (NULL);
 		}
 		if (!line)
+		{
+			// Handle EOF (Ctrl+D) - print newline and break
+			if (isatty(STDIN_FILENO))
+				write(STDOUT_FILENO, "\n", 1);
 			break;
+		}
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
