@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:51:30 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 12:25:25 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 15:32:00 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	exec_single_external(t_executor *executor, t_command *command)
 		setup_signals_child();
 		if (setup_redirection(command, executor) == FAILURE)
 		{
-			free_inherited_state_for_child(executor, command);
+			free_inherited_state_for_child(executor, executor->commands);
 			exit(EXIT_FAILURE);
 		}
 		exec_external_command(executor, command);

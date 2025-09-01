@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 21:36:31 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 15:45:00 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 	if (setup_children_pipes(executor, i) == FAILURE)
 	{
 		close_all_pipes_children(executor);
-		free_inherited_state_for_child(executor, command);
+		free_inherited_state_for_child(executor, executor->commands);
 		exit(EXIT_FAILURE);
 	}
 	setup_redirection_child_process(executor, command);
@@ -102,12 +102,12 @@ static void	handle_child_process(t_executor *executor, t_command *command,
 	{
 		executor->commands = command;
 		exec_builtin(executor);
-		free_inherited_state_for_child(executor, command);
+		free_inherited_state_for_child(executor, executor->commands);
 		exit(executor->last_exit_code);
 	}
 	else if (!command->argv || !command->argv[0] || !command->argv[0][0])
 	{
-		free_inherited_state_for_child(executor, command);
+		free_inherited_state_for_child(executor, executor->commands);
 		exit(SUCCESS);
 	}
 	else
