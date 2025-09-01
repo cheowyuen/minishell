@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/31 18:44:59 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/01 16:45:47 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ static int	handle_special(t_token **tokens, t_command **current,
 		(*current)->heredoc_delim = process_heredoc_delimiter((*tokens)->token,
 				(*tokens)->is_quoted, executor);
 		if (!(*current)->heredoc_delim)
+			return (free_tokens_commands(tokens, &executor->commands));
+		if (process_heredoc_during_parsing(*current) == FAILURE)
 			return (free_tokens_commands(tokens, &executor->commands));
 	}
 	else if (ft_strcmp((*tokens)->token, ">>") == 0

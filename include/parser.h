@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/01 11:12:06 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/01 16:45:45 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
+# include <stdbool.h>
 # define HEREDOC_LIMIT_EXCEEDED -2
 
 typedef enum e_redir_type
@@ -78,6 +79,7 @@ typedef struct s_command
 	int						append;
 	int						has_heredoc;
 	char					*heredoc_delim;
+	char					*heredoc_content;
 	int						heredoc_fd;
 	bool					is_quoted;
 	int						is_builtin;
@@ -128,5 +130,6 @@ int							validate_syntax(t_token *tokens,
 int							get_word_heredoc(char *input, int *i,
 								t_quote *quote, char **word);
 int							set_redir(t_token **tokens, t_redir **files);
+int							process_heredoc_during_parsing(t_command *command);
 
 #endif

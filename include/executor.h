@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 14:20:17 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 21:03:46 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 16:50:46 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ int					redirect_stdout(int fd, t_redir *redirs);
 // Heredoc utils
 int					create_heredoc_pipe(int pipefd[2]);
 int					setup_heredoc_input(int pipefd[2]);
-void				write_heredoc_content(int fd, char *delimiter,
-						t_executor *executor);
+void				write_heredoc_content(int fd, t_executor *executor);
 
 #endif

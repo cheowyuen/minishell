@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:41:29 by cyuen             #+#    #+#             */
-/*   Updated: 2025/08/31 15:35:34 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/01 16:45:43 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ t_command	*create_command(void)
 	new_command->append = 0;
 	new_command->has_heredoc = 0;
 	new_command->heredoc_delim = NULL;
+	new_command->heredoc_content = NULL;
 	new_command->heredoc_fd = -1;
 	new_command->is_quoted = false;
 	new_command->is_builtin = 0;
