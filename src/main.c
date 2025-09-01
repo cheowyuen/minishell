@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 22:06:43 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 22:36:32 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,52 +42,6 @@ int	main(int argc, char **argv, char **envp)
 	return (exit_code);
 }
 
-void	print_redirs(t_redir *redir)
-{
-	while (redir)
-	{
-		printf("  redir type: %d, filename: %s\n",
-			redir->type,
-			redir->filename ? redir->filename : "(null)");
-		redir = redir->next;
-	}
-}
-
-void	print_commands(t_command *cmd)
-{
-	int i;
-
-	while (cmd)
-	{
-		printf("=== Command ===\n");
-
-		// argv
-		if (cmd->argv)
-		{
-			printf("argv: ");
-			for (i = 0; cmd->argv[i]; i++)
-				printf("[%s] ", cmd->argv[i]);
-			printf("\n");
-		}
-
-		printf("append: %d\n", cmd->append);
-		printf("has_heredoc: %d\n", cmd->has_heredoc);
-		if (cmd->heredoc_delim)
-			printf("heredoc_delim: %s\n", cmd->heredoc_delim);
-		printf("is_quoted: %d\n", cmd->is_quoted);
-		printf("is_builtin: %d\n", cmd->is_builtin);
-		printf("is_last: %d\n", cmd->is_last);
-		printf("pipe_out: %d\n", cmd->pipe_out);
-
-		// redirs
-		if (cmd->redirs)
-			print_redirs(cmd->redirs);
-
-		printf("=============\n\n");
-		cmd = cmd->next;
-	}
-}
-
 static int	parse_and_execute(char *input, t_token **tokens,
 		t_executor *executor)
 {
@@ -108,7 +62,6 @@ static int	parse_and_execute(char *input, t_token **tokens,
 		return (-1);
 	}
 	parse_result = parse_commands(*tokens, &commands, executor);
-	//print_commands(commands);
 	if (parse_result == HEREDOC_LIMIT_EXCEEDED)
 	{
 		ft_lstclear(tokens);
@@ -197,20 +150,20 @@ static int	run_shell_loop(t_executor *executor)
 			rl_on_new_line();
 			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
 		}
-		else
-		{
-			int dev_null_fd = open("/dev/null", O_WRONLY);
-			FILE *dev_null_stream = fdopen(dev_null_fd, "w");
-			rl_outstream = dev_null_stream;
-			input = readline("");
-			if (rl_outstream != stdout)
-			{
-				fclose(rl_outstream);
-				rl_outstream = stdout;
-			}
-		}
 		// else
-		// 	input = readline(PROMPT);
+		// {
+		// 	int dev_null_fd = open("/dev/null", O_WRONLY);
+		// 	FILE *dev_null_stream = fdopen(dev_null_fd, "w");
+		// 	rl_outstream = dev_null_stream;
+		// 	input = readline("");
+		// 	if (rl_outstream != stdout)
+		// 	{
+		// 		fclose(rl_outstream);
+		// 		rl_outstream = stdout;
+		// 	}
+		// }
+		else
+			input = readline(PROMPT);
 		result = handle_input_processing(input, tokens, executor);
 		if (result == -1)
 			break ;

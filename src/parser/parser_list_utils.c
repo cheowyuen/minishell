@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/01 11:21:17 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/01 14:57:52 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	ft_lstclear(t_token **lst)
 		temp = *lst;
 		*lst = (*lst)->next;
 		free(temp->token);
-		free(temp->raw_value);
+		if (temp->raw_value)
+			free(temp->raw_value);
 		free(temp);
 	}
 	*lst = NULL;
@@ -125,10 +126,10 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, c
 		if (i > 0)
 			data.raw_value = NULL;
 		if (add_split_token(tokens, words[i], &data, from_expansion) < 0)
-			{
-				free_str_array(words);
-				return (-1);
-			}
+		{
+			free_str_array(words);
+			return (-1);
+		}
 		i++;
 	}
 	data.words_count = i;
