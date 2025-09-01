@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:52:49 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 18:42:49 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/09/01 18:43:34 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	setup_signals_child(void)
 
 void	setup_signals_heredoc(void)
 {
-	signal(SIGINT, SIG_DFL);
+	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_DFL);
 }
 

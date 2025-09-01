@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 16:30:56 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 16:53:31 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:56:37 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,6 @@
 #include "signals.h"
 #include <unistd.h>
 #include <stdbool.h>
-
-static char	*read_heredoc_line(void)
-{
-	char	*line;
-	char	*temp_line;
-	
-	if (isatty(STDIN_FILENO))
-		line = readline("> ");
-	else
-	{
-		temp_line = get_next_line(STDIN_FILENO);
-		if (!temp_line)
-			return (NULL);
-		line = ft_strtrim(temp_line, "\n");
-		free(temp_line);
-	}
-	return (line);
-}
 
 static char	*append_to_content(char *content, char *line)
 {
@@ -58,6 +40,7 @@ static char	*append_to_content(char *content, char *line)
 static char	*collect_heredoc_content(char *delimiter)
 {
 	char	*line;
+	char	*temp_line;
 	char	*content;
 	char	*new_content;
 	
@@ -65,7 +48,35 @@ static char	*collect_heredoc_content(char *delimiter)
 	setup_signals_heredoc();
 	while (1)
 	{
-		line = read_heredoc_line();
+		// Check signal status before reading
+		if (g_signal_status == SIGNAL_INT)
+		{
+			if (content)
+				free(content);
+			setup_signals_prompt();
+			return (NULL);
+		}
+		// Read line directly here instead of helper function
+		if (isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, "> ", 2);
+		temp_line = get_next_line(STDIN_FILENO);
+		if (!temp_line)
+			line = NULL;
+		else
+		{
+			line = ft_strtrim(temp_line, "\n");
+			free(temp_line);
+		}
+		// Check signal status immediately after readline
+		if (g_signal_status == SIGNAL_INT)
+		{
+			if (line)
+				free(line);
+			if (content)
+				free(content);
+			setup_signals_prompt();
+			return (NULL);
+		}
 		if (!line)
 			break;
 		if (ft_strcmp(line, delimiter) == 0)
@@ -79,8 +90,12 @@ static char	*collect_heredoc_content(char *delimiter)
 		content = new_content;
 		free(line);
 		if (!content)
+		{
+			setup_signals_prompt();
 			return (NULL);
+		}
 	}
+	setup_signals_prompt();
 	return (content);
 }
 
