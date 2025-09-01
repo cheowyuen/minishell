@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 19:28:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 17:06:49 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:05:54 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	setup_heredoc_for_pipeline(t_command *command)
 		perror("pipe");
 		return (FAILURE);
 	}
-	setup_signals_heredoc();
 	if (command->heredoc_content)
 	{
 		if (write(pipefd[1], command->heredoc_content, 
@@ -50,7 +49,6 @@ int	setup_heredoc(t_command *command)
 		perror("pipe");
 		return (FAILURE);
 	}
-	setup_signals_heredoc();
 	if (command->heredoc_content)
 	{
 		if (write(pipefd[1], command->heredoc_content, 
