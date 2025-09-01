@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 20:38:11 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 15:39:15 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	int		start;
 	int		j;
 
+	quote->raw_value = NULL;
 	joined = ft_strdup("");
 	if (!joined)
 		return (free_tokens_input(tokens, NULL, 1));
@@ -87,8 +88,8 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 			}
 		}
 	}
-	if (add_tokens_with_splitting(tokens, is_quoted && !has_unquoted_vars,
-			joined) < 0)
+	// Use word splitting for unquoted tokens that might contain expanded variables
+	if (add_tokens_with_splitting(tokens, is_quoted && !has_unquoted_vars, joined, quote->raw_value) < 0)
 	{
 		free(joined);
 		return (free_tokens_input(tokens, NULL, 1));
@@ -99,12 +100,15 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 
 static int	parse_special(char *input, int *i, t_token **tokens)
 {
-	int	j;
+	int				j;
+	t_token_data	data;
 
 	j = 1;
 	if (input[*i + 1] == input[*i])
 		j = 2;
-	if (add_token(tokens, false, &input[*i], j) < 0)
+	data.len = j;
+	data.raw_value = NULL;
+	if (add_token(tokens, false, &input[*i], &data) < 0)
 		return (free_tokens_input(tokens, NULL, 1));
 	*i += j;
 	return (0);

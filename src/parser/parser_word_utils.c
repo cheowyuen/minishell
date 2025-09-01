@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_word_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/08/30 20:37:58 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 15:40:39 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,12 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 	*word = ft_strndup(&input[*i], len);
 	if (!*word)
 		return (-1);
+	if ((*word)[0] == '$')
+    {
+		quote->raw_value = ft_strndup(&input[*i], len);
+		if (!quote->raw_value)
+			return (-1);
+	}
 	if (expand_tilde(word, quote->executor) < 0)
 		return (-1);
 	if (has_dollar_sign)

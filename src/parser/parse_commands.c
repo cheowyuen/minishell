@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 22:13:59 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/08/31 18:44:59 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	tmp = *tokens;
 	while (tmp && (tmp->is_quoted || ft_strcmp(tmp->token, "|") != 0))
 	{
+		//printf("quoted: %d\n", tmp->is_quoted);
 		if (!tmp->is_quoted && (tmp->token[0] == '<' || tmp->token[0] == '>'))
 		{
 			result = handle_special(&tmp, &current, &heredoc_count, executor);

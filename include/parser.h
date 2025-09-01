@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 20:51:07 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/01 11:12:06 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,17 @@ typedef struct s_token
 	char					*token;
 	bool					is_quoted;
 	bool					has_dollar_sign;
+	char					*raw_value;
+	int						words_count;
 	struct s_token			*next;
 }							t_token;
+
+typedef struct s_token_data
+{
+	int						len;
+	char					*raw_value;
+	int						words_count;
+}							t_token_data;
 
 typedef struct s_var
 {
@@ -45,6 +54,7 @@ typedef struct s_quote
 {
 	char					*quoted_word;
 	bool					is_heredoc;
+	char					*raw_value;
 	t_executor				*executor;
 }							t_quote;
 
@@ -83,9 +93,9 @@ int							parse_input(char *input, t_token **tokens,
 int							free_tokens_input(t_token **tokens, char *input,
 								int flag);
 int							add_token(t_token **tokens, bool is_quoted,
-								char *content, int len);
+								char *content, t_token_data *data);
 int							add_tokens_with_splitting(t_token **tokens,
-								bool is_quoted, char *content);
+								bool is_quoted, char *content, char *raw_value);
 int							is_special(char c);
 int							is_quote(char c);
 int							is_space(char c);
