@@ -17,7 +17,6 @@
 static int	check_redirection_syntax(t_token *current, t_token *next,
 		t_executor *executor)
 {
-	
 	(void)current;
 	if (!next)
 		return (print_syntax_error("newline", executor, 0));
@@ -27,8 +26,8 @@ static int	check_redirection_syntax(t_token *current, t_token *next,
 	{
 		if (next->token[0] == '\0' || next->words_count > 1)
 		{
-			ft_dprintf(STDERR_FILENO,
-				"minishell: %s: ambiguous redirect\n", next->raw_value);
+			ft_dprintf(STDERR_FILENO, "minishell: %s: ambiguous redirect\n",
+				next->raw_value);
 			return (-1);
 		}
 	}

@@ -73,9 +73,10 @@ static t_token	*ft_lstnew(bool is_quoted, char *content, t_token_data *data)
 	return (new_node);
 }
 
-int	add_token(t_token **tokens, bool is_quoted, char *content, t_token_data *data)
+int	add_token(t_token **tokens, bool is_quoted, char *content,
+		t_token_data *data)
 {
-	t_token			*new_token;
+	t_token	*new_token;
 
 	new_token = ft_lstnew(is_quoted, content, data);
 	if (!new_token)
@@ -84,9 +85,10 @@ int	add_token(t_token **tokens, bool is_quoted, char *content, t_token_data *dat
 	return (0);
 }
 
-static int	add_split_token(t_token **tokens, char *word, t_token_data *data, bool from_expansion)
+static int	add_split_token(t_token **tokens, char *word, t_token_data *data,
+		bool from_expansion)
 {
-	t_token			*new_token;
+	t_token	*new_token;
 
 	data->len = ft_strlen(word);
 	new_token = ft_lstnew(from_expansion, word, data);
@@ -96,7 +98,8 @@ static int	add_split_token(t_token **tokens, char *word, t_token_data *data, boo
 	return (0);
 }
 
-int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, char *raw_value)
+int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content,
+		char *raw_value)
 {
 	char			**words;
 	int				i;
@@ -108,7 +111,8 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, c
 	// If quoted, don't split - treat as single token
 	if (is_quoted)
 		return (add_token(tokens, is_quoted, content, &data));
-	from_expansion = (ft_strchr(content, '<') || ft_strchr(content, '>') || ft_strchr(content, '|'));
+	from_expansion = (ft_strchr(content, '<') || ft_strchr(content, '>')
+			|| ft_strchr(content, '|'));
 	if (content[0] == '\0')
 	{
 		data.len = 0;
@@ -119,7 +123,7 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content, c
 	if (!words)
 		return (-1);
 	// Add each word as a separate token
-	data.words_count = 0; 
+	data.words_count = 0;
 	while (words[data.words_count])
 		data.words_count++;
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:52:49 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 18:41:12 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:33:53 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,17 @@ void	setup_signals_ignore(void)
 int	check_signal_interrupt(void)
 {
 	if (g_signal_status == SIGNAL_INT)
-	{
 		return (1);
-	}
 	return (0);
 }
 
-void	heredoc_sigint_handler(int sig)
+void	setup_heredoc_signals(bool is_interactive)
 {
-	(void)sig;
-	g_signal_status = SIGNAL_INT;
-	rl_replace_line("", 0);
-	rl_done = 1;
+	if (is_interactive)
+	{
+		signal(SIGINT, heredoc_sigint_handler);
+		signal(SIGQUIT, SIG_IGN);
+		g_signal_status = SIGNAL_NONE;
+		rl_event_hook = check_signal_interrupt;
+	}
 }

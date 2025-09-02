@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 15:20:37 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/02 19:33:33 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,21 @@ void	sigint_handler(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
+}
+
+void	heredoc_sigint_handler(int sig)
+{
+	(void)sig;
+	g_signal_status = SIGNAL_INT;
+	rl_replace_line("", 0);
+	rl_done = 1;
+}
+
+void	cleanup_heredoc_signals(bool is_interactive)
+{
+	if (is_interactive)
+	{
+		setup_signals_prompt();
+		rl_event_hook = NULL;
+	}
 }

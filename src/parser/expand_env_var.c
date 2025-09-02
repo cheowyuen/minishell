@@ -89,7 +89,6 @@ static int	get_var(char **word, int i, t_executor *executor)
 	var.value = NULL;
 	var.should_free = false;
 	var.executor = executor;
-
 	if (!(*word)[i + 1] || ((*word)[i + 1] != '?' && (*word)[i + 1] != '{'
 			&& !ft_isalpha((*word)[i + 1]) && (*word)[i + 1] != '_'))
 		return (0);

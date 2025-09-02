@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 18:46:07 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:35:19 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,5 +144,8 @@ int							create_heredoc_pipe(t_command *command, char *content);
 void						free_heredoc_list(t_heredoc_list *list);
 int							process_all_heredocs(t_command *command,
                                 t_executor *executor);
+int							read_heredoc_input(char *delimiter, bool is_quoted,
+								t_executor *executor, char **content);
+int							cleanup_eof_warning(char *delimiter, bool is_interactive);
 
 #endif

@@ -47,7 +47,7 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 	if (!*word)
 		return (-1);
 	if ((*word)[0] == '$')
-    {
+	{
 		if (quote->raw_value)
 			free(quote->raw_value);
 		quote->raw_value = ft_strndup(&input[*i], len);

@@ -6,81 +6,128 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 23:39:50 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 18:46:22 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:34:52 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
 #include "minishell.h"
-#include "utils.h"
+#include "parser.h"
 #include "signals.h"
-#include <unistd.h>
+#include "utils.h"
 #include <stdbool.h>
+#include <unistd.h>
 
-t_heredoc_list	*add_heredoc_to_list(t_heredoc_list **list, char *delimiter, bool is_quoted)
+static char	*read_heredoc_line(bool is_interactive)
 {
-	t_heredoc_list	*new_heredoc;
-	t_heredoc_list	*current;
+	char	*line;
 
-	new_heredoc = malloc(sizeof(t_heredoc_list));
-	if (!new_heredoc)
-		return (NULL);
-	new_heredoc->delimiter = ft_strdup(delimiter);
-	if (!new_heredoc->delimiter)
+	if (is_interactive)
+		line = readline("> ");
+	else
 	{
-		free(new_heredoc);
-		return (NULL);
+		line = get_next_line(STDIN_FILENO);
+		if (line && line[ft_strlen(line) - 1] == '\n')
+			line[ft_strlen(line) - 1] = '\0';
 	}
-	new_heredoc->is_quoted = is_quoted;
-	new_heredoc->next = NULL;
-	if (!*list)
-	{
-		*list = new_heredoc;
-		return (new_heredoc);
-	}
-	current = *list;
-	while (current->next)
-		current = current->next;
-	current->next = new_heredoc;
-	return (new_heredoc);
+	return (line);
 }
 
-void	free_heredoc_list(t_heredoc_list *list)
+static int	handle_signal_or_eof(char *line, char *delimiter,
+		bool is_interactive, char **content)
 {
-	t_heredoc_list	*current;
-	t_heredoc_list	*next;
-
-	current = list;
-	while (current)
+	if (is_interactive && (g_signal_status == SIGNAL_INT || !line))
 	{
-		next = current->next;
-		if (current->delimiter)
-			free(current->delimiter);
-		free(current);
-		current = next;
+		if (line)
+			free(line);
+		if (g_signal_status == SIGNAL_INT)
+		{
+			free(*content);
+			*content = NULL;
+			cleanup_heredoc_signals(is_interactive);
+			return (FAILURE);
+		}
+		if (!line)
+			return (cleanup_eof_warning(delimiter, is_interactive));
 	}
+	if (!line)
+		return (cleanup_eof_warning(delimiter, is_interactive));
+	return (-1);
 }
 
-int	create_heredoc_pipe(t_command *command, char *content)
+static int	append_newline_to_content(char **content, char *temp,
+		bool is_interactive)
 {
-	int	pipefd[2];
+	char	*new_content;
 
-	if (pipe(pipefd) == -1)
+	free(*content);
+	*content = temp;
+	new_content = ft_strjoin(*content, "\n");
+	if (!new_content)
 	{
-		free(content);
+		cleanup_heredoc_signals(is_interactive);
 		return (FAILURE);
 	}
-	if (write(pipefd[1], content, ft_strlen(content)) == -1)
-	{
-		free(content);
-		close(pipefd[0]);
-		close(pipefd[1]);
-		return (FAILURE);
-	}
-	close(pipefd[1]);
-	command->heredoc_fd = pipefd[0];
-	if (command->heredoc_content)
-		free(command->heredoc_content);
-	command->heredoc_content = content;
+	free(*content);
+	*content = new_content;
 	return (SUCCESS);
+}
+
+static int	process_heredoc_line_content(char *line, bool is_quoted,
+		t_executor *executor, char **content, bool is_interactive)
+{
+	char	*temp;
+	char	*expanded_line;
+
+	if (!is_quoted)
+	{
+		expanded_line = ft_strdup(line);
+		if (expand_env_var(&expanded_line, executor) == FAILURE)
+		{
+			free(line);
+			free(expanded_line);
+			cleanup_heredoc_signals(is_interactive);
+			return (FAILURE);
+		}
+		temp = ft_strjoin(*content, expanded_line);
+		free(expanded_line);
+	}
+	else
+		temp = ft_strjoin(*content, line);
+	free(line);
+	if (!temp)
+	{
+		cleanup_heredoc_signals(is_interactive);
+		return (FAILURE);
+	}
+	return (append_newline_to_content(content, temp, is_interactive));
+}
+
+int	read_heredoc_input(char *delimiter, bool is_quoted, t_executor *executor,
+		char **content)
+{
+	char	*line;
+	bool	is_interactive;
+	int		result;
+
+	*content = ft_strdup("");
+	if (!*content)
+		return (FAILURE);
+	is_interactive = isatty(STDIN_FILENO);
+	setup_heredoc_signals(is_interactive);
+	while (1)
+	{
+		line = read_heredoc_line(is_interactive);
+		result = handle_signal_or_eof(line, delimiter, is_interactive, content);
+		if (result != -1)
+			return (result);
+		if (ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			cleanup_heredoc_signals(is_interactive);
+			return (SUCCESS);
+		}
+		if (process_heredoc_line_content(line, is_quoted, executor, content,
+				is_interactive) == FAILURE)
+			return (FAILURE);
+	}
 }

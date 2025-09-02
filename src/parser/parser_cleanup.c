@@ -70,7 +70,7 @@ void	free_commands(t_command **commands)
 		if (temp->heredoc_fd >= 0)
 			close(temp->heredoc_fd);
 		if (temp->heredoc_list)
-    		free_heredoc_list(temp->heredoc_list);
+			free_heredoc_list(temp->heredoc_list);
 		free(temp);
 	}
 	*commands = NULL;

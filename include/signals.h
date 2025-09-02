@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:46 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 18:41:32 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:34:04 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ int								wait_all_children(t_executor *executor,
 									int *last_status);
 int								check_signal_interrupt(void);
 void							heredoc_sigint_handler(int sig);
-
+void							cleanup_heredoc_signals(bool is_interactive);
+void							setup_heredoc_signals(bool is_interactive);
 #endif

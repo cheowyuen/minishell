@@ -37,8 +37,8 @@ static int	handle_special(t_token **tokens, t_command **current,
 		(*current)->has_heredoc = 1;
 		(*current)->is_quoted = (*tokens)->is_quoted;
 		/* Add heredoc to the list instead of processing immediately */
-		if (!add_heredoc_to_list(&(*current)->heredoc_list, 
-				(*tokens)->token, (*tokens)->is_quoted))
+		if (!add_heredoc_to_list(&(*current)->heredoc_list, (*tokens)->token,
+				(*tokens)->is_quoted))
 			return (free_tokens_commands(tokens, &executor->commands));
 		/* Store delimiter for backward compatibility */
 		if ((*current)->heredoc_delim)
@@ -76,7 +76,7 @@ static int	handle_commands(t_token **tokens, t_command *current,
 	tmp = *tokens;
 	while (tmp && (tmp->is_quoted || ft_strcmp(tmp->token, "|") != 0))
 	{
-		//printf("quoted: %d\n", tmp->is_quoted);
+		// printf("quoted: %d\n", tmp->is_quoted);
 		if (!tmp->is_quoted && (tmp->token[0] == '<' || tmp->token[0] == '>'))
 		{
 			result = handle_special(&tmp, &current, &heredoc_count, executor);
@@ -126,7 +126,8 @@ static int	process_tokens(t_token *tokens, t_command **commands,
 	return (0);
 }
 
-static int	process_collected_heredocs(t_command *commands, t_executor *executor)
+static int	process_collected_heredocs(t_command *commands,
+		t_executor *executor)
 {
 	t_command	*current;
 	int			result;

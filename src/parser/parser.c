@@ -52,10 +52,10 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	int		j;
 	int		starting_pos;
 	bool	has_quotes;
-//	bool	has_spaces;
 	char	*trimmed;
 	char	*temp;
 
+	//	bool	has_spaces;
 	quote->raw_value = NULL;
 	joined = ft_strdup("");
 	if (!joined)
@@ -64,13 +64,13 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	has_unquoted_vars = false;
 	starting_pos = *i;
 	has_quotes = false;
-	//has_spaces = false;
+	// has_spaces = false;
 	temp = NULL;
 	while (input[*i] && !is_space(input[*i]) && !is_special(input[*i]))
 	{
 		if (is_quote(input[*i]))
 		{
-			if (*i == starting_pos) 
+			if (*i == starting_pos)
 				has_quotes = true;
 			is_quoted = true;
 			if (handle_quoted_word(&joined, quote, input, i) < 0)
@@ -123,7 +123,8 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	{
 		if (has_unquoted_vars)
 		{
-			if (add_tokens_with_splitting(tokens, is_quoted, temp, quote->raw_value) < 0)
+			if (add_tokens_with_splitting(tokens, is_quoted, temp,
+					quote->raw_value) < 0)
 			{
 				free(joined);
 				free(temp);
@@ -133,7 +134,8 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 		free(temp);
 	}
 	// Use word splitting for unquoted tokens that might contain expanded variables
-	if (add_tokens_with_splitting(tokens, is_quoted && !has_unquoted_vars, joined, quote->raw_value) < 0)
+	if (add_tokens_with_splitting(tokens, is_quoted && !has_unquoted_vars,
+			joined, quote->raw_value) < 0)
 	{
 		free(joined);
 		return (free_tokens_input(tokens, NULL, 1));
