@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/01 14:57:51 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/02 13:37:08 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	bool	has_unquoted_vars;
 	int		start;
 	int		j;
+	int		starting_pos;
+	bool	has_quotes;
+	bool	has_spaces;
+	char	*trimmed;
+	char	*temp;
 
 	quote->raw_value = NULL;
 	joined = ft_strdup("");
@@ -57,15 +62,41 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 		return (free_tokens_input(tokens, NULL, 1));
 	is_quoted = false;
 	has_unquoted_vars = false;
+	starting_pos = *i;
+	has_quotes = false;
+	has_spaces = false;
+	temp = NULL;
 	while (input[*i] && !is_space(input[*i]) && !is_special(input[*i]))
 	{
 		if (is_quote(input[*i]))
 		{
+			if (*i == starting_pos) 
+				has_quotes = true;
 			is_quoted = true;
 			if (handle_quoted_word(&joined, quote, input, i) < 0)
 			{
 				free(joined);
 				return (free_tokens_input(tokens, NULL, 1));
+			}
+			if (has_quotes && joined[0] != '\0')
+			{
+				trimmed = ft_strtrim(joined, " ");
+				if (!trimmed)
+				{
+					free(joined);
+					return (free_tokens_input(tokens, NULL, 1));
+				}
+				if (trimmed[0] == '\0')
+				{
+					temp = ft_substr(joined, 0, ft_strlen(joined) - 1);
+					if (!temp)
+					{
+						free(joined);
+						return (free_tokens_input(tokens, NULL, 1));
+					}
+				}
+				free(trimmed);
+				has_quotes = false;
 			}
 		}
 		else
@@ -88,6 +119,15 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 			}
 		}
 	}
+	if (temp && has_unquoted_vars)
+	{
+		if (add_tokens_with_splitting(tokens, is_quoted, temp, quote->raw_value) < 0)
+		{
+			free(joined);
+			return (free_tokens_input(tokens, NULL, 1));
+		}
+		free(temp);
+	}
 	// Use word splitting for unquoted tokens that might contain expanded variables
 	if (add_tokens_with_splitting(tokens, is_quoted && !has_unquoted_vars, joined, quote->raw_value) < 0)
 	{
@@ -95,6 +135,7 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 		return (free_tokens_input(tokens, NULL, 1));
 	}
 	free(joined);
+	free(quote->raw_value);
 	return (0);
 }
 
