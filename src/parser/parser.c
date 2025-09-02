@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 13:37:08 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/02 14:42:16 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,16 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 			}
 		}
 	}
-	if (temp && has_unquoted_vars)
+	if (temp)
 	{
-		if (add_tokens_with_splitting(tokens, is_quoted, temp, quote->raw_value) < 0)
+		if (has_unquoted_vars)
 		{
-			free(joined);
-			return (free_tokens_input(tokens, NULL, 1));
+			if (add_tokens_with_splitting(tokens, is_quoted, temp, quote->raw_value) < 0)
+			{
+				free(joined);
+				free(temp);
+				return (free_tokens_input(tokens, NULL, 1));
+			}
 		}
 		free(temp);
 	}
