@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 23:39:50 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 19:34:52 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:04:53 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ static int	handle_signal_or_eof(char *line, char *delimiter,
 		{
 			free(*content);
 			*content = NULL;
-			cleanup_heredoc_signals(is_interactive);
-			return (FAILURE);
+			return (cleanup_heredoc_signals(is_interactive, FAILURE));
 		}
 		if (!line)
 			return (cleanup_eof_warning(delimiter, is_interactive));
@@ -54,8 +53,7 @@ static int	handle_signal_or_eof(char *line, char *delimiter,
 	return (-1);
 }
 
-static int	append_newline_to_content(char **content, char *temp,
-		bool is_interactive)
+static int	append_newline_to_content(char **content, char *temp)
 {
 	char	*new_content;
 
@@ -63,17 +61,14 @@ static int	append_newline_to_content(char **content, char *temp,
 	*content = temp;
 	new_content = ft_strjoin(*content, "\n");
 	if (!new_content)
-	{
-		cleanup_heredoc_signals(is_interactive);
 		return (FAILURE);
-	}
 	free(*content);
 	*content = new_content;
 	return (SUCCESS);
 }
 
 static int	process_heredoc_line_content(char *line, bool is_quoted,
-		t_executor *executor, char **content, bool is_interactive)
+		t_executor *executor, char **content)
 {
 	char	*temp;
 	char	*expanded_line;
@@ -85,7 +80,6 @@ static int	process_heredoc_line_content(char *line, bool is_quoted,
 		{
 			free(line);
 			free(expanded_line);
-			cleanup_heredoc_signals(is_interactive);
 			return (FAILURE);
 		}
 		temp = ft_strjoin(*content, expanded_line);
@@ -95,11 +89,8 @@ static int	process_heredoc_line_content(char *line, bool is_quoted,
 		temp = ft_strjoin(*content, line);
 	free(line);
 	if (!temp)
-	{
-		cleanup_heredoc_signals(is_interactive);
 		return (FAILURE);
-	}
-	return (append_newline_to_content(content, temp, is_interactive));
+	return (append_newline_to_content(content, temp));
 }
 
 int	read_heredoc_input(char *delimiter, bool is_quoted, t_executor *executor,
@@ -123,11 +114,9 @@ int	read_heredoc_input(char *delimiter, bool is_quoted, t_executor *executor,
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
-			cleanup_heredoc_signals(is_interactive);
-			return (SUCCESS);
+			return (cleanup_heredoc_signals(is_interactive, SUCCESS));
 		}
-		if (process_heredoc_line_content(line, is_quoted, executor, content,
-				is_interactive) == FAILURE)
-			return (FAILURE);
+		if (process_heredoc_line_content(line, is_quoted, executor, content) == FAILURE)
+			return (cleanup_heredoc_signals(is_interactive, FAILURE));
 	}
 }

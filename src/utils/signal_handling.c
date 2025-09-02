@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:01:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 19:33:33 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:04:54 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,12 @@ void	heredoc_sigint_handler(int sig)
 	rl_done = 1;
 }
 
-void	cleanup_heredoc_signals(bool is_interactive)
+int	cleanup_heredoc_signals(bool is_interactive, int return_status)
 {
 	if (is_interactive)
 	{
 		setup_signals_prompt();
 		rl_event_hook = NULL;
 	}
+	return (return_status);
 }

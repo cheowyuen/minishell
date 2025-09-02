@@ -61,9 +61,9 @@ typedef struct s_quote
 
 typedef struct s_heredoc_list
 {
-    char					*delimiter;
-    bool					is_quoted;
-    struct s_heredoc_list	*next;
+	char					*delimiter;
+	bool					is_quoted;
+	struct s_heredoc_list	*next;
 }							t_heredoc_list;
 
 typedef struct s_redir
@@ -137,15 +137,17 @@ int							validate_syntax(t_token *tokens,
 								t_executor *executor);
 int							set_redir(t_token **tokens, t_redir **files);
 
-//Heredoc functions
+// Heredoc functions
 t_heredoc_list				*add_heredoc_to_list(t_heredoc_list **list,
-                                char *delimiter, bool is_quoted);
-int							create_heredoc_pipe(t_command *command, char *content);
+								char *delimiter, bool is_quoted);
+int							create_heredoc_pipe(t_command *command,
+								char *content);
 void						free_heredoc_list(t_heredoc_list *list);
 int							process_all_heredocs(t_command *command,
-                                t_executor *executor);
+								t_executor *executor);
 int							read_heredoc_input(char *delimiter, bool is_quoted,
 								t_executor *executor, char **content);
-int							cleanup_eof_warning(char *delimiter, bool is_interactive);
+int							cleanup_eof_warning(char *delimiter,
+								bool is_interactive);
 
 #endif

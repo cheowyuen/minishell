@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 16:30:56 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 19:35:05 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:04:58 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,5 @@ int	cleanup_eof_warning(char *delimiter, bool is_interactive)
 				"here-document delimited by "
 				"end-of-file (wanted `%s')\n",
 				delimiter);
-	cleanup_heredoc_signals(is_interactive);
-	return (SUCCESS);
+	return (cleanup_heredoc_signals(is_interactive, SUCCESS));
 }
