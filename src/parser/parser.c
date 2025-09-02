@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 14:42:16 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/02 16:53:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	int		j;
 	int		starting_pos;
 	bool	has_quotes;
-	bool	has_spaces;
+//	bool	has_spaces;
 	char	*trimmed;
 	char	*temp;
 
@@ -64,7 +64,7 @@ static int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	has_unquoted_vars = false;
 	starting_pos = *i;
 	has_quotes = false;
-	has_spaces = false;
+	//has_spaces = false;
 	temp = NULL;
 	while (input[*i] && !is_space(input[*i]) && !is_special(input[*i]))
 	{
