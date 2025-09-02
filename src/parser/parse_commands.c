@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 08:28:45 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:06:42 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,17 @@ static int	handle_special(t_token **tokens, t_command **current,
 		}
 		(*current)->has_heredoc = 1;
 		(*current)->is_quoted = (*tokens)->is_quoted;
+		/* Add heredoc to the list instead of processing immediately */
+		if (!add_heredoc_to_list(&(*current)->heredoc_list, 
+				(*tokens)->token, (*tokens)->is_quoted))
+			return (free_tokens_commands(tokens, &executor->commands));
+		/* Store delimiter for backward compatibility */
 		if ((*current)->heredoc_delim)
 			free((*current)->heredoc_delim);
 		(*current)->heredoc_delim = process_heredoc_delimiter((*tokens)->token,
 				(*tokens)->is_quoted, executor);
 		if (!(*current)->heredoc_delim)
 			return (free_tokens_commands(tokens, &executor->commands));
-		if (process_heredoc(*current, executor) == FAILURE)
-		{
-			free_commands(&executor->commands);
-			executor->commands = NULL;
-			return (HEREDOC_INTERRUPTED);
-		}
 	}
 	else if (ft_strcmp((*tokens)->token, ">>") == 0
 		|| (*tokens)->token[0] == '<' || (*tokens)->token[0] == '>')
@@ -127,6 +126,32 @@ static int	process_tokens(t_token *tokens, t_command **commands,
 	return (0);
 }
 
+static int	process_collected_heredocs(t_command *commands, t_executor *executor)
+{
+	t_command	*current;
+	int			result;
+
+	current = commands;
+	while (current)
+	{
+		if (current->has_heredoc && current->heredoc_list)
+		{
+			result = process_all_heredocs(current, executor);
+			if (result == FAILURE)
+			{
+				free_commands(&executor->commands);
+				executor->commands = NULL;
+				return (HEREDOC_INTERRUPTED);
+			}
+			/* Clean up the heredoc list after processing */
+			free_heredoc_list(current->heredoc_list);
+			current->heredoc_list = NULL;
+		}
+		current = current->next;
+	}
+	return (SUCCESS);
+}
+
 int	parse_commands(t_token *tokens, t_command **commands, t_executor *executor)
 {
 	int	result;
@@ -142,5 +167,9 @@ int	parse_commands(t_token *tokens, t_command **commands, t_executor *executor)
 			*commands = NULL;
 		return (result);
 	}
+	/* Process all collected heredocs after parsing is complete */
+	result = process_collected_heredocs(*commands, executor);
+	if (result < 0)
+		return (result);
 	return (0);
 }

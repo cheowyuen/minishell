@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 08:32:02 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:48:54 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,13 @@ typedef struct s_quote
 	t_executor				*executor;
 }							t_quote;
 
+typedef struct s_heredoc_list
+{
+    char					*delimiter;
+    bool					is_quoted;
+    struct s_heredoc_list	*next;
+}							t_heredoc_list;
+
 typedef struct s_redir
 {
 	t_redir_type			type;
@@ -86,6 +93,7 @@ typedef struct s_command
 	int						is_builtin;
 	int						is_last;
 	int						pipe_out;
+	t_heredoc_list			*heredoc_list;
 	t_outfile				*outfiles;
 	t_redir					*redirs;
 	struct s_command		*next;
@@ -132,6 +140,11 @@ int							get_word_heredoc(char *input, int *i,
 								t_quote *quote, char **word);
 int							set_redir(t_token **tokens, t_redir **files);
 int							process_heredoc(t_command *command, t_executor *executor);
+t_heredoc_list				*add_heredoc_to_list(t_heredoc_list **list,
+                                char *delimiter, bool is_quoted);
+void						free_heredoc_list(t_heredoc_list *list);
+int							process_all_heredocs(t_command *command,
+                                t_executor *executor);
 
 
 #endif

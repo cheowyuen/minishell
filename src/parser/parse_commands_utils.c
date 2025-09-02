@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:41:29 by cyuen             #+#    #+#             */
-/*   Updated: 2025/09/01 16:45:43 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:49:48 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ t_command	*create_command(void)
 	new_command->is_builtin = 0;
 	new_command->is_last = 0;
 	new_command->pipe_out = 0;
+	new_command->heredoc_list = NULL;
 	new_command->outfiles = NULL;
 	new_command->redirs = NULL;
 	new_command->next = NULL;

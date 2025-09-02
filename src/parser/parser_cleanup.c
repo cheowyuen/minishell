@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:41:50 by cyuen             #+#    #+#             */
-/*   Updated: 2025/09/01 22:36:47 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:50:16 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ void	free_commands(t_command **commands)
 			free(temp->heredoc_content);
 		if (temp->heredoc_fd >= 0)
 			close(temp->heredoc_fd);
+		if (temp->heredoc_list)
+    		free_heredoc_list(temp->heredoc_list);
 		free(temp);
 	}
 	*commands = NULL;
