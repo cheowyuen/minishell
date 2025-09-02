@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 18:31:25 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:46:07 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,12 +136,13 @@ int							get_word(char *input, int *i, t_quote *quote,
 int							validate_syntax(t_token *tokens,
 								t_executor *executor);
 int							set_redir(t_token **tokens, t_redir **files);
-int							process_heredoc(t_command *command, t_executor *executor);
+
+//Heredoc functions
 t_heredoc_list				*add_heredoc_to_list(t_heredoc_list **list,
                                 char *delimiter, bool is_quoted);
+int							create_heredoc_pipe(t_command *command, char *content);
 void						free_heredoc_list(t_heredoc_list *list);
 int							process_all_heredocs(t_command *command,
                                 t_executor *executor);
-
 
 #endif
