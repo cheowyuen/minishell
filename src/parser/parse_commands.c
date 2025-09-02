@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 18:30:29 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 23:26:04 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,15 @@ static int	handle_special(t_token **tokens, t_command **current,
 		(*current)->has_heredoc = 1;
 		(*current)->is_quoted = (*tokens)->is_quoted;
 		/* Add heredoc to the list instead of processing immediately */
-		if (!add_heredoc_to_list(&(*current)->heredoc_list, (*tokens)->token,
+		if (!add_heredoc_to_list(&(*current)->heredoc_list, 
+				(*tokens)->raw_value ? (*tokens)->raw_value : (*tokens)->token,
 				(*tokens)->is_quoted))
 			return (free_tokens_commands(tokens, &executor->commands));
 		/* Store delimiter for backward compatibility */
 		if ((*current)->heredoc_delim)
 			free((*current)->heredoc_delim);
-		(*current)->heredoc_delim = process_heredoc_delimiter((*tokens)->token,
-				(*tokens)->is_quoted, executor);
+		(*current)->heredoc_delim = process_heredoc_delimiter(
+				(*tokens)->raw_value ? (*tokens)->raw_value : (*tokens)->token);
 		if (!(*current)->heredoc_delim)
 			return (free_tokens_commands(tokens, &executor->commands));
 	}
