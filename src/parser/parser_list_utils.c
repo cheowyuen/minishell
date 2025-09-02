@@ -6,7 +6,7 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/01 14:57:52 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/02 13:35:30 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ void	ft_lstclear(t_token **lst)
 		temp = *lst;
 		*lst = (*lst)->next;
 		free(temp->token);
-		if (temp->raw_value)
-			free(temp->raw_value);
+		free(temp->raw_value);
 		free(temp);
 	}
 	*lst = NULL;
@@ -65,7 +64,10 @@ static t_token	*ft_lstnew(bool is_quoted, char *content, t_token_data *data)
 		return (NULL);
 	}
 	new_node->is_quoted = is_quoted;
-	new_node->raw_value = data->raw_value;
+	if (data->raw_value)
+		new_node->raw_value = ft_strdup(data->raw_value);
+	else
+		new_node->raw_value = NULL;
 	new_node->words_count = data->words_count;
 	new_node->next = NULL;
 	return (new_node);
