@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 23:26:04 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 23:33:28 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 static int	handle_special(t_token **tokens, t_command **current,
 		int *heredoc_count, t_executor *executor)
 {
+	char *delimiter_value;
+	
 	if (ft_strcmp((*tokens)->token, "<<") == 0)
 	{
 		(*heredoc_count)++;
@@ -37,15 +39,17 @@ static int	handle_special(t_token **tokens, t_command **current,
 		(*current)->has_heredoc = 1;
 		(*current)->is_quoted = (*tokens)->is_quoted;
 		/* Add heredoc to the list instead of processing immediately */
-		if (!add_heredoc_to_list(&(*current)->heredoc_list, 
-				(*tokens)->raw_value ? (*tokens)->raw_value : (*tokens)->token,
+		if ((*tokens)->raw_value)
+			delimiter_value = (*tokens)->raw_value;
+		else
+			delimiter_value = (*tokens)->token;
+		if (!add_heredoc_to_list(&(*current)->heredoc_list, delimiter_value,
 				(*tokens)->is_quoted))
 			return (free_tokens_commands(tokens, &executor->commands));
 		/* Store delimiter for backward compatibility */
 		if ((*current)->heredoc_delim)
 			free((*current)->heredoc_delim);
-		(*current)->heredoc_delim = process_heredoc_delimiter(
-				(*tokens)->raw_value ? (*tokens)->raw_value : (*tokens)->token);
+		(*current)->heredoc_delim = process_heredoc_delimiter(delimiter_value);
 		if (!(*current)->heredoc_delim)
 			return (free_tokens_commands(tokens, &executor->commands));
 	}
