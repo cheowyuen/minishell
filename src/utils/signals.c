@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:52:49 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 18:43:34 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:31:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,6 @@ void	setup_signals_prompt(void)
 void	setup_signals_child(void)
 {
 	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-}
-
-void	setup_signals_heredoc(void)
-{
-	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_DFL);
 }
 

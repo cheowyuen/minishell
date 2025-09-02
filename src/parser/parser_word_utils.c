@@ -3,43 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_word_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/09/01 14:57:50 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/02 18:31:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "minishell.h"
 #include "parser.h"
-
-int	get_word_heredoc(char *input, int *i, t_quote *quote, char **word)
-{
-	int		len;
-	bool	has_dollar_sign;
-
-	len = 0;
-	has_dollar_sign = false;
-	while (input[*i + len])
-	{
-		if (input[*i + len] == '$')
-		{
-			has_dollar_sign = true;
-		}
-		len++;
-	}
-	*word = ft_strndup(&input[*i], len);
-	if (!*word)
-		return (-1);
-	if (has_dollar_sign)
-	{
-		if (expand_env_var(word, quote->executor) < 0)
-			return (-1);
-	}
-	*i += len;
-	return (0);
-}
 
 int	get_word(char *input, int *i, t_quote *quote, char **word)
 {
@@ -114,7 +87,6 @@ int	handle_unquoted_word(char **joined, t_quote *quote, char *input, int *i)
 	char	*temp;
 
 	word = NULL;
-	quote->is_heredoc = false;
 	if (get_word(input, i, quote, &word) < 0)
 		return (-1);
 	temp = ft_strjoin(*joined, word);

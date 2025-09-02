@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 17:48:54 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:31:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ typedef struct s_var
 typedef struct s_quote
 {
 	char					*quoted_word;
-	bool					is_heredoc;
 	char					*raw_value;
 	t_executor				*executor;
 }							t_quote;
@@ -136,8 +135,6 @@ int							get_word(char *input, int *i, t_quote *quote,
 								char **word);
 int							validate_syntax(t_token *tokens,
 								t_executor *executor);
-int							get_word_heredoc(char *input, int *i,
-								t_quote *quote, char **word);
 int							set_redir(t_token **tokens, t_redir **files);
 int							process_heredoc(t_command *command, t_executor *executor);
 t_heredoc_list				*add_heredoc_to_list(t_heredoc_list **list,

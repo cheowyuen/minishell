@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 16:30:56 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 18:16:47 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:31:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,8 +233,9 @@ int	process_all_heredocs(t_command *command, t_executor *executor)
 int	process_heredoc(t_command *command, t_executor *executor)
 {
 	(void)executor;
+	(void)command;
 	
-	if (!command || !command->has_heredoc)
-		return (SUCCESS);
+	/* This function is kept for compatibility but heredocs are now
+	 * processed after parsing is complete via process_all_heredocs() */
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:49:46 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 15:52:07 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:31:25 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ extern volatile sig_atomic_t	g_signal_status;
 void							sigint_handler(int sig);
 void							setup_signals_prompt(void);
 void							setup_signals_child(void);
-void							setup_signals_heredoc(void);
 void							setup_signals_ignore(void);
 int								wait_all_children(t_executor *executor,
 									int *last_status);
