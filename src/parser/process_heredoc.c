@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 16:30:56 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 20:04:58 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:24:10 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,9 @@ int	create_heredoc_pipe(t_command *command, char *content)
 int	cleanup_eof_warning(char *delimiter, bool is_interactive)
 {
 	ft_dprintf(STDERR_FILENO,
-				"minishell: warning: "
-				"here-document delimited by "
-				"end-of-file (wanted `%s')\n",
-				delimiter);
+		"minishell: warning: "
+		"here-document delimited by "
+		"end-of-file (wanted `%s')\n",
+		delimiter);
 	return (cleanup_heredoc_signals(is_interactive, SUCCESS));
 }

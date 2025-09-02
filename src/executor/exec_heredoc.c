@@ -29,8 +29,8 @@ int	setup_heredoc_for_pipeline(t_command *command)
 	}
 	if (command->heredoc_content)
 	{
-		if (write(pipefd[1], command->heredoc_content, 
-			ft_strlen(command->heredoc_content)) == -1)
+		if (write(pipefd[1], command->heredoc_content,
+				ft_strlen(command->heredoc_content)) == -1)
 			perror("write");
 	}
 	close(pipefd[1]);
@@ -51,8 +51,8 @@ int	setup_heredoc(t_command *command)
 	}
 	if (command->heredoc_content)
 	{
-		if (write(pipefd[1], command->heredoc_content, 
-			ft_strlen(command->heredoc_content)) == -1)
+		if (write(pipefd[1], command->heredoc_content,
+				ft_strlen(command->heredoc_content)) == -1)
 			perror("write");
 	}
 	close(pipefd[1]);
