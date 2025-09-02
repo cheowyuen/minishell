@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 21:00:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 17:05:54 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/03 00:00:16 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,9 @@ void	setup_redirection_child_process(t_executor *executor,
 			exit(EXIT_FAILURE);
 		}
 		close(command->heredoc_fd);
+		command->heredoc_fd = -1;
 	}
-	else if (command->redirs)
+	if (command->redirs)
 	{
 		if (setup_redirection(command) == FAILURE)
 		{

@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 17:05:57 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 23:45:55 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,17 @@ int	setup_redirection(t_command *command)
 
 	if (!command)
 		return (FAILURE);
-	if (command->has_heredoc)
-		return (setup_heredoc(command));
+	if (command->has_heredoc && command->heredoc_fd >= 0)
+	{
+		if (setup_heredoc(command) == FAILURE)
+			return (FAILURE);
+	}
 	if (!command->redirs)
 		return (SUCCESS);
 	redirs = command->redirs;
 	while (redirs)
 	{
-		if (redirs->type == REDIR_IN)
+		if (redirs->type == REDIR_IN && (!command->has_heredoc || command->heredoc_fd < 0))
 		{
 			if (process_redir_input(redirs, !has_next(redirs,
 						REDIR_IN)) == FAILURE)
