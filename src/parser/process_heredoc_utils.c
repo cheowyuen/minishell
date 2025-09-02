@@ -116,7 +116,8 @@ int	read_heredoc_input(char *delimiter, bool is_quoted, t_executor *executor,
 			free(line);
 			return (cleanup_heredoc_signals(is_interactive, SUCCESS));
 		}
-		if (process_heredoc_line_content(line, is_quoted, executor, content) == FAILURE)
+		if (process_heredoc_line_content(line, is_quoted, executor,
+				content) == FAILURE)
 			return (cleanup_heredoc_signals(is_interactive, FAILURE));
 	}
 }

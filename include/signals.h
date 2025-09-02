@@ -37,7 +37,8 @@ int								wait_all_children(t_executor *executor,
 									int *last_status);
 int								check_signal_interrupt(void);
 void							heredoc_sigint_handler(int sig);
-int								cleanup_heredoc_signals(bool is_interactive, int return_status);
+int								cleanup_heredoc_signals(bool is_interactive,
+									int return_status);
 void							setup_heredoc_signals(bool is_interactive);
 
 #endif
