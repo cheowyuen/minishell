@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 16:30:56 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 23:47:48 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 08:27:39 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static char	*collect_heredoc_content(char *delimiter)
 	return (content);
 }
 
-int	process_heredoc_during_parsing(t_command *command, t_executor *executor)
+int	process_heredoc(t_command *command, t_executor *executor)
 {
 	char	*expanded_content;
 

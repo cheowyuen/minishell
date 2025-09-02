@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/01 23:35:20 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/02 08:28:45 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	handle_special(t_token **tokens, t_command **current,
 				(*tokens)->is_quoted, executor);
 		if (!(*current)->heredoc_delim)
 			return (free_tokens_commands(tokens, &executor->commands));
-		if (process_heredoc_during_parsing(*current, executor) == FAILURE)
+		if (process_heredoc(*current, executor) == FAILURE)
 		{
 			free_commands(&executor->commands);
 			executor->commands = NULL;
