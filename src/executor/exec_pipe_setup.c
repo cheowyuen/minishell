@@ -90,8 +90,8 @@ int	fork_processes(t_executor *executor, t_command *command)
 static void	handle_child_process(t_executor *executor, t_command *command,
 		int i)
 {
-	t_command *original_commands;
-	
+	t_command	*original_commands;
+
 	if (setup_children_pipes(executor, i) == FAILURE)
 	{
 		close_all_pipes_children(executor);
