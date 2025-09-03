@@ -6,22 +6,12 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 23:45:55 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/03 18:58:11 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include <stdbool.h>
-
-static int	open_and_validate_file(const char *filename, int flags)
-{
-	int	fd;
-
-	fd = open(filename, flags);
-	if (fd < 0)
-		perror(filename);
-	return (fd);
-}
 
 static int	setup_stdin_redirection(int fd)
 {
@@ -38,9 +28,12 @@ static int	process_redir_input(t_redir *redir, bool is_last_input)
 {
 	int	fd;
 
-	fd = open_and_validate_file(redir->filename, O_RDONLY);
+	fd = open(redir->filename, O_RDONLY);
 	if (fd < 0)
+	{
+		perror(redir->filename);
 		return (FAILURE);
+	}
 	if (is_last_input && setup_stdin_redirection(fd) == FAILURE)
 		return (FAILURE);
 	close(fd);
@@ -57,23 +50,12 @@ static int	handle_output_redirection(t_redir *redir)
 	return (redirect_stdout(fd, redir));
 }
 
-int	setup_redirection(t_command *command)
+static int	process_redirection_list(t_command *command, t_redir *redirs)
 {
-	t_redir	*redirs;
-
-	if (!command)
-		return (FAILURE);
-	if (command->has_heredoc && command->heredoc_fd >= 0)
-	{
-		if (setup_heredoc(command) == FAILURE)
-			return (FAILURE);
-	}
-	if (!command->redirs)
-		return (SUCCESS);
-	redirs = command->redirs;
 	while (redirs)
 	{
-		if (redirs->type == REDIR_IN && (!command->has_heredoc || command->heredoc_fd < 0))
+		if (redirs->type == REDIR_IN && (!command->has_heredoc
+				|| command->heredoc_fd < 0))
 		{
 			if (process_redir_input(redirs, !has_next(redirs,
 						REDIR_IN)) == FAILURE)
@@ -87,4 +69,18 @@ int	setup_redirection(t_command *command)
 		redirs = redirs->next;
 	}
 	return (SUCCESS);
+}
+
+int	setup_redirection(t_command *command)
+{
+	if (!command)
+		return (FAILURE);
+	if (command->has_heredoc && command->heredoc_fd >= 0)
+	{
+		if (setup_heredoc(command) == FAILURE)
+			return (FAILURE);
+	}
+	if (!command->redirs)
+		return (SUCCESS);
+	return (process_redirection_list(command, command->redirs));
 }
