@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_list_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 13:35:30 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/03 17:46:55 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,8 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted, char *content,
 		data.len = 0;
 		return (add_token(tokens, is_quoted, "", &data));
 	}
-	// Split on spaces for unquoted content
-	words = ft_split(content, ' ');
+	// Split on spaces and tabs for unquoted content
+	words = split_whitespace(content);
 	if (!words)
 		return (-1);
 	// Add each word as a separate token

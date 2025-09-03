@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/03 17:08:06 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/03 18:15:11 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,9 @@ static int	run_shell_loop(t_executor *executor)
 			int dev_null_fd = open("/dev/null", O_WRONLY);
 			FILE *dev_null_stream = fdopen(dev_null_fd, "w");
 			rl_outstream = dev_null_stream;
+			
+			// Disable tab completion for non-interactive input
+			rl_bind_key('\t', rl_insert);
 			input = readline("");
 			if (rl_outstream != stdout)
 			{
