@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/03 18:44:38 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/03 19:28:23 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ static int	parse_and_execute(char *input, t_token **tokens,
 		result = exec_cmd(executor, commands);
 		executor->last_exit_code = result;
 		free_commands(&commands);
+		executor->commands = NULL;
 	}
 	return (0);
 }
