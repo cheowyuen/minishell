@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 15:50:11 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/03 11:21:46 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	validate_single_argument(const char *arg, int *exit_code,
 			return (FAILURE);
 		}
 	}
-	if (arg[0] == '-' && result < 0)
+	if (arg[0] == '-' && result < LLONG_MIN)
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: exit: %s: numeric argument required\n", arg);
