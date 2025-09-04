@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/04 10:08:47 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/04 22:23:37 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,54 +40,6 @@ int	main(int argc, char **argv, char **envp)
 	free_executor(&executor);
 	rl_clear_history();
 	return (exit_code);
-}
-
-static int	parse_and_execute(char *input, t_token **tokens,
-		t_executor *executor)
-{
-	t_command	*commands;
-	int			result;
-	int			parse_result;
-
-	commands = NULL;
-	if (parse_input(input, tokens, executor) < 0)
-	{
-		ft_lstclear(tokens);
-		return (print_syntax_error(NULL, executor, 2));
-	}
-	if (validate_syntax(*tokens, executor) < 0)
-	{
-		ft_lstclear(tokens);
-		executor->last_exit_code = 2;
-		return (-1);
-	}
-	parse_result = parse_commands(*tokens, &commands, executor);
-	if (parse_result == HEREDOC_LIMIT_EXCEEDED)
-	{
-		ft_lstclear(tokens);
-		executor->last_exit_code = 2;
-		return (HEREDOC_LIMIT_EXCEEDED);
-	}
-	if (parse_result == HEREDOC_INTERRUPTED)
-	{
-		ft_lstclear(tokens);
-		return (HEREDOC_INTERRUPTED);
-	}
-	if (parse_result < 0)
-	{
-		ft_lstclear(tokens);
-		return (print_syntax_error(NULL, executor, 2));
-	}
-	if (*tokens)
-		ft_lstclear(tokens);
-	if (commands)
-	{
-		result = exec_cmd(executor, commands);
-		executor->last_exit_code = result;
-		free_commands(&commands);
-		executor->commands = NULL;
-	}
-	return (0);
 }
 
 static int	handle_input_processing(char *input, t_token *tokens,

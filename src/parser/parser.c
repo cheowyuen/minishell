@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/04 12:38:16 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/04 21:34:33 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ int	parse_quote(char *input, int *i, t_quote *quote)
 	*i += len + 1;
 	return (0);
 }
-
-
 
 static int	parse_special(char *input, int *i, t_token **tokens)
 {

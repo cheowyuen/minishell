@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/04 13:35:05 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/04 22:21:40 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ typedef struct s_token_data
 typedef struct s_word
 {
 	int						*i;
-	bool					*is_quoted;
-	bool					*has_unquoted_vars;
-	char					**temp;
+	bool					is_quoted;
+	bool					has_unquoted_vars;
+	char					*temp;
+	int						starting_pos;
 }							t_word;
 
 typedef struct s_var
@@ -161,6 +162,10 @@ int							parse_word(char *input, int *i, t_token **tokens,
 								t_quote *quote);
 int							add_tokens_with_splitting(t_token **tokens,
 								bool is_quoted, char *content, char *raw_value);
+int							handle_quoted(t_word *w, char **joined, t_quote *quote,
+								char *input);
+int							parse_and_execute(char *input, t_token **tokens,
+								t_executor *executor);
 
 // Syntax validation
 int							validate_syntax(t_token *tokens,

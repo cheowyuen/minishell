@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   add_token_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 11:31:06 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/04 11:46:32 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/04 21:38:23 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,37 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted,
 	}
 	free_str_array(words);
 	return (0);
+}
+
+static int	free_trimmed(char *trimmed)
+{
+	free(trimmed);
+	return (-1);
+}
+
+int	handle_quoted(t_word *w, char **joined, t_quote *quote, char *input)
+{
+	bool	has_quotes;
+	char	*trimmed;
+
+	has_quotes = false;
+	if (*(w->i) == w->starting_pos)
+		has_quotes = true;
+	w->is_quoted = true;
+	if (handle_quoted_word(joined, quote, input, w->i) < 0)
+		return (-1);
+	if (has_quotes && (*joined)[0] != '\0')
+	{
+		trimmed = ft_strtrim(*joined, " ");
+		if (!trimmed)
+			return (-1);
+		if (trimmed[0] == '\0')
+		{
+			w->temp = ft_substr(*joined, 0, ft_strlen(*joined) - 1);
+			if (!w->temp)
+				return (free_trimmed(trimmed));
+		}
+		free(trimmed);
+	}
+	return 0;
 }
