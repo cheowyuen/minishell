@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/02 23:33:28 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/04 11:08:30 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,98 +15,44 @@
 #include "parser.h"
 #include "utils.h"
 
-static int	handle_special(t_token **tokens, t_command **current,
-		int *heredoc_count, t_executor *executor)
+int	handle_special(t_token **tokens, t_command **current,
+	int *heredoc_count, t_executor *executor)
 {
-	char *delimiter_value;
-	
+	int	result;
+
 	if (ft_strcmp((*tokens)->token, "<<") == 0)
-	{
-		(*heredoc_count)++;
-		if (*heredoc_count > HEREDOC_MAX)
-		{
-			ft_dprintf(STDERR_FILENO,
-				"minishell: maximum here-document count exceeded\n");
-			free_commands(&executor->commands);
-			return (HEREDOC_LIMIT_EXCEEDED);
-		}
-		*tokens = (*tokens)->next;
-		if (!*tokens)
-		{
-			print_syntax_error("newline", NULL, 0);
-			return (free_tokens_commands(tokens, &executor->commands));
-		}
-		(*current)->has_heredoc = 1;
-		(*current)->is_quoted = (*tokens)->is_quoted;
-		/* Add heredoc to the list instead of processing immediately */
-		if ((*tokens)->raw_value)
-			delimiter_value = (*tokens)->raw_value;
-		else
-			delimiter_value = (*tokens)->token;
-		if (!add_heredoc_to_list(&(*current)->heredoc_list, delimiter_value,
-				(*tokens)->is_quoted))
-			return (free_tokens_commands(tokens, &executor->commands));
-		/* Store delimiter for backward compatibility */
-		if ((*current)->heredoc_delim)
-			free((*current)->heredoc_delim);
-		(*current)->heredoc_delim = process_heredoc_delimiter(delimiter_value);
-		if (!(*current)->heredoc_delim)
-			return (free_tokens_commands(tokens, &executor->commands));
-	}
+		result = handle_heredoc(tokens, *current, heredoc_count, executor);
 	else if (ft_strcmp((*tokens)->token, ">>") == 0
 		|| (*tokens)->token[0] == '<' || (*tokens)->token[0] == '>')
 	{
-		if (set_redir(tokens, &(*current)->redirs) < 0)
-			return (free_tokens_commands(tokens, &executor->commands));
+		result = set_redir(tokens, &(*current)->redirs);
+		if (result < 0)
+			free_tokens_commands(tokens, &executor->commands);
 	}
+	else
+		result = 0;
 	*tokens = (*tokens)->next;
-	return (0);
+	return (result);
 }
 
 static int	handle_commands(t_token **tokens, t_command *current,
-		t_command **commands, t_executor *executor)
+	t_command **commands, t_executor *executor)
 {
 	int		count;
-	int		argv_index;
-	t_token	*tmp;
 	int		heredoc_count;
-	int		result;
 
 	heredoc_count = 0;
 	count = count_tokens(*tokens);
 	current->argv = ft_calloc(count + 1, sizeof(char *));
 	if (!current->argv)
 		return (free_tokens_commands(tokens, commands));
-	argv_index = 0;
-	tmp = *tokens;
-	while (tmp && (tmp->is_quoted || ft_strcmp(tmp->token, "|") != 0))
-	{
-		// printf("quoted: %d\n", tmp->is_quoted);
-		if (!tmp->is_quoted && (tmp->token[0] == '<' || tmp->token[0] == '>'))
-		{
-			result = handle_special(&tmp, &current, &heredoc_count, executor);
-			if (result < 0)
-				return (result);
-			continue ;
-		}
-		if (tmp->token && (tmp->token[0] || tmp->is_quoted))
-		{
-			current->argv[argv_index] = ft_strdup(tmp->token);
-			if (!current->argv[argv_index])
-				return (free_tokens_commands(tokens, commands));
-			if (argv_index == 0 && is_builtin(tmp->token))
-				current->is_builtin = 1;
-			argv_index++;
-		}
-		tmp = tmp->next;
-	}
-	current->argv[argv_index] = NULL;
-	*tokens = tmp;
+	if (fill_argv_from_tokens(tokens, current, executor, &heredoc_count) < 0)
+		return (free_tokens_commands(tokens, commands));
 	return (0);
 }
 
 static int	process_tokens(t_token *tokens, t_command **commands,
-		t_executor *executor)
+	t_executor *executor)
 {
 	t_command	*current;
 	int			result;

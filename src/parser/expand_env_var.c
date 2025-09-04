@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_var.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/08/30 20:37:16 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/04 10:20:26 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,18 +99,9 @@ static int	get_var(char **word, int i, t_executor *executor)
 		if ((*word)[i + 1] == '}')
 			return (-1);
 	}
-	if ((*word)[i + 1] == '?')
-	{
-		if (var.has_braces && ft_strncmp(&(*word)[i], "{?}", 3) != 0)
-			return (-1);
-		len = 2;
-		var.value = ft_itoa(executor->last_exit_code);
-		var.should_free = true;
-		if (!var.value)
-			return (-1);
-	}
-	else
-		len = 1;
+	len = handle_exit_code(*word, i, &var, executor);
+	if (len < 0)
+		return (-1);
 	if (get_value(word, i, len, var) < 0)
 		return (-1);
 	return (1);

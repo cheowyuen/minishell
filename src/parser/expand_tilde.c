@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_tilde.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 15:20:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 15:48:26 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/04 12:14:18 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,31 @@ int	expand_tilde(char **word, t_executor *executor)
 	if (expand_tilde_word(word, home_path) < 0)
 		return (0);
 	return (0);
+}
+
+int	expand_word_if_needed(char **word, bool has_dollar, t_executor *executor)
+{
+	if (expand_tilde(word, executor) < 0)
+		return (-1);
+	if (has_dollar)
+	{
+		if (expand_env_var(word, executor) < 0)
+			return (-1);
+	}
+	return (0);
+}
+
+int	handle_exit_code(const char *word, int i, t_var *var, t_executor *executor)
+{
+	if (word[i + 1] == '?')
+	{
+		if (var->has_braces && ft_strncmp(&word[i], "{?}", 3) != 0)
+			return (-1);
+		var->value = ft_itoa(executor->last_exit_code);
+		if (!var->value)
+			return (-1);
+		var->should_free = true;
+		return (2);
+	}
+	return (1);
 }

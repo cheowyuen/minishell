@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_word_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/09/02 18:31:25 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/04 12:14:52 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,46 @@
 #include "minishell.h"
 #include "parser.h"
 
+static int	handle_dollar_single_quote(char *input, int *i, char **word)
+{
+	int len;
+
+	len = 2;
+	while (input[*i + len] && input[*i + len] != '\'')
+		len++;
+	if (input[*i + len] == '\'')
+		len++;
+	*word = ft_strndup(&input[*i + 2], len - 3);
+	if (!*word)
+		return (-1);
+	*i += len;
+	return (0);
+}
+
+static int	get_word_length(char *input, int start, bool *has_dollar)
+{
+	int len;
+
+	len = 0;
+	while (input[start + len] && !is_quote(input[start + len])
+		&& !is_space(input[start + len]) && !is_special(input[start + len]))
+	{
+		if (input[start + len] == '$')
+			*has_dollar = true;
+		len++;
+	}
+	return len;
+}
+
 int	get_word(char *input, int *i, t_quote *quote, char **word)
 {
 	int		len;
-	bool	has_dollar_sign;
+	bool	has_dollar;
 
-	len = 0;
-	has_dollar_sign = false;
+	has_dollar = false;
 	if (input[*i] == '$' && input[*i + 1] == '\'')
-	{
-		len = 2;
-		while (input[*i + len] && input[*i + len] != '\'')
-			len++;
-		if (input[*i + len] == '\'')
-			len++;
-		*word = ft_strndup(&input[*i + 2], len - 3);
-		if (!*word)
-			return (-1);
-		*i += len;
-		return (0);
-	}
-	while (input[*i + len] && !is_quote(input[*i + len]) && !is_space(input[*i
-			+ len]) && !is_special(input[*i + len]))
-	{
-		if (input[*i + len] == '$')
-		{
-			has_dollar_sign = true;
-		}
-		len++;
-	}
+		return handle_dollar_single_quote(input, i, word);
+	len = get_word_length(input, *i, &has_dollar);
 	*word = ft_strndup(&input[*i], len);
 	if (!*word)
 		return (-1);
@@ -54,13 +65,8 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 		if (!quote->raw_value)
 			return (-1);
 	}
-	if (expand_tilde(word, quote->executor) < 0)
+	if (expand_word_if_needed(word, has_dollar, quote->executor) < 0)
 		return (-1);
-	if (has_dollar_sign)
-	{
-		if (expand_env_var(word, quote->executor) < 0)
-			return (-1);
-	}
 	*i += len;
 	return (0);
 }
