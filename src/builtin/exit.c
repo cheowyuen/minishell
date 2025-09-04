@@ -6,13 +6,12 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:47:15 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/04 09:52:09 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/04 15:41:11 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "parser.h"
-#include <errno.h>
 
 static int	validate_exit_args(char **argv, int *exit_code);
 
