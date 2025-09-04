@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 18:49:27 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/31 15:20:51 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/04 09:51:26 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,44 @@ int	is_overflow(const char *str)
 	if (!str || !*str)
 		return (0);
 	i = 0;
-	if (str[i] == '+' || str[i] == '-')
+	if (str[i] == '+')
 		i++;
+	else if (str[i] == '-')
+		return (0);
+	if (!str[i])
+		return (1);
 	len = ft_strlen(&str[i]);
 	if (len > 19)
 		return (1);
 	if (len == 19)
 	{
 		if (ft_strncmp(&str[i], max_str, 19) > 0)
+			return (1);
+	}
+	return (0);
+}
+
+int	is_underflow(const char *str)
+{
+	int			len;
+	const char	*min_str = "9223372036854775808";
+	int			i;
+
+	if (!str || !*str)
+		return (0);
+	i = 0;
+	if (str[i] == '-')
+		i++;
+	else
+		return (0);
+	if (!str[i])
+		return (1);
+	len = ft_strlen(&str[i]);
+	if (len > 19)
+		return (1);
+	if (len == 19)
+	{
+		if (ft_strncmp(&str[i], min_str, 19) > 0)
 			return (1);
 	}
 	return (0);
