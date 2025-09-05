@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 09:00:02 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 15:54:24 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:26:48 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
-#include "environment.h"
-#include "minishell.h"
-#include "utils.h"
 
 static char	*search_in_paths(char **paths, char *command)
 {

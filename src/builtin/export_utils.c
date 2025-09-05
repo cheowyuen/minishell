@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 14:12:03 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/27 18:39:59 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/09/05 10:28:58 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
-#include "environment.h"
 
 static int	alloc_and_add_var(t_executor *executor, const char *key,
 				const char *value);

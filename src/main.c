@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/04 09:54:07 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:15:29 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtin.h"
+#include "utils.h"
 #include "executor.h"
-#include "minishell.h"
 #include "parser.h"
 #include "signals.h"
 
@@ -42,70 +41,53 @@ int	main(int argc, char **argv, char **envp)
 	return (exit_code);
 }
 
-static int	parse_and_execute(char *input, t_token **tokens,
+static int	handle_nonempty_input(char *input, t_token *tokens,
 		t_executor *executor)
 {
-	t_command	*commands;
-	int			result;
-	int			parse_result;
+	int	result;
 
-	commands = NULL;
-	if (parse_input(input, tokens, executor) < 0)
+	add_history(input);
+	result = parse_and_execute(input, &tokens, executor);
+	if (result == HEREDOC_LIMIT_EXCEEDED)
 	{
-		ft_lstclear(tokens);
-		return (print_syntax_error(NULL, executor, 2));
-	}
-	if (validate_syntax(*tokens, executor) < 0)
-	{
-		ft_lstclear(tokens);
-		executor->last_exit_code = 2;
+		free_input_failure(input);
 		return (-1);
 	}
-	parse_result = parse_commands(*tokens, &commands, executor);
-	if (parse_result == HEREDOC_LIMIT_EXCEEDED)
+	else if (result == HEREDOC_INTERRUPTED)
 	{
-		ft_lstclear(tokens);
-		executor->last_exit_code = 2;
-		return (HEREDOC_LIMIT_EXCEEDED);
+		return (free_input_failure(input));
 	}
-	if (parse_result == HEREDOC_INTERRUPTED)
+	else if (result < 0)
 	{
-		ft_lstclear(tokens);
-		return (HEREDOC_INTERRUPTED);
-	}
-	if (parse_result < 0)
-	{
-		ft_lstclear(tokens);
-		return (print_syntax_error(NULL, executor, 2));
-	}
-	if (*tokens)
-		ft_lstclear(tokens);
-	if (commands)
-	{
-		result = exec_cmd(executor, commands);
-		executor->last_exit_code = result;
-		free_commands(&commands);
-		executor->commands = NULL;
+		if (!isatty(STDIN_FILENO))
+		{
+			free(input);
+			return (-1);
+		}
+		return (free_input_failure(input));
 	}
 	return (0);
+}
+
+static int	handle_null_input(t_executor *executor)
+{
+	if (g_signal_status == SIGNAL_INT)
+	{
+		executor->last_exit_code = 130;
+		g_signal_status = SIGNAL_NONE;
+	}
+	if (isatty(STDIN_FILENO))
+		printf("exit\n");
+	return (-1);
 }
 
 static int	handle_input_processing(char *input, t_token *tokens,
 		t_executor *executor)
 {
-	int result;
+	int	ret;
 
 	if (!input)
-	{
-		if (g_signal_status == SIGNAL_INT)
-		{
-			executor->last_exit_code = 130;
-			g_signal_status = SIGNAL_NONE;
-		}
-		if (isatty(STDIN_FILENO))
-			printf("exit\n");
-		return (-1);
-	}
+		return (handle_null_input(executor));
 	if (g_signal_status == SIGNAL_INT)
 	{
 		executor->last_exit_code = 130;
@@ -115,26 +97,9 @@ static int	handle_input_processing(char *input, t_token *tokens,
 	}
 	if (*input && ft_strlen(input) > 0 && !is_only_space_or_tab(input))
 	{
-		add_history(input);
-		result = parse_and_execute(input, &tokens, executor);
-		if (result == HEREDOC_LIMIT_EXCEEDED)
-		{
-			free_input_failure(input);
-			return (-1);
-		}
-		else if (result == HEREDOC_INTERRUPTED)
-		{
-			return (free_input_failure(input));
-		}
-		else if (result < 0)
-		{
-			if (!isatty(STDIN_FILENO))
-			{
-				free(input);
-				return (-1);
-			}
-			return (free_input_failure(input));
-		}
+		ret = handle_nonempty_input(input, tokens, executor);
+		if (ret != 0)
+			return (ret);
 	}
 	free(input);
 	return (0);

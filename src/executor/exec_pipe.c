@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:34 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 17:05:55 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:18:18 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "signals.h"
-#include "utils.h"
 
 static int	setup_and_run_pipeline(t_executor *executor, t_command *command);
 static int	process_pipeline_heredocs(t_command *command);

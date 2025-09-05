@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   process_heredoc_delimiter.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:00:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 23:26:07 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:11:16 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "environment.h"
-#include "executor.h"
 #include "minishell.h"
-#include "parser.h"
-#include "utils.h"
 
 static char	*strip_quotes(const char *str);
 

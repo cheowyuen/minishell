@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:41:29 by cyuen             #+#    #+#             */
-/*   Updated: 2025/09/02 18:30:20 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:08:26 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,29 +79,9 @@ t_command	*create_command(void)
 	new_command->is_last = 0;
 	new_command->pipe_out = 0;
 	new_command->heredoc_list = NULL;
-	new_command->outfiles = NULL;
 	new_command->redirs = NULL;
 	new_command->next = NULL;
 	return (new_command);
-}
-
-static void	ft_lstadd_back_outfile(t_outfile **lst, t_outfile *new)
-{
-	t_outfile	*end;
-
-	if (!lst || !new)
-		return ;
-	if (!*lst)
-	{
-		*lst = new;
-		new->next = NULL;
-		return ;
-	}
-	end = *lst;
-	while (end->next)
-		end = end->next;
-	end->next = new;
-	new->next = NULL;
 }
 
 static void	ft_lstadd_back_redir(t_redir **lst, t_redir *new)
@@ -121,28 +101,6 @@ static void	ft_lstadd_back_redir(t_redir **lst, t_redir *new)
 		end = end->next;
 	end->next = new;
 	new->next = NULL;
-}
-
-int	set_outfile(t_token **tokens, int append, t_outfile **files)
-{
-	t_outfile	*new_file;
-
-	*tokens = (*tokens)->next;
-	if (!*tokens)
-		return (print_syntax_error("newline", NULL, 0));
-	new_file = malloc(sizeof(t_outfile));
-	if (!new_file)
-		return (-1);
-	new_file->filename = ft_strdup((*tokens)->token);
-	if (!new_file->filename)
-	{
-		free(new_file);
-		return (-1);
-	}
-	new_file->append = append;
-	new_file->next = NULL;
-	ft_lstadd_back_outfile(files, new_file);
-	return (0);
 }
 
 int	set_redir(t_token **tokens, t_redir **files)

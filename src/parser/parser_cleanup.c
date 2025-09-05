@@ -3,31 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   parser_cleanup.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 18:41:50 by cyuen             #+#    #+#             */
-/*   Updated: 2025/09/02 17:50:16 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/04 11:29:08 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
 
-int	free_tokens(t_token **tokens)
+static void	free_redirs(t_redir *redirs)
 {
-	if (tokens && *tokens)
-		ft_lstclear(tokens);
-	return (-1);
+	t_redir	*next;
+
+	while (redirs)
+	{
+		next = redirs->next;
+		free(redirs->filename);
+		free(redirs);
+		redirs = next;
+	}
+}
+
+static void	free_single_command(t_command *cmd)
+{
+	int	i;
+
+	if (!cmd)
+		return ;
+	if (cmd->argv)
+	{
+		i = 0;
+		while (cmd->argv[i])
+			free(cmd->argv[i++]);
+		free(cmd->argv);
+	}
+	free_redirs(cmd->redirs);
+	free(cmd->heredoc_delim);
+	free(cmd->heredoc_content);
+	if (cmd->heredoc_fd >= 0)
+		close(cmd->heredoc_fd);
+	if (cmd->heredoc_list)
+		free_heredoc_list(cmd->heredoc_list);
+	free(cmd);
 }
 
 void	free_commands(t_command **commands)
 {
 	t_command	*temp;
-	int			i;
-	t_outfile	*outfiles;
-	t_redir		*redirs;
-	t_outfile	*next;
-	t_redir		*next_redir;
 
 	if (!commands || !*commands)
 		return ;
@@ -35,43 +59,7 @@ void	free_commands(t_command **commands)
 	{
 		temp = *commands;
 		*commands = (*commands)->next;
-		i = 0;
-		if (temp->argv)
-		{
-			while (temp->argv[i])
-			{
-				free(temp->argv[i]);
-				i++;
-			}
-			free(temp->argv);
-		}
-		redirs = temp->redirs;
-		while (redirs)
-		{
-			next_redir = redirs->next;
-			if (redirs->filename)
-				free(redirs->filename);
-			free(redirs);
-			redirs = next_redir;
-		}
-		outfiles = temp->outfiles;
-		while (outfiles)
-		{
-			next = outfiles->next;
-			if (outfiles->filename)
-				free(outfiles->filename);
-			free(outfiles);
-			outfiles = next;
-		}
-		if (temp->heredoc_delim)
-			free(temp->heredoc_delim);
-		if (temp->heredoc_content)
-			free(temp->heredoc_content);
-		if (temp->heredoc_fd >= 0)
-			close(temp->heredoc_fd);
-		if (temp->heredoc_list)
-			free_heredoc_list(temp->heredoc_list);
-		free(temp);
+		free_single_command(temp);
 	}
 	*commands = NULL;
 }

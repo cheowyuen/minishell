@@ -3,18 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   exec_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 19:28:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/01 18:05:54 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:17:25 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
 #include "minishell.h"
 #include "parser.h"
-#include "signals.h"
-#include "utils.h"
 
 int	setup_heredoc_for_pipeline(t_command *command)
 {
