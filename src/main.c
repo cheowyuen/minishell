@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/05 07:53:41 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/09/05 10:15:29 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtin.h"
+#include "utils.h"
 #include "executor.h"
-#include "minishell.h"
 #include "parser.h"
 #include "signals.h"
 
@@ -85,7 +84,6 @@ static int	handle_null_input(t_executor *executor)
 static int	handle_input_processing(char *input, t_token *tokens,
 		t_executor *executor)
 {
-	int	result;
 	int	ret;
 
 	if (!input)

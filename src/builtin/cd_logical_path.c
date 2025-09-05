@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cd_logical_path.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 10:58:28 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/28 19:58:43 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:27:32 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
-#include "environment.h"
 
 char	*prepare_path_for_resolution(char *current_logical_pwd,
 		char *target)

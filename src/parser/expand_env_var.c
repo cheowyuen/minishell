@@ -6,12 +6,11 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:01:16 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/04 10:20:26 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/05 10:04:44 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
-#include "executor.h"
 #include "minishell.h"
 #include "parser.h"
 

@@ -3,19 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   process_heredoc_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 23:39:50 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 20:04:53 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:11:54 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parser.h"
 #include "signals.h"
-#include "utils.h"
-#include <stdbool.h>
-#include <unistd.h>
 
 static char	*read_heredoc_line(bool is_interactive)
 {

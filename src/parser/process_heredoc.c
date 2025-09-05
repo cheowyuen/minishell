@@ -3,19 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   process_heredoc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 16:30:56 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/02 20:24:10 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:12:34 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
 #include "signals.h"
-#include "utils.h"
-#include <stdbool.h>
-#include <unistd.h>
 
 int	process_all_heredocs(t_command *command, t_executor *executor)
 {

@@ -6,13 +6,12 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 10:23:27 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/04 11:48:01 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/05 10:09:56 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
-#include "utils.h"
 
 int	free_tokens(t_token **tokens)
 {

@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 19:32:09 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/28 19:57:00 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:27:47 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
-#include "environment.h"
 
 char	*handle_cd_dash(t_executor *executor)
 {

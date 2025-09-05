@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 12:37:31 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/05 07:44:01 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/09/05 10:09:28 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,7 @@ static int	cleanup_error(char *joined, t_quote *quote, t_token **tokens)
 	return (free_tokens_input(tokens, NULL, 1));
 }
 
-static int	handle_temp_token(t_token **tokens, t_word *w, t_quote *quote
-	, char *joined)
+static int	handle_temp_token(t_token **tokens, t_word *w, t_quote *quote)
 {
 	if (!w->temp)
 		return (0);
@@ -96,7 +95,7 @@ int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	w.temp = NULL;
 	if (process_word_loop(input, quote, &joined, &w) < 0)
 		return (cleanup_error(joined, quote, tokens));
-	if (handle_temp_token(tokens, &w, quote, joined) < 0)
+	if (handle_temp_token(tokens, &w, quote) < 0)
 		return (cleanup_error(joined, quote, tokens));
 	if (add_tokens_with_splitting(tokens, w.is_quoted && !w.has_unquoted_vars,
 			joined, quote->raw_value) < 0)

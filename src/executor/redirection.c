@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:58:47 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/03 18:58:11 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 10:23:50 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include <stdbool.h>
 
 static int	setup_stdin_redirection(int fd)
 {

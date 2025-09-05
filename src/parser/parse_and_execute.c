@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_execute.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 22:20:34 by cyuen             #+#    #+#             */
-/*   Updated: 2025/09/05 07:44:09 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/09/05 10:07:58 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtin.h"
 #include "executor.h"
-#include "minishell.h"
 #include "parser.h"
-#include "signals.h"
+#include "utils.h"
 
 static int	handle_parse_error(t_token **tokens, t_executor *executor)
 {

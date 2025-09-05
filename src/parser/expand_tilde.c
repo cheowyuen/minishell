@@ -6,13 +6,12 @@
 /*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 15:20:00 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/04 12:14:18 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/05 10:05:26 by cwong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "executor.h"
-#include "minishell.h"
 
 static int	expand_tilde_word(char **word, char *home_path)
 {
