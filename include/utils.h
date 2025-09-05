@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:35:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/08/30 15:52:25 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 11:22:42 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int		print_syntax_error(char *token, t_executor *executor, int flag);
 int		is_only_space_or_tab(char *str);
 
 // Generic memory management utilities
-void	free_split(char **arr);
 void	free_str_array(char **arr);
 void	free_environment(t_executor *executor);
 void	free_executor(t_executor *executor);

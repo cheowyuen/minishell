@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/05 10:01:25 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/05 11:23:20 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ typedef enum e_redir_type
 {
 	REDIR_IN,
 	REDIR_OUT,
-	REDIR_APPEND,
-	HEREDOC
+	REDIR_APPEND
 }							t_redir_type;
 
 typedef struct s_executor	t_executor;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:42:48 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/05 10:16:15 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/05 11:24:01 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ void	free_environment(t_executor *executor)
 	executor->env_list = NULL;
 }
 
+int	free_input_failure(char *input)
+{
+	free(input);
+	return (1);
+}
+
 void	free_executor(t_executor *executor)
 {
 	if (executor->pids)
@@ -38,18 +44,6 @@ void	free_executor(t_executor *executor)
 	free_environment(executor);
 	executor->command_count = 0;
 	executor->current_command_index = 0;
-}
-
-void	free_split(char **arr)
-{
-	int	i;
-
-	i = 0;
-	if (!arr)
-		return ;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
 }
 
 void	free_str_array(char **arr)

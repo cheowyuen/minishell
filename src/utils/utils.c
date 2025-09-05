@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:33:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/05 10:16:40 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/05 11:23:51 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,6 @@ int	is_only_space_or_tab(char *str)
 			return (0);
 		str++;
 	}
-	return (1);
-}
-
-int	free_input_failure(char *input)
-{
-	free(input);
 	return (1);
 }
 
