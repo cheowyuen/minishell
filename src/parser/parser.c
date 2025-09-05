@@ -6,7 +6,7 @@
 /*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/04 21:34:33 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/09/05 07:41:54 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 static int	scan_quoted_word(char *input, int start, bool *has_dollar)
 {
-	int len;
+	int	len;
 
 	len = 1;
 	while (input[start + len] && input[start + len] != input[start])
@@ -38,18 +38,22 @@ int	parse_quote(char *input, int *i, t_quote *quote)
 	has_dollar = false;
 	len = scan_quoted_word(input, *i, &has_dollar);
 	if (len < 0)
-		return -1;
+		return (-1);
 	quote->quoted_word = ft_strndup(&input[*i + 1], len - 1);
 	if (!quote->quoted_word)
 		return (-1);
 	if (input[*i] == '\"' && has_dollar)
+	{
 		if (ft_strncmp(&input[*i], "\"$\"", 3) != 0)
+		{
 			if (expand_env_var(&quote->quoted_word, quote->executor) < 0)
 			{
 				free(quote->quoted_word);
 				quote->quoted_word = NULL;
 				return (-1);
 			}
+		}
+	}
 	*i += len + 1;
 	return (0);
 }

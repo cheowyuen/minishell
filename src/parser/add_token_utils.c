@@ -6,7 +6,7 @@
 /*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 11:31:06 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/04 21:38:23 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/09/05 07:40:50 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	add_tokens_with_splitting(t_token **tokens, bool is_quoted,
 	if (is_quoted)
 		return (add_token(tokens, is_quoted, content, &data));
 	from_expansion = (ft_strchr(content, '<') || ft_strchr(content, '>')
-		|| ft_strchr(content, '|'));
+			|| ft_strchr(content, '|'));
 	if (content[0] == '\0')
 	{
 		data.len = 0;
@@ -108,5 +108,5 @@ int	handle_quoted(t_word *w, char **joined, t_quote *quote, char *input)
 		}
 		free(trimmed);
 	}
-	return 0;
+	return (0);
 }

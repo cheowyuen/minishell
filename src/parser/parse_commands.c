@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 16:32:29 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/04 11:08:30 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/05 07:42:39 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ static int	process_collected_heredocs(t_command *commands,
 				executor->commands = NULL;
 				return (HEREDOC_INTERRUPTED);
 			}
-			/* Clean up the heredoc list after processing */
 			free_heredoc_list(current->heredoc_list);
 			current->heredoc_list = NULL;
 		}
@@ -119,7 +118,6 @@ int	parse_commands(t_token *tokens, t_command **commands, t_executor *executor)
 			*commands = NULL;
 		return (result);
 	}
-	/* Process all collected heredocs after parsing is complete */
 	result = process_collected_heredocs(*commands, executor);
 	if (result < 0)
 		return (result);

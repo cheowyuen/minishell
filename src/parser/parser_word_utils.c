@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_word_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:18:09 by cheowyuenwo       #+#    #+#             */
-/*   Updated: 2025/09/04 12:14:52 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/05 07:38:15 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 static int	handle_dollar_single_quote(char *input, int *i, char **word)
 {
-	int len;
+	int	len;
 
 	len = 2;
 	while (input[*i + len] && input[*i + len] != '\'')
@@ -32,7 +32,7 @@ static int	handle_dollar_single_quote(char *input, int *i, char **word)
 
 static int	get_word_length(char *input, int start, bool *has_dollar)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (input[start + len] && !is_quote(input[start + len])
@@ -42,7 +42,7 @@ static int	get_word_length(char *input, int start, bool *has_dollar)
 			*has_dollar = true;
 		len++;
 	}
-	return len;
+	return (len);
 }
 
 int	get_word(char *input, int *i, t_quote *quote, char **word)
@@ -52,7 +52,7 @@ int	get_word(char *input, int *i, t_quote *quote, char **word)
 
 	has_dollar = false;
 	if (input[*i] == '$' && input[*i + 1] == '\'')
-		return handle_dollar_single_quote(input, i, word);
+		return (handle_dollar_single_quote(input, i, word));
 	len = get_word_length(input, *i, &has_dollar);
 	*word = ft_strndup(&input[*i], len);
 	if (!*word)

@@ -6,17 +6,18 @@
 /*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 12:37:31 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/04 21:40:04 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/09/05 07:44:01 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
 
-static int	handle_unquoted(t_word *w, char **joined, t_quote *quote, char *input)
+static int	handle_unquoted(t_word *w, char **joined, t_quote *quote,
+	char *input)
 {
-	int start;
-	int j;
+	int	start;
+	int	j;
 
 	start = *(w->i);
 	if (handle_unquoted_word(joined, quote, input, w->i) < 0)
@@ -34,10 +35,12 @@ static int	handle_unquoted(t_word *w, char **joined, t_quote *quote, char *input
 	return (0);
 }
 
-static int	process_word_loop(char *input, t_quote *quote, char **joined, t_word *w)
+static int	process_word_loop(char *input, t_quote *quote, char **joined,
+	t_word *w)
 {
 	w->starting_pos = *(w->i);
-	while (input[*(w->i)] && !is_space(input[*(w->i)]) && !is_special(input[*(w->i)]))
+	while (input[*(w->i)] && !is_space(input[*(w->i)])
+		&& !is_special(input[*(w->i)]))
 	{
 		if (is_quote(input[*(w->i)]))
 		{
@@ -57,16 +60,18 @@ static int	cleanup_error(char *joined, t_quote *quote, t_token **tokens)
 {
 	free(joined);
 	free(quote->raw_value);
-	return free_tokens_input(tokens, NULL, 1); 
+	return (free_tokens_input(tokens, NULL, 1));
 }
 
-static int	handle_temp_token(t_token **tokens, t_word *w, t_quote *quote, char *joined)
+static int	handle_temp_token(t_token **tokens, t_word *w, t_quote *quote
+	, char *joined)
 {
 	if (!w->temp)
 		return (0);
 	if (w->has_unquoted_vars)
 	{
-		if (add_tokens_with_splitting(tokens, w->is_quoted, w->temp, quote->raw_value) < 0)
+		if (add_tokens_with_splitting(tokens, w->is_quoted, w->temp,
+				quote->raw_value) < 0)
 		{
 			free(w->temp);
 			return (-1);
@@ -94,7 +99,7 @@ int	parse_word(char *input, int *i, t_token **tokens, t_quote *quote)
 	if (handle_temp_token(tokens, &w, quote, joined) < 0)
 		return (cleanup_error(joined, quote, tokens));
 	if (add_tokens_with_splitting(tokens, w.is_quoted && !w.has_unquoted_vars,
-		joined, quote->raw_value) < 0)
+			joined, quote->raw_value) < 0)
 		return (cleanup_error(joined, quote, tokens));
 	free(joined);
 	free(quote->raw_value);

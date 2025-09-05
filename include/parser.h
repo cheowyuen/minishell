@@ -6,7 +6,7 @@
 /*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 14:32:43 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/04 22:21:40 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/09/05 07:52:24 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,20 +104,22 @@ int							expand_env_var(char **word, t_executor *executor);
 int							expand_tilde(char **word, t_executor *executor);
 int							expand_word_if_needed(char **word, bool has_dollar,
 								t_executor *executor);
-int							handle_exit_code(const char *word, int i, t_var *var,
-								t_executor *executor);
+int							handle_exit_code(const char *word, int i,
+								t_var *var, t_executor *executor);
 
 // Parse commands			
 int							parse_commands(t_token *tokens,
 								t_command **commands, t_executor *executor);
-int							handle_special(t_token **tokens, t_command **current,
-								int *heredoc_count, t_executor *executor);
+int							handle_special(t_token **tokens,
+								t_command **current, int *heredoc_count,
+								t_executor *executor);
 int							fill_argv_from_tokens(t_token **tokens,
 								t_command *current, t_executor *executor,
-								int *heredoc_count);														
-int							handle_heredoc(t_token **tokens, t_command *current,
-								int *heredoc_count, t_executor *executor);
-								
+								int *heredoc_count);
+int							handle_heredoc(t_token **tokens,
+								t_command *current, int *heredoc_count,
+								t_executor *executor);
+
 // Parse commands utilities
 int							set_redir(t_token **tokens, t_redir **files);
 t_command					*create_command(void);
@@ -162,8 +164,8 @@ int							parse_word(char *input, int *i, t_token **tokens,
 								t_quote *quote);
 int							add_tokens_with_splitting(t_token **tokens,
 								bool is_quoted, char *content, char *raw_value);
-int							handle_quoted(t_word *w, char **joined, t_quote *quote,
-								char *input);
+int							handle_quoted(t_word *w, char **joined,
+								t_quote *quote, char *input);
 int							parse_and_execute(char *input, t_token **tokens,
 								t_executor *executor);
 

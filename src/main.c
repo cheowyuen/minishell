@@ -6,7 +6,7 @@
 /*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/04 22:23:37 by cyuen            ###   ########.fr       */
+/*   Updated: 2025/09/05 07:53:41 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,22 +42,54 @@ int	main(int argc, char **argv, char **envp)
 	return (exit_code);
 }
 
+static int	handle_nonempty_input(char *input, t_token *tokens,
+		t_executor *executor)
+{
+	int	result;
+
+	add_history(input);
+	result = parse_and_execute(input, &tokens, executor);
+	if (result == HEREDOC_LIMIT_EXCEEDED)
+	{
+		free_input_failure(input);
+		return (-1);
+	}
+	else if (result == HEREDOC_INTERRUPTED)
+	{
+		return (free_input_failure(input));
+	}
+	else if (result < 0)
+	{
+		if (!isatty(STDIN_FILENO))
+		{
+			free(input);
+			return (-1);
+		}
+		return (free_input_failure(input));
+	}
+	return (0);
+}
+
+static int	handle_null_input(t_executor *executor)
+{
+	if (g_signal_status == SIGNAL_INT)
+	{
+		executor->last_exit_code = 130;
+		g_signal_status = SIGNAL_NONE;
+	}
+	if (isatty(STDIN_FILENO))
+		printf("exit\n");
+	return (-1);
+}
+
 static int	handle_input_processing(char *input, t_token *tokens,
 		t_executor *executor)
 {
-	int result;
+	int	result;
+	int	ret;
 
 	if (!input)
-	{
-		if (g_signal_status == SIGNAL_INT)
-		{
-			executor->last_exit_code = 130;
-			g_signal_status = SIGNAL_NONE;
-		}
-		if (isatty(STDIN_FILENO))
-			printf("exit\n");
-		return (-1);
-	}
+		return (handle_null_input(executor));
 	if (g_signal_status == SIGNAL_INT)
 	{
 		executor->last_exit_code = 130;
@@ -67,26 +99,9 @@ static int	handle_input_processing(char *input, t_token *tokens,
 	}
 	if (*input && ft_strlen(input) > 0 && !is_only_space_or_tab(input))
 	{
-		add_history(input);
-		result = parse_and_execute(input, &tokens, executor);
-		if (result == HEREDOC_LIMIT_EXCEEDED)
-		{
-			free_input_failure(input);
-			return (-1);
-		}
-		else if (result == HEREDOC_INTERRUPTED)
-		{
-			return (free_input_failure(input));
-		}
-		else if (result < 0)
-		{
-			if (!isatty(STDIN_FILENO))
-			{
-				free(input);
-				return (-1);
-			}
-			return (free_input_failure(input));
-		}
+		ret = handle_nonempty_input(input, tokens, executor);
+		if (ret != 0)
+			return (ret);
 	}
 	free(input);
 	return (0);
