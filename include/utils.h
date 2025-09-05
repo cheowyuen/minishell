@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:35:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/05 11:22:42 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 11:45:09 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,8 @@ void	free_inherited_state_for_child(t_executor *executor,
 
 // Sort linked list of environment variables alphabetically by key
 void	sort_env_list_alpha(t_env **env_list);
+
+// Get user input with readline, handling EOF and signals
+char	*get_user_input(void);
 
 #endif

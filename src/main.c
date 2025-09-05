@@ -6,16 +6,16 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:49:37 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/05 11:24:27 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 11:45:43 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
 #include "executor.h"
 #include "parser.h"
 #include "signals.h"
+#include "utils.h"
 
-static int	run_shell_loop(t_executor *executor);
+static void	run_shell_loop(t_executor *executor);
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -105,36 +105,22 @@ static int	handle_input_processing(char *input, t_token *tokens,
 	return (0);
 }
 
-static int	run_shell_loop(t_executor *executor)
+static void	run_shell_loop(t_executor *executor)
 {
 	char	*input;
 	t_token	*tokens;
 	int		result;
-	char	*line;
 
 	tokens = NULL;
 	while (1)
 	{
-		if (isatty(STDIN_FILENO))
-			input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
-		else
-		{
-			line = get_next_line(fileno(stdin));
-			if (!line)
-				return (-1);
-			input = ft_strtrim(line, "\n");
-			if (!input)
-			{
-				free(line);
-				return (-1);
-			}
-			free(line);
-		}
+		input = get_user_input();
+		if (!input)
+			break ;
 		result = handle_input_processing(input, tokens, executor);
 		if (result == -1)
 			break ;
 		if (result == 1)
 			continue ;
 	}
-	return (0);
 }

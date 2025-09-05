@@ -6,7 +6,7 @@
 /*   By: lsurco-t <lsurco-t@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 20:33:52 by lsurco-t          #+#    #+#             */
-/*   Updated: 2025/09/05 11:23:51 by lsurco-t         ###   ########.fr       */
+/*   Updated: 2025/09/05 11:45:35 by lsurco-t         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,27 @@ void	sort_env_list_alpha(t_env **env_list)
 		}
 		current = current->next;
 	}
+}
+
+char	*get_user_input(void)
+{
+	char	*input;
+	char	*line;
+
+	if (isatty(STDIN_FILENO))
+		input = readline("\001" CLR_GREEN "\002" PROMPT "\001" RESET "\002");
+	else
+	{
+		line = get_next_line(fileno(stdin));
+		if (!line)
+			return (NULL);
+		input = ft_strtrim(line, "\n");
+		if (!input)
+		{
+			free(line);
+			return (NULL);
+		}
+		free(line);
+	}
+	return (input);
 }
