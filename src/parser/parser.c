@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:03:22 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/05 10:10:55 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/05 20:52:46 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	parse_quote(char *input, int *i, t_quote *quote)
 	quote->quoted_word = ft_strndup(&input[*i + 1], len - 1);
 	if (!quote->quoted_word)
 		return (-1);
-	if (input[*i] == '\"' && has_dollar)
+	if (input[*i] == '\"' && has_dollar && !quote->is_heredoc)
 	{
 		if (ft_strncmp(&input[*i], "\"$\"", 3) != 0)
 		{
@@ -58,7 +58,8 @@ int	parse_quote(char *input, int *i, t_quote *quote)
 	return (0);
 }
 
-static int	parse_special(char *input, int *i, t_token **tokens)
+static int	parse_special(char *input, int *i, t_token **tokens,
+	t_quote *quote)
 {
 	int				j;
 	t_token_data	data;
@@ -68,6 +69,8 @@ static int	parse_special(char *input, int *i, t_token **tokens)
 		j = 2;
 	data.len = j;
 	data.raw_value = NULL;
+	if (ft_strncmp(&input[*i], "<<", 2) == 0)
+		quote->is_heredoc = true;
 	if (add_token(tokens, false, &input[*i], &data) < 0)
 		return (free_tokens_input(tokens, NULL, 1));
 	*i += j;
@@ -79,7 +82,7 @@ static int	handle_parsing(char *input, int *i, t_token **tokens,
 {
 	if (is_special(input[*i]))
 	{
-		if (parse_special(input, i, tokens) < 0)
+		if (parse_special(input, i, tokens, quote) < 0)
 			return (-1);
 	}
 	else

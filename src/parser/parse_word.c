@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cwong <cwong@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: cyuen <cwong@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 12:37:31 by cwong             #+#    #+#             */
-/*   Updated: 2025/09/05 10:09:28 by cwong            ###   ########.fr       */
+/*   Updated: 2025/09/05 20:51:23 by cyuen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static int	process_word_loop(char *input, t_quote *quote, char **joined,
 				return (-1);
 		}
 	}
+	quote->is_heredoc = false;
 	return (0);
 }
 
